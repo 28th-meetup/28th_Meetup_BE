@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.1.4'
+	id 'org.springframework.boot' version '3.1.3'
 	id 'io.spring.dependency-management' version '1.1.3'
 }
 
@@ -26,7 +26,17 @@ repositories {
 }
 
 dependencies {
+    //spring data jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //spring web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//javax validation
+	implementation 'javax.validation:validation-api:2.0.1.Final'
+	//swagger (spring 3.x버전이라 springfox 적용불가, springdoc 중에서 호환되는 종속성 사용)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	//mysql (spring 3.x)
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    //lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
