@@ -31,3 +31,7 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+
+secret:
+  pwd: ${SECRET_PWD}
+  jwt: ${SECRET_JWT}
