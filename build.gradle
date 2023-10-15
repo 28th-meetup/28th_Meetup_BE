@@ -30,6 +30,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     //spring web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	//javax validation
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	//swagger (spring 3.x버전이라 springfox 적용불가, springdoc 중에서 호환되는 종속성 사용)
