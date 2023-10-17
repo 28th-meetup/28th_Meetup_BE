@@ -1,5 +1,6 @@
 package com.kusitms.jipbap.user;
 
+import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,8 +18,9 @@ public class UserController {
 
     @Operation(summary = "로그아웃 - 리프레쉬 토큰 삭제")
     @PostMapping("/logout")
-    public void logout(@Auth AuthInfo authInfo) {
+    public CommonResponse<String> logout(@Auth AuthInfo authInfo) {
         userService.logout(authInfo.getEmail());
+        return new CommonResponse<>("로그아웃 성공");
     }
 }
 

@@ -6,21 +6,29 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ErrorResponse<T> {
+public class CommonResponse<T> {
     private Boolean isSuccess;
     private int code;
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
+    //성공
+    public CommonResponse(T result) {
+        this.isSuccess = ErrorCode.SUCCESS.getIsSuccess();
+        this.code = ErrorCode.SUCCESS.getCode();
+        this.message = ErrorCode.SUCCESS.getMessage();
+        this.result = result;
+    }
+
     // 오류 발생
-    public ErrorResponse(ErrorCode errorCode) {
+    public CommonResponse(ErrorCode errorCode) {
         this.isSuccess = errorCode.getIsSuccess();
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
 
-    public ErrorResponse(ErrorCode errorCode, T result) {
+    public CommonResponse(ErrorCode errorCode, T result) {
         this.isSuccess = errorCode.getIsSuccess();
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();

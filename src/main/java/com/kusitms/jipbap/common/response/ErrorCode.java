@@ -5,6 +5,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
+    //success
+    SUCCESS(true, HttpStatus.OK.value(), "요청에 성공했습니다."),
+
+    //internal
     INTERNAL_SERVER_ERROR(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부에서 문제가 발생했습니다."),
     NOT_FOUND(false, HttpStatus.NOT_FOUND.value(), "해당 로그인 정보는 존재하지 않습니다."),
     UNAUTHORIZED(false, HttpStatus.UNAUTHORIZED.value(), "권한이 없습니다."),
@@ -17,7 +21,10 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN_ERROR(false, HttpStatus.BAD_REQUEST.value(), "RefreshToken 정보를 찾을 수 없습니다."),
 
     //user
-    USER_NOT_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 유저입니다."),
+    USER_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 유저입니다."),
+
+    //message
+    ROOM_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 채팅방입니다."),
     ;
 
     private Boolean isSuccess;
