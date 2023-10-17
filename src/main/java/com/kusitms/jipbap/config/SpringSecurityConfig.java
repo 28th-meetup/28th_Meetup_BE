@@ -38,16 +38,12 @@ public class SpringSecurityConfig {
                             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                         }
                 )
-                //인가(Authorize)
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(
-                                        "/auth/**"
-                                ).permitAll() //로그인, 회원가입,
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //cors
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
@@ -60,7 +56,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        //인증(Authentication)
         return web -> web.ignoring().requestMatchers(
                 "/v3/api-docs/**",
                 "/favicon.ico",

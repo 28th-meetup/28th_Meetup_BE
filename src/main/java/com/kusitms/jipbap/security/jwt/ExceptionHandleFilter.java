@@ -2,7 +2,7 @@ package com.kusitms.jipbap.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kusitms.jipbap.common.response.ErrorCode;
-import com.kusitms.jipbap.common.response.ErrorResponse;
+import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.jwt.exception.EmptyTokenException;
 import com.kusitms.jipbap.security.jwt.exception.InvalidTokenException;
 import jakarta.servlet.FilterChain;
@@ -56,7 +56,7 @@ public class ExceptionHandleFilter extends OncePerRequestFilter {
                                   String errorCode) {
         response.setStatus(status.value());
         response.setContentType("application/json");
-        ErrorResponse<?> errorResponse = new ErrorResponse<>(code, exception.getMessage());
+        CommonResponse<?> commonResponse = new CommonResponse<>(code, exception.getMessage());
         try {
             log.error("에러코드 {}: {} [에러 종류: {}, 요청 url: {}]",
                     errorCode,
@@ -64,7 +64,7 @@ public class ExceptionHandleFilter extends OncePerRequestFilter {
                     exception.getClass(),
                     request.getRequestURI());
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            response.getWriter().write(objectMapper.writeValueAsString(commonResponse));
         } catch (IOException e) {
             e.printStackTrace();
         }
