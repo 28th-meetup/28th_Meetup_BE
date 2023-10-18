@@ -14,6 +14,7 @@ import com.kusitms.jipbap.security.jwt.TokenInfo;
 import com.kusitms.jipbap.user.Role;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
+import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Member;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -142,9 +144,7 @@ public class AuthService {
                 .oauth(KAKAO)
                 .build();
 
-        User findUser = userRepository.findByEmail(kakaoUser.getEmail()).orElse(null);
-
-        if(findUser != null) {
+        if(userRepository.findByEmail(kakaoUser.getEmail()).isEmpty()) {
             log.info(profile.getKakao_account().getEmail()+": 기존 회원이 아니므로 자동 회원가입 후 로그인을 진행합니다.");
             signUp(new SignUpRequestDto(
                     kakaoUser.getEmail(),
@@ -155,10 +155,12 @@ public class AuthService {
                     Role.USER,
                     kakaoUser.getImage()
             ));
-            findUser.updateOAuth(KAKAO);
         } else {
             log.info(profile.getKakao_account().getEmail()+": 기존 회원이므로 자동 로그인을 진행합니다.");
         }
+
+        User findUser = userRepository.findByEmail(kakaoUser.getEmail()).orElseThrow(()->new UserNotFoundException("카카오 회원가입 도중 문제가 발생했습니다."));
+        findUser.updateOAuth(KAKAO);
         return signIn(kakaoUser.getEmail(), kakaoUser.getPassword());
     }
 
