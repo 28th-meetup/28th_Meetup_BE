@@ -144,7 +144,7 @@ public class AuthService {
 
         User findUser = userRepository.findByEmail(kakaoUser.getEmail()).orElse(null);
 
-        if(findUser != null) {
+        if(findUser == null) {
             log.info(profile.getKakao_account().getEmail()+": 기존 회원이 아니므로 자동 회원가입 후 로그인을 진행합니다.");
             signUp(new SignUpRequestDto(
                     kakaoUser.getEmail(),
