@@ -4,11 +4,10 @@ name: Deploy to Amazon EC2
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "master" ]
+  # Triggers the 'Deploy' workflow when the pull request closed but only for the "master" branch
   pull_request:
-    branches: [ "master" ]
+    types : [ closed ]
+    branches: [ master ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
