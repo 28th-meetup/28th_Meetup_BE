@@ -15,14 +15,14 @@ on:
 env:
   AWS_REGION: ap-northeast-2 # EC2 Region
   S3_BUCKET_NAME: jipbap-s3-bucket # S3 bucket name
-#  IAM_ROLE_ARN: ${{ secrets.IAM_ROLE_ARN }}
   CODE_DEPLOY_APPLICATION_NAME: jipbap-application
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: jipbap-deployment-group
   SERVER_PORT: ${{ secrets.SERVER_PORT }}
-  #  DB_URL: ${{ secrets.DB_URL }}
-  #  DB_USERNAME: ${{ secrets.DB_USERNAME }}
-  #  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  #  DDL_AUTO: ${{ secrets.DDL_AUTO }}
+  MYSQL_URL: ${{ secrets.MYSQL_URL }}
+  MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  SECRET_PWD: ${{ secrets.SECRET_PWD }}
+  SECRET_JWT: ${{ secrets.SECRET_JWT }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
