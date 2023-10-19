@@ -32,6 +32,11 @@ spring:
     serialization:
       fail-on-empty-beans: false
 
+  data:
+    redis:
+      host: ${REDIS_URL}
+      port: ${REDIS_PORT}
+
 secret:
   pwd: ${SECRET_PWD}
   jwt: ${SECRET_JWT}
