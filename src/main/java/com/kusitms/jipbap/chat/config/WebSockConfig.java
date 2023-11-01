@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.message;
+package com.kusitms.jipbap.chat.config;
 
 
 import org.springframework.context.annotation.Configuration;
