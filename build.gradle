@@ -40,12 +40,16 @@ dependencies {
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	//websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 	//swagger (spring 3.x버전이라 springfox 적용불가, springdoc 중에서 호환되는 종속성 사용)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	//mysql (spring 3.x)
     runtimeOnly 'com.mysql:mysql-connector-j'
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	//embedded redis - https://mvnrepository.com/artifact/it.ozimov/embedded-redis
+//	implementation 'it.ozimov:embedded-redis:0.7.2'
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
