@@ -64,8 +64,7 @@ public class SpringSecurityConfig {
                 "/swagger/**",
                 "/error",
                 "/auth/**",
-                "/ws/**", //ws://localhost:8080/ws/chat
-                "/ws-stomp/**"
+                "/"
                 );
     }
 }
