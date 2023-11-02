@@ -7,8 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @EnableJpaAuditing
-//@EnableWebSocketMessageBroker
-//@EnableRedisRepositories
 @SpringBootApplication
 public class JipbapApplication {
 
