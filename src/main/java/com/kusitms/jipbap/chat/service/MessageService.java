@@ -56,7 +56,7 @@ public class MessageService {
         List<MessageDto> redisMessageList = redisTemplateMessage.opsForList().range(roomId, 0, 99);
         Room room = roomRepository.findByRoomId(roomId).orElseThrow(()-> new RoomNotExistsException("현재 채팅방이 존재하지 않습니다."));
 
-        // 4. Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
+        // 4. cache miss - Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
         if (redisMessageList == null || redisMessageList.isEmpty()) {
             // 5. 생성시간이 빠른 순서부터 100개의 데이터 정렬
             List<Message> dbMessageList = messageRepository.findTop100ByRoomOrderById(room);      // db 저장된 채팅내역
@@ -68,7 +68,7 @@ public class MessageService {
                 redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(Message.class));      // 직렬화 이후
                 redisTemplateMessage.opsForList().rightPush(roomId, messageDto);                                // redis 저장
             }
-        } else {
+        } else { // cache hit
             // 7. 최근 내역 100개 저장
             messageList.addAll(redisMessageList);
         }
