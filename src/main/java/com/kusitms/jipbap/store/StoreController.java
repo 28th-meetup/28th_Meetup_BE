@@ -1,6 +1,8 @@
 package com.kusitms.jipbap.store;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
+import com.kusitms.jipbap.security.Auth;
+import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
@@ -18,17 +20,11 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class StoreController {
 
-    private final StoreRepository storeRepository;
-    private final UserRepository userRepository;
+    private final StoreService storeService;
 
     @PostMapping
-    public CommonResponse<String> registerStore(@Valid @RequestBody RegisterStoreRequestDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(()->new UserNotFoundException("유저 없음"));
-
-        storeRepository.save(
-                new Store(null, user, dto.getName(), dto.getDescription(), dto.getKoreanYn(), dto.getAvgRate(), null)
-        );
-
+    public CommonResponse<String> registerStore(@Auth AuthInfo authInfo, @Valid @RequestBody RegisterStoreRequestDto dto) {
+        storeService.registerStore(authInfo.getEmail(), dto);
         return new CommonResponse<>("가게 등록 완료");
     }
 }
