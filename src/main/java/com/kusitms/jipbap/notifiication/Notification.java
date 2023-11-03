@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.store;
+package com.kusitms.jipbap.notifiication;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
 import com.kusitms.jipbap.user.User;
@@ -10,33 +10,32 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "tb_store")
+@Table(name = "tb_notification")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Store extends DateEntity {
+public class Notification extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="store_id")
+    @Column(name ="notification_id")
     private Long id; //고유 pk
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private User owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
-    //TODO("읍면동 지역 id?")
-  
-    private String name;
-    private String description;
+    private String message;
 
     @ColumnDefault("false")
     @Column(columnDefinition = "TINYINT(1)")
-    private Boolean koreanYn; //한국인 인증 여부
+    private Boolean readYn;
 
-    private Double avgRate;
-
-    private String image;
+    public enum NotificationType {
+        OFFER, CHAT, REVIEW, WISHLIST
+    }
 }

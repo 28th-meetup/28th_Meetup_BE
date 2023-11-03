@@ -1,7 +1,7 @@
-package com.kusitms.jipbap.store;
+package com.kusitms.jipbap.food;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
-import com.kusitms.jipbap.user.User;
+import com.kusitms.jipbap.store.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,33 +10,29 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "tb_store")
+@Table(name = "tb_food")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Store extends DateEntity {
+public class Food extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="store_id")
+    @Column(name ="food_id")
     private Long id; //고유 pk
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private User owner;
+    private Store store;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Category category;
 
-    //TODO("읍면동 지역 id?")
-  
     private String name;
+    private Long price;
     private String description;
+    private Long recommendCount;
 
-    @ColumnDefault("false")
-    @Column(columnDefinition = "TINYINT(1)")
-    private Boolean koreanYn; //한국인 인증 여부
-
-    private Double avgRate;
-
-    private String image;
 }
