@@ -23,8 +23,11 @@ public enum ErrorCode {
     //user
     USER_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 유저입니다."),
 
-    //message
+    //chat
     ROOM_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 채팅방입니다."),
+
+    //store
+    STORE_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 가게입니다.");
     ;
 
     private Boolean isSuccess;

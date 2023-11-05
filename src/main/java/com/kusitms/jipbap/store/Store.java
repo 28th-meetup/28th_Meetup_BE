@@ -26,14 +26,15 @@ public class Store extends DateEntity {
     @JoinColumn
     private User owner;
 
-    //읍면동 지역 ID
 
+    //TODO("읍면동 지역 id?")
+  
     private String name;
     private String description;
 
     @ColumnDefault("false")
     @Column(columnDefinition = "TINYINT(1)")
-    private Boolean koreanYn;
+    private Boolean koreanYn; //한국인 인증 여부
 
     private Double avgRate;
 
