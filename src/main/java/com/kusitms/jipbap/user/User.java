@@ -44,6 +44,7 @@ public class User extends DateEntity {
 
     private String refreshToken;
     private String oauth; //INAPP, KAKAO
+    private String fcmToken;
 
     public void updateRefreshToken(String newRefreshToken) {
         this.refreshToken = newRefreshToken;
