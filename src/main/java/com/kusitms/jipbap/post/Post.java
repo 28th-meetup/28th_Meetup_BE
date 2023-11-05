@@ -36,6 +36,6 @@ public class Post extends DateEntity {
 
 
     public enum PostType {
-        STANDBY, APPROVE, SUSPEND
+        STANDBY, APPROVE, SUSPEND // 대기, 승인, 정지
     }
 }
