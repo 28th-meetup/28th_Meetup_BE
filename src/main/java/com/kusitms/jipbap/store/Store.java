@@ -26,7 +26,7 @@ public class Store extends DateEntity {
     @JoinColumn
     private User owner;
 
-    //TODO("읍면동 지역 id?")
+    //읍면동 지역 ID
 
     private String name;
     private String description;
