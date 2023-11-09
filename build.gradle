@@ -1,7 +1,14 @@
+//buildscript {
+//	ext {
+//		queryDslVersion = "5.0.0"
+//	}
+//}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.3'
 	id 'io.spring.dependency-management' version '1.1.3'
+//	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" //QueryDsl
 }
 
 group = 'com.kusitms'
@@ -19,6 +26,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+//	querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -53,9 +61,30 @@ dependencies {
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	//queryDsl
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//def querydslDir = "$buildDir/generated/querydsl"
+//
+//querydsl {
+//	jpa = true
+//	querydslSourcesDir = querydslDir
+//}
+//
+//sourceSets {
+//	main.java.srcDir querydslDir
+//}
+//
+//compileQuerydsl{
+//	options.annotationProcessorPath = configurations.querydsl
+//}

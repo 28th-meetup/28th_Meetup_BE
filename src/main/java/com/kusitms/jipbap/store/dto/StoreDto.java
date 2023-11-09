@@ -1,16 +1,18 @@
 package com.kusitms.jipbap.store.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterStoreRequestDto {
+public class StoreDto {
 
-    private Long userId;
+    private Long id;
     private String name;
     private String description;
     private Boolean koreanYn;
-
-    private Long minOrderAmount;
+    private Double avgRate;
+    private Long bookmarkCount;
+    private String image;
 }

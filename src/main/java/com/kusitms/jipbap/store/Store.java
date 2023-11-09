@@ -26,7 +26,6 @@ public class Store extends DateEntity {
     @JoinColumn
     private User owner;
 
-
     //TODO("읍면동 지역 id?")
   
     private String name;
@@ -36,7 +35,24 @@ public class Store extends DateEntity {
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean koreanYn; //한국인 인증 여부
 
-    private Double avgRate;
+    private Double avgRate; // 가게 평점
+    private Long rateCount; // 평점 개수
+    private Long bookmarkCount; // 가게 즐겨찾기 횟수 (추천순)
+    private Long reviewCount; // 가게 후기 개수
+
+    private Long minOrderAmount; //최소 주문 금액
 
     private String image;
+
+    public void increaseBookmarkCount() {
+        this.bookmarkCount++;
+    }
+
+    public void increaseReviewCount() {
+        this.reviewCount++;
+    }
+
+    public void updateAvgRate(Double newRate) {
+        this.avgRate = (avgRate*rateCount+newRate)/(rateCount+1);
+    }
 }

@@ -24,7 +24,7 @@ public class StoreBookmark extends DateEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private User owner;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

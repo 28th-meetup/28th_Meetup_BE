@@ -27,7 +27,6 @@ public class Review extends DateEntity {
     private Order order;
 
     private Long rating;
-    private Long like;
     private String message;
 
 }
