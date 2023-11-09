@@ -39,3 +39,6 @@ out/
 
 ### JRebel ###
 rebel.xml
+
+### .DS_Store ###
+.DS_Store

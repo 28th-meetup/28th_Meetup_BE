@@ -37,13 +37,12 @@ public class Store extends DateEntity {
     private Boolean koreanYn; //한국인 인증 여부
 
     private Double avgRate; // 가게 평점
-    private Long rateCount; // 평점 개수
-    private Long bookmarkCount; // 가게 즐겨찾기 횟수 (추천순)
-    private Long reviewCount; // 가게 후기 개수
-
     private Long minOrderAmount; //최소 주문 금액
-
     private String image;
+
+    private Long reviewCount; // 가게 후기 개수
+    private Long bookmarkCount; // 가게 즐겨찾기 횟수 (추천순)
+    private Long rateCount; // 평점 남긴 인원수
 
     public void increaseBookmarkCount() {
         this.bookmarkCount++;
