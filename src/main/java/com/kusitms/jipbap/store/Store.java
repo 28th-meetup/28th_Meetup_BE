@@ -19,7 +19,7 @@ public class Store extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="store_id")
+    @Column(name ="id")
     private Long id; //고유 pk
 
     @OneToOne(fetch = FetchType.LAZY)

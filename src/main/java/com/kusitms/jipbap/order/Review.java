@@ -19,7 +19,7 @@ public class Review extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="review_id")
+    @Column(name ="id")
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
