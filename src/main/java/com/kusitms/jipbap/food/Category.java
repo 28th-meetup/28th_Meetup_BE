@@ -20,6 +20,7 @@ public class Category extends DateEntity {
     @Column(name ="category_id")
     private Long id; //고유 pk
 
+    @Column(name = "category_name")
     private String name;
     private String image;
 

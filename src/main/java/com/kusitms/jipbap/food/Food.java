@@ -23,13 +23,14 @@ public class Food extends DateEntity {
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "store_id")
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "food_name")
     private String name;
     private Long price;
     private String description;

@@ -23,11 +23,11 @@ public class StoreBookmark extends DateEntity {
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "store_id")
     private Store store;
 
 

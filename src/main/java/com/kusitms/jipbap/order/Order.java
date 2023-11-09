@@ -25,11 +25,11 @@ public class Order extends DateEntity {
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "food_id")
     private Food food;
 
     private Long orderCount;

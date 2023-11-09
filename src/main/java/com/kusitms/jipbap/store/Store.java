@@ -23,11 +23,12 @@ public class Store extends DateEntity {
     private Long id; //고유 pk
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     //TODO("읍면동 지역 id?")
-  
+
+    @Column(name = "store_name")
     private String name;
     private String description;
 
