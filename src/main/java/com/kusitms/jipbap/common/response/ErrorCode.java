@@ -25,6 +25,9 @@ public enum ErrorCode {
 
     //message
     ROOM_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 채팅방입니다."),
+
+    //area
+    DEVICE_ID_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 등록된 기기입니다.")
     ;
 
     private Boolean isSuccess;
