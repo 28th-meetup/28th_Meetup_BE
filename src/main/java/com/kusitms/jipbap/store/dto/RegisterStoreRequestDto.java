@@ -7,9 +7,8 @@ import lombok.Setter;
 @Setter
 public class RegisterStoreRequestDto {
 
-    private Long userId;
     private String name;
     private String description;
     private Boolean koreanYn;
-    private Double avgRate;
+    private Long minOrderAmount;
 }

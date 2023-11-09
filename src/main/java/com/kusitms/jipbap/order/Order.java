@@ -21,15 +21,15 @@ public class Order extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="order_id")
+    @Column(name ="id")
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "food_id")
     private Food food;
 
     private Long orderCount;

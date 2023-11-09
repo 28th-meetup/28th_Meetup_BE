@@ -17,9 +17,10 @@ public class Category extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="category_id")
+    @Column(name ="id")
     private Long id; //고유 pk
 
+    @Column(name = "category_name")
     private String name;
     private String image;
 

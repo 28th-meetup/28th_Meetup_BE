@@ -27,7 +27,8 @@ public enum ErrorCode {
     ROOM_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 채팅방입니다."),
 
     //store
-    STORE_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 가게입니다.");
+    STORE_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 가게입니다."),
+    STORE_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 채팅방을 만든 유저입니다.")
     ;
 
     private Boolean isSuccess;

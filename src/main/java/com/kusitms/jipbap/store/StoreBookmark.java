@@ -19,15 +19,15 @@ public class StoreBookmark extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="store_bookmark_id")
+    @Column(name ="id")
     private Long id; //고유 pk
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private User owner;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "store_id")
     private Store store;
 
 
