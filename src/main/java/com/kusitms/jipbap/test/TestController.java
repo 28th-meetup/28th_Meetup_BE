@@ -8,6 +8,7 @@ import com.kusitms.jipbap.user.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,4 +35,17 @@ public class TestController {
         User user = userRepository.findByEmail(authInfo.getEmail()).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
         return "Healthy Connection";
     }
+
+    @Operation(summary = "s3 이미지 저장 테스트")
+    @PostMapping("/image")
+    public String saveImageTest() {
+        return null;
+    }
+
+    @Operation(summary = "s3 이미지 조회 테스트")
+    @GetMapping("/image")
+    public String getImageTest() {
+        return null;
+    }
+
 }
