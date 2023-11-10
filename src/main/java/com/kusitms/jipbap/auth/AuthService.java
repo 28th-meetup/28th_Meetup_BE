@@ -53,6 +53,7 @@ public class AuthService {
     public void signUp(SignUpRequestDto dto) {
 
         if(userRepository.existsByEmail(dto.getEmail())) throw new EmailExistsException("이미 가입한 이메일입니다.");
+        if(userRepository.existsByUsername(dto.getUsername())) throw new UsernameExistsException("이미 존재하는 닉네임입니다.");
         userRepository.save(
                 User.builder()
                         .id(null)

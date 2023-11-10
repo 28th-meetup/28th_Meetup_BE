@@ -30,6 +30,7 @@ public class User extends DateEntity {
     private String password; //비밀번호
 
     @NotBlank
+    @Column(unique = true)
     private String username; //닉네임
 
     @NotBlank
