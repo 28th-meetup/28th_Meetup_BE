@@ -18,7 +18,7 @@ public class FoodController {
 
     private final FoodService foodService;
 
-    @Operation(summary = "가게 등록하기")
+    @Operation(summary = "음식 등록하기")
     @PostMapping
     public CommonResponse<FoodDto> registerFood(@Auth AuthInfo authInfo, RegisterFoodRequestDto dto) {
         return new CommonResponse<>(foodService.registerFood(authInfo.getEmail(), dto));

@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.store;
 
-import com.kusitms.jipbap.common.QueryDslUtil;
+import com.kusitms.jipbap.common.utils.QueryDslUtil;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
 import com.kusitms.jipbap.user.User;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kusitms.jipbap.store.QStore.*;
 import static com.kusitms.jipbap.store.QStore.store;
 import static org.springframework.util.ObjectUtils.isEmpty;
 

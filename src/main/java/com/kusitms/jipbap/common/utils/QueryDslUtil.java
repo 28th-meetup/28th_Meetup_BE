@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.common;
+package com.kusitms.jipbap.common.utils;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

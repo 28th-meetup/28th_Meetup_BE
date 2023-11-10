@@ -1,22 +1,35 @@
 package com.kusitms.jipbap.test;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.kusitms.jipbap.auth.exception.InvalidEmailException;
+import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
+@Slf4j
 public class TestController {
 
     private final UserRepository userRepository;
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     /**
      * 커넥션 테스트용 컨트롤러
@@ -34,4 +47,29 @@ public class TestController {
         User user = userRepository.findByEmail(authInfo.getEmail()).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
         return "Healthy Connection";
     }
+
+    @Operation(summary = "s3 이미지 저장, 조회 테스트용 컨트롤러")
+    @PostMapping("/image")
+    public String saveImageTest(@RequestParam("file") MultipartFile file) {
+        try {
+            return saveFile(file);
+        } catch(IOException e) {
+            log.info("s3 이미지 저장 테스트 중 IOException 발생");
+            return null;
+        }
+    }
+
+
+    // 파일 저장 후 uri 반환
+    private String saveFile(MultipartFile multipartFile) throws IOException {
+        String originalFilename = multipartFile.getOriginalFilename();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(multipartFile.getSize());
+        metadata.setContentType(multipartFile.getContentType());
+
+        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+        return amazonS3.getUrl(bucket, originalFilename).toString();
+    }
+
 }
