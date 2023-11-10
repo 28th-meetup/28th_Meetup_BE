@@ -47,4 +47,11 @@ public class AuthExceptionHandler {
         log.warn("Auth-005> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UsernameExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleUsernameExistsException(UsernameExistsException e, HttpServletRequest request) {
+        log.warn("Auth-006> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.EMAIL_EXISTS_ERROR);
+    }
 }
