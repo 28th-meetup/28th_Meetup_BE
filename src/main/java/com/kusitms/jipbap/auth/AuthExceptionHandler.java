@@ -52,6 +52,6 @@ public class AuthExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResponse<?> handleUsernameExistsException(UsernameExistsException e, HttpServletRequest request) {
         log.warn("Auth-006> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.EMAIL_EXISTS_ERROR);
+        return new CommonResponse<>(ErrorCode.USERNAME_EXISTS_ERROR);
     }
 }
