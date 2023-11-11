@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +27,8 @@ public class StoreController {
 
     @Operation(summary = "가게 등록하기")
     @PostMapping
-    public CommonResponse<StoreDto> registerStore(@Auth AuthInfo authInfo, @Valid @RequestBody RegisterStoreRequestDto dto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommonResponse<StoreDto> registerStore(@Auth AuthInfo authInfo, @Valid @RequestBody RegisterStoreRequestDto dto){
         return new CommonResponse<>(storeService.registerStore(authInfo.getEmail(), dto));
     }
 

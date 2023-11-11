@@ -1,10 +1,10 @@
 package com.kusitms.jipbap.store.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class RegisterStoreRequestDto {
 
     private String name;

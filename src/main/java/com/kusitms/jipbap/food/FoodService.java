@@ -1,6 +1,8 @@
 package com.kusitms.jipbap.food;
 
+import com.kusitms.jipbap.food.dto.CategoryDto;
 import com.kusitms.jipbap.food.dto.FoodDto;
+import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
 import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.store.Store;
@@ -34,5 +36,14 @@ public class FoodService {
                 new Food(null, store, category, dto.getName(), dto.getPrice(), dto.getDescription(), 0L)
         );
         return new FoodDto(food.getId(), store.getId(), category.getId(), food.getName(), food.getPrice(), food.getDescription());
+    }
+
+    @Transactional
+    public CategoryDto registerCategory(RegisterCategoryRequestDto dto) {
+        System.out.println(dto.getName());
+        Category category = categoryRepository.save(
+                new Category(null, dto.getName(), dto.getImage())
+        );
+        return new CategoryDto(category.getId(), category.getName(), category.getImage());
     }
 }
