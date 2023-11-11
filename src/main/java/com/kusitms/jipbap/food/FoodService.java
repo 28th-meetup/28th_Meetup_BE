@@ -29,7 +29,6 @@ public class FoodService {
 
     @Transactional
     public CategoryDto registerCategory(RegisterCategoryRequestDto dto) {
-        System.out.println(dto.getName());
         Category category = categoryRepository.save(
                 new Category(null, dto.getName(), dto.getImage())
         );
