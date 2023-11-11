@@ -1,5 +1,6 @@
 package com.kusitms.jipbap.store;
 
+import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
 import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,6 +64,47 @@ public class StoreService {
                 ),
                 isStoreBookmarked(user, store)
         );
+    }
+
+    @Transactional
+    public StoreDto bookmarkStore(String email, Long storeId) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+
+        storeBookmarkRepository.save(new StoreBookmark(null, user, store));
+
+        return new StoreDto(
+                null,
+                store.getName(),
+                store.getDescription(),
+                store.getKoreanYn(),
+                store.getAvgRate(),
+                store.getMinOrderAmount(),
+                store.getImage()
+                );
+    }
+
+    @Transactional
+    public BookmarkedStoreListResponseDto findBookmarkedStore(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        List<StoreBookmark> storeBookmarks = storeBookmarkRepository.findByUser(user);
+        List<StoreDto> sbList = new ArrayList<>();
+
+        for (StoreBookmark sb : storeBookmarks) {
+            sbList.add(new StoreDto(
+                    sb.getId(),
+                    sb.getStore().getName(),
+                    sb.getStore().getDescription(),
+                    sb.getStore().getKoreanYn(),
+                    sb.getStore().getAvgRate(),
+                    sb.getStore().getMinOrderAmount(),
+                    sb.getStore().getImage()
+                )
+            );
+        }
+
+        return new BookmarkedStoreListResponseDto(sbList);
     }
 
     private Boolean isStoreBookmarked(User user, Store store){
