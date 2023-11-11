@@ -1,9 +1,7 @@
 package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
-import com.kusitms.jipbap.food.Category;
 import com.kusitms.jipbap.food.Food;
-import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
