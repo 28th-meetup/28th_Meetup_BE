@@ -33,7 +33,7 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
 
         List<Store> storeList = queryFactory.selectFrom(store)
                 .where(
-                    lastStore(pageable, lastId),
+                    lastStore(pageable, orderSpecifiers, lastId),
                     containsKeyword(keyword)
                 )
                 .limit(pageable.getPageSize()+1)
@@ -74,25 +74,43 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
 
     // no-offset 방식 처리하는 메서드
     // 정렬조건에 따라서 다음에 나와야 할 친구들을 구함
-    private BooleanExpression lastStore(Pageable pageable, Long id) {
+    private BooleanExpression lastStore(Pageable pageable, List<OrderSpecifier<?>> specifiers, Long id) {
         if(id==null) return null;
 
         Store stdStore = queryFactory.selectFrom(QStore.store)
                 .where(QStore.store.id.eq(id))
                 .fetchFirst();
 
+        System.out.println("aaaa>>"+specifiers.get(0).getOrder());
+
         for (Sort.Order order : pageable.getSort()) {
-            return switch (order.getProperty()) {
-                case "bookmark" -> // 추천순
-                        store.bookmarkCount.lt(stdStore.getBookmarkCount());
-                case "review" -> // 후기순
-                        store.reviewCount.lt(stdStore.getReviewCount());
-                case "rate" -> // 평점순
-                        store.rateCount.lt(stdStore.getRateCount());
-                case "id" -> // 최신순
-                        store.id.lt(stdStore.getId());
-                default -> null;
-            };
+            if(order.getDirection().isAscending()) {
+                switch (order.getProperty()) {
+                    case "bookmark" : // 추천순
+                        return store.bookmarkCount.goe(stdStore.getBookmarkCount()).and(store.id.ne(stdStore.getId()));
+                    case "review" : // 후기순
+                        return store.reviewCount.goe(stdStore.getReviewCount()).and(store.id.ne(stdStore.getId()));
+                    case "rate" : // 평점순
+                        return store.rateCount.goe(stdStore.getRateCount()).and(store.id.ne(stdStore.getId()));
+                    case "id" : // 최신순
+                        return store.id.gt(stdStore.getId());
+                    default :
+                        return null;
+                }
+            } else {
+                switch (order.getProperty()) {
+                    case "bookmark" : // 추천순
+                        return store.bookmarkCount.loe(stdStore.getBookmarkCount()).and(store.id.ne(stdStore.getId()));
+                    case "review" : // 후기순
+                        return store.reviewCount.loe(stdStore.getReviewCount()).and(store.id.ne(stdStore.getId()));
+                    case "rate" : // 평점순
+                        return store.rateCount.loe(stdStore.getRateCount()).and(store.id.ne(stdStore.getId()));
+                    case "id" : // 최신순
+                        return store.id.lt(stdStore.getId());
+                    default :
+                        return null;
+                }
+            }
         }
 
         return null;

@@ -3,6 +3,7 @@ package com.kusitms.jipbap.store;
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
+import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
 import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,7 +23,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class StoreController {
 
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 3;
     private final StoreService storeService;
 
     @Operation(summary = "가게 등록하기")
@@ -65,6 +67,18 @@ public class StoreController {
     @GetMapping("/{storeId}")
     public CommonResponse<StoreDetailResponseDto> storeDetail(@Auth AuthInfo authInfo, @PathVariable Long storeId) {
         return new CommonResponse<>(storeService.getStoreDetail(authInfo.getEmail(), storeId));
+    }
+
+    @Operation(summary = "가게 찜하기")
+    @PostMapping("/bookmark/{storeId}")
+    public CommonResponse<StoreDto> bookmarkStore(@Auth AuthInfo authInfo, @PathVariable Long storeId) {
+        return new CommonResponse<>(storeService.bookmarkStore(authInfo.getEmail(), storeId));
+    }
+
+    @Operation(summary = "찜한 가게 리스트")
+    @GetMapping("/bookmark")
+    public CommonResponse<BookmarkedStoreListResponseDto> getBookmarkedStoreList(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(storeService.findBookmarkedStore(authInfo.getEmail()));
     }
 
 }
