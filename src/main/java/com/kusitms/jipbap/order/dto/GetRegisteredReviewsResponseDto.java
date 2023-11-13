@@ -5,17 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
-
-    private Long id;
-
-    private Long user;
-
-    private Long food;
-
-    private Long orderCount;
+public class GetRegisteredReviewsResponseDto {
+    private List<ReviewDto> reviewList;
 }

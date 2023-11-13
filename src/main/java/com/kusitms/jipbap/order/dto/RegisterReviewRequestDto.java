@@ -9,13 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
-
-    private Long id;
-
-    private Long user;
-
-    private Long food;
-
-    private Long orderCount;
+public class RegisterReviewRequestDto {
+    private Long orderId;
+    private Long rating;
+    private String message;
 }

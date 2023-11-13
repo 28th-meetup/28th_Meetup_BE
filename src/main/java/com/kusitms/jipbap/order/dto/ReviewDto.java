@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class ReviewDto {
 
     private Long id;
 
-    private Long user;
+    private Long orderId;
 
-    private Long food;
+    private Long rating;
 
-    private Long orderCount;
+    private String message;
 }
