@@ -4,6 +4,9 @@ import com.kusitms.jipbap.order.dto.GetRegisteredReviewsResponseDto;
 import com.kusitms.jipbap.order.dto.RegisterReviewRequestDto;
 import com.kusitms.jipbap.order.dto.ReviewDto;
 import com.kusitms.jipbap.order.exception.OrderNotExistsException;
+import com.kusitms.jipbap.store.Store;
+import com.kusitms.jipbap.store.StoreRepository;
+import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
@@ -23,6 +26,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final StoreRepository storeRepository;
 
     @Transactional
     public ReviewDto registerReview(String email, RegisterReviewRequestDto dto) {
@@ -35,10 +39,23 @@ public class ReviewService {
     }
 
     @Transactional
-    public GetRegisteredReviewsResponseDto getRegisteredReviews(String email) {
+    public GetRegisteredReviewsResponseDto getUserRegisteredReviews(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
         List<Review> reviews = reviewRepository.findAllReviewsByUser(user);
+
+        return new GetRegisteredReviewsResponseDto(
+                reviews.stream()
+                .map(r -> new ReviewDto(r.getId(), r.getOrder().getId(), r.getRating(), r.getMessage()))
+                .collect(Collectors.toList())
+        );
+    }
+
+    @Transactional
+    public GetRegisteredReviewsResponseDto getStoreRegisteredReviews(Long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+
+        List<Review> reviews = reviewRepository.findAllReviewsByStore(store);
 
         return new GetRegisteredReviewsResponseDto(
                 reviews.stream()

@@ -25,7 +25,13 @@ public class ReviewController {
 
     @Operation(summary = "유저가 작성한 리뷰 모아보기")
     @GetMapping
-    public CommonResponse<GetRegisteredReviewsResponseDto> getRegisteredReviews(@Auth AuthInfo authInfo) {
-        return new CommonResponse<>(reviewService.getRegisteredReviews(authInfo.getEmail()));
+    public CommonResponse<GetRegisteredReviewsResponseDto> getUserRegisteredReviews(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(reviewService.getUserRegisteredReviews(authInfo.getEmail()));
+    }
+
+    @Operation(summary = "가게 리뷰 모두보기")
+    @GetMapping("/{storeId}")
+    public CommonResponse<GetRegisteredReviewsResponseDto> getStoreRegisteredReviews(@PathVariable Long storeId) {
+        return new CommonResponse<>(reviewService.getStoreRegisteredReviews(storeId));
     }
 }
