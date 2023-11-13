@@ -29,7 +29,7 @@ public enum ErrorCode {
 
     //store
     STORE_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 가게입니다."),
-    STORE_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 가게입니다."),
+    STORE_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 가게이거나, 이미 가게를 생성한 유저입니다."),
 
     //food
     CATEGORY_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 카테고리입니다."),
