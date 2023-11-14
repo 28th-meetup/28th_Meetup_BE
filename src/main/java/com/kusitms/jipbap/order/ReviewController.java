@@ -9,6 +9,7 @@ import com.kusitms.jipbap.security.AuthInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/review")
@@ -19,8 +20,12 @@ public class ReviewController {
 
     @Operation(summary = "주문 리뷰 작성")
     @PostMapping
-    public CommonResponse<ReviewDto> registerReview(@Auth AuthInfo authInfo, @RequestBody RegisterReviewRequestDto dto) {
-        return new CommonResponse<>(reviewService.registerReview(authInfo.getEmail(), dto));
+    public CommonResponse<ReviewDto> registerReview(
+            @Auth AuthInfo authInfo,
+            @RequestPart(value = "dto") RegisterReviewRequestDto dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return new CommonResponse<>(reviewService.registerReview(authInfo.getEmail(), dto, image));
     }
 
     @Operation(summary = "유저가 작성한 리뷰 모아보기")
