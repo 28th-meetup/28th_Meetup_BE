@@ -79,7 +79,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public GetRegisteredReviewsResponseDto getStoreR메egisteredReviews(Long storeId) {
+    public GetRegisteredReviewsResponseDto getStoreRegisteredReviews(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
 
         List<Review> reviews = reviewRepository.findAllReviewsByStore(store);
