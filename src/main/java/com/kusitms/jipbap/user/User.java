@@ -1,6 +1,7 @@
 package com.kusitms.jipbap.user;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
+import com.kusitms.jipbap.user.entity.area.LocalArea;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +34,15 @@ public class User extends DateEntity {
     @Column(unique = true)
     private String username; //닉네임
 
+    @ManyToOne
+    @JoinColumn(name = "local_area_id")
+    private LocalArea localArea; //지역
+
     @NotBlank
-    private String address; //주소
+    private String address; //상세주소
+
+    @NotBlank
+    private String postalCode; //우편번호
 
     private String image; //프로필 사진
 
