@@ -65,7 +65,8 @@ public class SpringSecurityConfig {
                 "/error",
                 "/auth/**",
                 "/ws/**", //ws://localhost:8080/ws/chat
-                "/ws-stomp/**"
+                "/ws-stomp/**",
+                "/addresses/**"
                 );
     }
 }

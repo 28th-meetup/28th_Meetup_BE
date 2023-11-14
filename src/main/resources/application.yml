@@ -54,3 +54,4 @@ cloud:
 secret:
   pwd: ${SECRET_PWD}
   jwt: ${SECRET_JWT}
+  geocodingApiKey: ${GEOCODING_API_KEY}

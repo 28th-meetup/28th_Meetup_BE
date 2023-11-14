@@ -34,6 +34,14 @@ public enum ErrorCode {
     //food
     CATEGORY_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 카테고리입니다."),
     FOOD_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 메뉴입니다."),
+
+    //address
+    REGION_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 지역입니다."),
+    REGION_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 지역입니다."),
+    GEOCODING_CONNECTION_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 서버와 연결할 수 없습니다."),
+    GEOCODING_INVALID_REQUEST_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 서버의 알 수 없는 오류입니다. 다시 요청해주세요."),
+    GEOCODING_UNKNOWN_ADDRESS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "찾을 수 없는 주소입니다. 주소를 다시 확인해주세요."),
+    GEOCODING_QUERY_MISSING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 쿼리가 없습니다. 다시 요청해주세요.")
     ;
 
     private Boolean isSuccess;
