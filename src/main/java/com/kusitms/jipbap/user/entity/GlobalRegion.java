@@ -1,10 +1,7 @@
 package com.kusitms.jipbap.user.entity;
 
-import com.kusitms.jipbap.user.entity.area.AdministrativeArea;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Builder
 @Entity
