@@ -96,6 +96,7 @@ public class StoreService {
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
 
         storeBookmarkRepository.save(new StoreBookmark(null, user, store));
+        store.increaseBookmarkCount();
 
         return new StoreDto(
                 null,

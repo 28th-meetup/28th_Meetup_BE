@@ -43,6 +43,7 @@ public class ReviewService {
     public ReviewDto registerReview(String email, RegisterReviewRequestDto dto, MultipartFile image) {
         userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
         Order order = orderRepository.findById(dto.getOrderId()).orElseThrow(()-> new OrderNotExistsException("orderId: "+dto.getOrderId()+"에 해당하는 주문이 존재하지 않습니다."));
+        Store store = order.getFood().getStore();
 
         String imageUri = null;
 
@@ -56,6 +57,10 @@ public class ReviewService {
         }
 
         Review review = reviewRepository.save(new Review(null, order, dto.getRating(), dto.getMessage(), imageUri));
+        // 리뷰 개수 업데이트
+        store.increaseReviewCount();
+        // 평점 업데이트
+        store.updateAvgRate(Double.parseDouble(String.valueOf(dto.getRating())));
 
         return new ReviewDto(review.getId(), review.getOrder().getId(), review.getRating(), review.getMessage(), review.getImage());
     }
@@ -74,7 +79,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public GetRegisteredReviewsResponseDto getStoreRegisteredReviews(Long storeId) {
+    public GetRegisteredReviewsResponseDto getStoreR메egisteredReviews(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
 
         List<Review> reviews = reviewRepository.findAllReviewsByStore(store);
