@@ -1,5 +1,6 @@
 package com.kusitms.jipbap.user;
 
+import com.kusitms.jipbap.auth.exception.EmailExistsException;
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.user.dto.address.GlobalRegionRequest;
 import com.kusitms.jipbap.user.dto.address.GlobalRegionResponse;
@@ -9,6 +10,7 @@ import com.kusitms.jipbap.user.dto.geolocation.GeocodingResponseDto;
 import com.kusitms.jipbap.user.entity.GlobalRegion;
 import com.kusitms.jipbap.user.exception.GeocodingConnectionException;
 import com.kusitms.jipbap.user.exception.GeocodingUnknownAdressException;
+import com.kusitms.jipbap.user.exception.RegionExistsException;
 import com.kusitms.jipbap.user.repository.GlobalRegionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,8 +37,20 @@ public class UserAddressService {
     private String apiKey;
 
     public GlobalRegionResponse saveGlobalAreaData (GlobalRegionRequest dto) {
+        if(globalRegionRepository.existsByRegionName(dto.getRegionName())) throw new RegionExistsException("이미 존재하는 지역입니다.");
+
         GlobalRegion globalRegion = globalRegionRepository.save(dto.toEntity());
-        return new GlobalRegionResponse(globalRegion.getId(), globalRegion.getCountryShortName(), globalRegion.getRegionName());
+        return new GlobalRegionResponse(globalRegion);
+    }
+
+    public List<GlobalRegionResponse> getAllGlobalAreaData () {
+        List<GlobalRegion> globalRegionList = globalRegionRepository.findAll();
+
+        List<GlobalRegionResponse> globalRegionResponse = globalRegionList.stream()
+                .map(GlobalRegionResponse::new)
+                .collect(Collectors.toList());
+
+        return globalRegionResponse;
     }
 
     @Transactional
