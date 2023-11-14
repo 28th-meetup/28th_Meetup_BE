@@ -1,26 +1,41 @@
 package com.kusitms.jipbap.user;
 
+import com.kusitms.jipbap.common.response.CommonResponse;
+import com.kusitms.jipbap.user.dto.address.GlobalRegionRequest;
+import com.kusitms.jipbap.user.dto.address.GlobalRegionResponse;
 import com.kusitms.jipbap.user.dto.geolocation.AddressComponentDto;
 import com.kusitms.jipbap.user.dto.geolocation.GeocodingAddressDto;
 import com.kusitms.jipbap.user.dto.geolocation.GeocodingResponseDto;
+import com.kusitms.jipbap.user.entity.GlobalRegion;
 import com.kusitms.jipbap.user.exception.GeocodingConnectionException;
 import com.kusitms.jipbap.user.exception.GeocodingUnknownAdressException;
+import com.kusitms.jipbap.user.repository.GlobalRegionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserAddressService {
+
+    private final GlobalRegionRepository globalRegionRepository;
+
     @Value("${secret.geocodingApiKey}")
     private String apiKey;
+
+    public GlobalRegionResponse saveGlobalAreaData (GlobalRegionRequest dto) {
+        GlobalRegion globalRegion = globalRegionRepository.save(dto.toEntity());
+        return new GlobalRegionResponse(globalRegion.getId(), globalRegion.getCountryShortName(), globalRegion.getRegionName());
+    }
 
     @Transactional
     public void getGeoDataByAddress(String address){

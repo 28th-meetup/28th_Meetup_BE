@@ -1,5 +1,6 @@
-package com.kusitms.jipbap.user.entity.area;
+package com.kusitms.jipbap.user.entity;
 
+import com.kusitms.jipbap.user.entity.area.AdministrativeArea;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,12 +8,13 @@ import java.util.List;
 
 @Builder
 @Entity
-@Table(name = "tb_global_area")
+@Table(name = "tb_global_region")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GlobalArea {
+public class GlobalRegion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,17 +27,11 @@ public class GlobalArea {
     private String countryShortName;
 
     @Column(name = "country_korean")
-    private String CountryKorean;
+    private String countryKorean;
 
-    @Column(name="state_long_name")
-    private String stateLongName;
+    @Column(name="region_name")
+    private String regionName;
 
-    @Column(name="state_short_name")
-    private String stateShortName;
-
-    @Column(name="state_korean")
-    private String stateKorean;
-
-    @OneToMany(mappedBy = "globalArea")
-    private List<AdministrativeArea> administrativeAreaList;
+    @Column(name="region_korean")
+    private String regionKorean;
 }

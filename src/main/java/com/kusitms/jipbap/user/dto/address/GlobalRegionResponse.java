@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GlobalAreaResponse {
+public class GlobalRegionResponse {
     private Long id;
-    private String countryLongName;
-    private String stateLongName;
+    private String countryShortName;
+    private String regionName;
 }
