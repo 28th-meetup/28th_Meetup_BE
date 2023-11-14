@@ -1,10 +1,7 @@
 package com.kusitms.jipbap.user;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
-import com.kusitms.jipbap.user.dto.address.GlobalRegionRequest;
-import com.kusitms.jipbap.user.dto.address.GlobalRegionResponse;
-import com.kusitms.jipbap.user.dto.address.UserAddressRequest;
-import com.kusitms.jipbap.user.dto.address.UserAddressResponse;
+import com.kusitms.jipbap.user.dto.address.*;
 import com.kusitms.jipbap.user.entity.GlobalRegion;
 import com.kusitms.jipbap.user.repository.GlobalRegionRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +24,13 @@ public class UserAddressController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<UserAddressResponse> saveUserAddress(@Valid @RequestBody UserAddressRequest dto) {
         return new CommonResponse<>(userAddressService.saveUserAddress(dto));
+    }
+
+    @Operation(summary = "유효한 주소인지 확인하고 우편번호 반환하기")
+    @GetMapping("/valid")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<PostalAddressDto> getValidPostalCode(@RequestParam String address) {
+        return new CommonResponse<>(userAddressService.getValidPostalCode(address));
     }
 
     @Operation(summary = "지역 코드 데이터 저장하기")

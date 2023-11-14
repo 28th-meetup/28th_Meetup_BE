@@ -2,8 +2,7 @@ package com.kusitms.jipbap.user;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.common.response.ErrorCode;
-import com.kusitms.jipbap.user.exception.RegionNotFoundException;
-import com.kusitms.jipbap.user.exception.RegionExistsException;
+import com.kusitms.jipbap.user.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,5 +25,33 @@ public class UserAddressExceptionController {
     public CommonResponse<?> RegionNotFoundException(RegionNotFoundException e, HttpServletRequest request) {
         log.warn("UserAddress-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.REGION_NOT_FOUND_ERROR);
+    }
+
+    @ExceptionHandler(GeocodingConnectionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> GeocodingConnectionException(GeocodingConnectionException e, HttpServletRequest request) {
+        log.warn("UserAddress-003> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.GEOCODING_CONNECTION_ERROR);
+    }
+
+    @ExceptionHandler(GeocodingUnknownAddressException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> GeocodingUnknownAddressException(GeocodingUnknownAddressException e, HttpServletRequest request) {
+        log.warn("UserAddress-004> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.GEOCODING_UNKNOWN_ADDRESS_ERROR);
+    }
+
+    @ExceptionHandler(GeocodingInvalidRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> GeocodingInvalidRequestException(GeocodingInvalidRequestException e, HttpServletRequest request) {
+        log.warn("UserAddress-005> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.GEOCODING_INVALID_REQUEST_ERROR);
+    }
+
+    @ExceptionHandler(GeocodingQueryMissingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> GeocodingQueryMissingException(GeocodingQueryMissingException e, HttpServletRequest request) {
+        log.warn("UserAddress-006> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.GEOCODING_QUERY_MISSING_ERROR);
     }
 }
