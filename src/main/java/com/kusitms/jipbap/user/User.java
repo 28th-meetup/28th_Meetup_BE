@@ -39,7 +39,10 @@ public class User extends DateEntity {
     private GlobalRegion globalRegion; //지역
 
     @NotBlank
-    private String address; //상세주소
+    private String address; //주소
+
+    @NotBlank
+    private String detailAddress; //상세주소
 
     @NotBlank
     private String postalCode; //우편번호

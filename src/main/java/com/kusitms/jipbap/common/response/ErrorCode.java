@@ -37,6 +37,7 @@ public enum ErrorCode {
 
     //address
     REGION_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 지역입니다."),
+    REGION_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 지역입니다."),
     ;
 
     private Boolean isSuccess;

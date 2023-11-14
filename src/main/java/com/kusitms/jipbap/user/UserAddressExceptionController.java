@@ -2,8 +2,8 @@ package com.kusitms.jipbap.user;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.common.response.ErrorCode;
+import com.kusitms.jipbap.user.exception.RegionNotFoundException;
 import com.kusitms.jipbap.user.exception.RegionExistsException;
-import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,5 +19,12 @@ public class UserAddressExceptionController {
     public CommonResponse<?> RegionExistsException(RegionExistsException e, HttpServletRequest request) {
         log.warn("UserAddress-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.REGION_ALREADY_EXISTS_ERROR);
+    }
+
+    @ExceptionHandler(RegionNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> RegionNotFoundException(RegionNotFoundException e, HttpServletRequest request) {
+        log.warn("UserAddress-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.REGION_NOT_FOUND_ERROR);
     }
 }
