@@ -29,6 +29,8 @@ public class QReview extends EntityPathBase<Review> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath image = createString("image");
+
     public final StringPath message = createString("message");
 
     public final QOrder order;

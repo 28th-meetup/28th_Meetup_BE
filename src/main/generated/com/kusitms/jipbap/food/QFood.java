@@ -33,6 +33,8 @@ public class QFood extends EntityPathBase<Food> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath image = createString("image");
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> price = createNumber("price", Long.class);

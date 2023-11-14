@@ -18,4 +18,5 @@ public class ReviewDto {
     private Long rating;
 
     private String message;
+    private String image;
 }
