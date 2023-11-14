@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/food")
@@ -29,8 +30,12 @@ public class FoodController {
     @Operation(summary = "메뉴 등록하기")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<FoodDto> registerFood(@Auth AuthInfo authInfo, @RequestBody RegisterFoodRequestDto dto) {
-        return new CommonResponse<>(foodService.registerFood(authInfo.getEmail(), dto));
+    public CommonResponse<FoodDto> registerFood(
+            @Auth AuthInfo authInfo,
+            @RequestPart(value = "dto") RegisterFoodRequestDto dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+        ) {
+        return new CommonResponse<>(foodService.registerFood(authInfo.getEmail(), dto, image));
     }
 
     @Operation(summary = "메뉴 하나 상세조회")
