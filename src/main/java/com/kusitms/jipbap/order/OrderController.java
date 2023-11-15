@@ -33,4 +33,12 @@ public class OrderController {
         return new CommonResponse<>(orderService.getOrderDetail(orderId));
     }
 
+    @Operation(summary = "주문내역의 주문 상태 변경하기")
+    @PutMapping("/{orderId}/process")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<String> processOrder(@PathVariable Long orderId, @RequestParam("new-status") String newStatus) {
+        orderService.processOrder(orderId, newStatus);
+        return new CommonResponse<>("주문 상태 변경에 성공했습니다.");
+    }
+
 }

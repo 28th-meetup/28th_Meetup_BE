@@ -48,6 +48,7 @@ public enum ErrorCode {
     ORDER_STATUS_FROM_STRING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "주문 상태를 확인할 수 없습니다. 다시 확인해주세요."),
     ORDER_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문번호를 찾을 수 없습니다."),
     ORDER_NOT_EXISTS_BY_ORDER_STATUS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문 상태의 주문이 존재하지 않습니다."),
+    UNAUTHORIZED_ACCESS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문에 접근할 권한이 없습니다."),
     ;
 
     private Boolean isSuccess;

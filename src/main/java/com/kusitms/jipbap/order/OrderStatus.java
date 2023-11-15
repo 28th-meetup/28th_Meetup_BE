@@ -3,10 +3,9 @@ package com.kusitms.jipbap.order;
 import com.kusitms.jipbap.order.exception.OrderStatusFromStringError;
 
 public enum OrderStatus {
-    PENDING, // 대기 중
-    CONFIRMED, // 확정
-    REJECTED , // 거절됨
-    CANCELED, // 취소됨
+    PENDING, // 판매자에게 확인 중
+    ACCEPTED, // 판매자가 주문 수락
+    REJECTED, // 판매자가 주문 거절
     COMPLETED; // 완료됨
 
     public static OrderStatus fromString(String text) {
