@@ -66,6 +66,8 @@ public class StoreService {
     @Transactional
     public Slice<StoreDetailResponseDto> searchStoreList(String email, Pageable pageable, String keyword, String standard, String order, Long lastId) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        if(lastId!=null)
+            storeRepository.findById(lastId).orElseThrow(()-> new StoreNotExistsException("lastId: "+lastId+"에 해당하는 가게가 존재하지 않습니다."));
 
         return storeRepository.searchByKeywordOrderBySort(user, pageable, keyword, standard, order, lastId);
     }

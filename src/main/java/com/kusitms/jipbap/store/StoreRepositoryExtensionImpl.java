@@ -81,17 +81,15 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
                 .where(QStore.store.id.eq(id))
                 .fetchFirst();
 
-        System.out.println("aaaa>>"+specifiers.get(0).getOrder());
-
         for (Sort.Order order : pageable.getSort()) {
             if(order.getDirection().isAscending()) {
                 switch (order.getProperty()) {
                     case "bookmark" : // 추천순
-                        return store.bookmarkCount.goe(stdStore.getBookmarkCount()).and(store.id.ne(stdStore.getId()));
+                        return store.bookmarkCount.goe(stdStore.getBookmarkCount()).and(store.id.lt(stdStore.getId()));
                     case "review" : // 후기순
-                        return store.reviewCount.goe(stdStore.getReviewCount()).and(store.id.ne(stdStore.getId()));
+                        return store.reviewCount.goe(stdStore.getReviewCount()).and(store.id.lt(stdStore.getId()));
                     case "rate" : // 평점순
-                        return store.rateCount.goe(stdStore.getRateCount()).and(store.id.ne(stdStore.getId()));
+                        return store.rateCount.goe(stdStore.getRateCount()).and(store.id.lt(stdStore.getId()));
                     case "id" : // 최신순
                         return store.id.gt(stdStore.getId());
                     default :
@@ -100,11 +98,11 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
             } else {
                 switch (order.getProperty()) {
                     case "bookmark" : // 추천순
-                        return store.bookmarkCount.loe(stdStore.getBookmarkCount()).and(store.id.ne(stdStore.getId()));
+                        return store.bookmarkCount.loe(stdStore.getBookmarkCount()).and(store.id.lt(stdStore.getId()));
                     case "review" : // 후기순
-                        return store.reviewCount.loe(stdStore.getReviewCount()).and(store.id.ne(stdStore.getId()));
+                        return store.reviewCount.loe(stdStore.getReviewCount()).and(store.id.lt(stdStore.getId()));
                     case "rate" : // 평점순
-                        return store.rateCount.loe(stdStore.getRateCount()).and(store.id.ne(stdStore.getId()));
+                        return store.rateCount.loe(stdStore.getRateCount()).and(store.id.lt(stdStore.getId()));
                     case "id" : // 최신순
                         return store.id.lt(stdStore.getId());
                     default :
