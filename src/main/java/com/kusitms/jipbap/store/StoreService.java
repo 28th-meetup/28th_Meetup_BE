@@ -1,5 +1,8 @@
 package com.kusitms.jipbap.store;
 
+import com.kusitms.jipbap.food.Food;
+import com.kusitms.jipbap.food.FoodRepository;
+import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
 import com.amazonaws.services.s3.AmazonS3;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +37,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreBookmarkRepository storeBookmarkRepository;
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -57,7 +62,7 @@ public class StoreService {
         }
 
         Store store = storeRepository.save(
-                new Store(null, user, dto.getName(), dto.getDescription(), dto.getKoreanYn(), 0D, dto.getMinOrderAmount(), imageUri, 0L, 0L,  0L)
+                new Store(null, user, user.getGlobalRegion(), dto.getName(), dto.getDescription(), dto.getKoreanYn(), 0D, dto.getMinOrderAmount(),null, 0L, 0L,  0L)
         );
 
         return new StoreDto(store.getId(), store.getName(), store.getDescription(), store.getKoreanYn(), store.getAvgRate(), store.getBookmarkCount(), store.getImage());
@@ -135,6 +140,19 @@ public class StoreService {
 
     private Boolean isStoreBookmarked(User user, Store store){
         return storeBookmarkRepository.existsByUserAndStore(user, store);
+    }
+
+    public List<FoodDetailByStoreResponse> getAllMenuListByStoreId(Long storeId) {
+        //유효한 storeId인지 검사
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: " + storeId + "에 해당하는 가게가 존재하지 않습니다."));
+        List<Food> foodList = foodRepository.findAllByStore(store);
+
+        List<FoodDetailByStoreResponse> foodDetailByStoreResponseList = foodList.stream()
+                .map(FoodDetailByStoreResponse::new)
+                .collect(Collectors.toList());
+
+        return foodDetailByStoreResponseList;
     }
 
 }

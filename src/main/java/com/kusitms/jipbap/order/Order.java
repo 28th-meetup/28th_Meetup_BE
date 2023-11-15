@@ -4,15 +4,15 @@ import com.kusitms.jipbap.common.entity.DateEntity;
 import com.kusitms.jipbap.food.Food;
 import com.kusitms.jipbap.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_order")
-@Data
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order extends DateEntity {
@@ -30,5 +30,16 @@ public class Order extends DateEntity {
     @JoinColumn(name = "food_id")
     private Food food;
 
+    @NotNull
     private Long orderCount;
+
+    @NotNull
+    private Long totalPrice;
+
+    @NotNull
+    private Long regionId; // 관계로 묶으면 너무 많아질 것 같아서 일단 Long으로
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 }

@@ -1,5 +1,6 @@
 package com.kusitms.jipbap.food;
 
+import com.kusitms.jipbap.food.dto.*;
 import com.amazonaws.services.s3.AmazonS3;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
@@ -9,6 +10,7 @@ import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
 import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
+import com.kusitms.jipbap.order.OrderRepository;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -23,6 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,6 +38,7 @@ public class FoodService {
     private final StoreRepository storeRepository;
     private final FoodRepository foodRepository;
     private final CategoryRepository categoryRepository;
+    private final OrderRepository orderRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -72,5 +79,40 @@ public class FoodService {
     public FoodDto getFoodDetail(Long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
         return new FoodDto(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getPrice(), food.getDescription(), food.getImage());
+    }
+
+    public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(user.getGlobalRegion().getId());
+
+        List<BestSellingFoodResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
+                .map(food -> new BestSellingFoodResponse(
+                        food.getName(),
+                        food.getStore().getName(),
+                        food.getPrice()
+                ))
+                .collect(Collectors.toList());
+
+        return bestSellingFoodResponseList;
+    }
+
+    public List<FoodDto> getFoodByCategory(Long categoryId){
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
+
+        List<Food> foodList = foodRepository.findAllByCategory(category);
+
+        List<FoodDto> foodDtoList = foodList.stream()
+                .map(food -> new FoodDto(
+                        food.getId(),
+                        food.getStore().getId(),
+                        food.getCategory().getId(),
+                        food.getName(),
+                        food.getPrice(),
+                        food.getDescription()
+                ))
+                .collect(Collectors.toList());
+
+        return foodDtoList;
     }
 }

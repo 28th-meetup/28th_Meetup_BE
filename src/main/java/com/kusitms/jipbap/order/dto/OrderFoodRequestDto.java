@@ -11,8 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderFoodRequestDto {
     private Long user;
-
     private Long food;
-
     private Long orderCount;
+    private Long totalPrice;
 }

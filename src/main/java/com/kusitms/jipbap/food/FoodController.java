@@ -1,10 +1,7 @@
 package com.kusitms.jipbap.food;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
-import com.kusitms.jipbap.food.dto.CategoryDto;
-import com.kusitms.jipbap.food.dto.FoodDto;
-import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
-import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
+import com.kusitms.jipbap.food.dto.*;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/food")
@@ -44,4 +43,20 @@ public class FoodController {
     public CommonResponse<FoodDto> getFoodDetail(@PathVariable Long foodId) {
         return new CommonResponse<>(foodService.getFoodDetail(foodId));
     }
+
+    @Operation(summary = "홈에서 현재 지역 내에서 인기메뉴 조회하기")
+    @GetMapping("/home")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<List<BestSellingFoodResponse>> getBestSellingFoodByRegion(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(foodService.getBestSellingFoodByRegion(authInfo.getEmail()));
+    }
+
+    @Operation(summary = "특정 카테고리에 속하는 메뉴 조회하기")
+    @GetMapping("/category/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<List<FoodDto>> getFoodByCategory(@PathVariable Long categoryId) {
+        return new CommonResponse<>(foodService.getFoodByCategory(categoryId));
+    }
 }
+
+

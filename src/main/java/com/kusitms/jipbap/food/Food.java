@@ -36,5 +36,4 @@ public class Food extends DateEntity {
     private String description;
     private Long recommendCount;
     private String image;
-
 }

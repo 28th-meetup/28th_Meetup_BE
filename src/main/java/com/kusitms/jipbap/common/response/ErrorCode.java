@@ -42,7 +42,14 @@ public enum ErrorCode {
     GEOCODING_CONNECTION_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 서버와 연결할 수 없습니다."),
     GEOCODING_INVALID_REQUEST_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 서버의 알 수 없는 오류입니다. 다시 요청해주세요."),
     GEOCODING_UNKNOWN_ADDRESS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "찾을 수 없는 주소입니다. 주소를 다시 확인해주세요."),
-    GEOCODING_QUERY_MISSING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 쿼리가 없습니다. 다시 요청해주세요.")
+    GEOCODING_QUERY_MISSING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "지오코딩 쿼리가 없습니다. 다시 요청해주세요."),
+
+    //order
+    ORDER_NOT_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 주문입니다."),
+    ORDER_STATUS_FROM_STRING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "주문 상태를 확인할 수 없습니다. 다시 확인해주세요."),
+    ORDER_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문번호를 찾을 수 없습니다."),
+    ORDER_NOT_EXISTS_BY_ORDER_STATUS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문 상태의 주문이 존재하지 않습니다."),
+    UNAUTHORIZED_ACCESS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문에 접근할 권한이 없습니다."),
     ;
 
     private Boolean isSuccess;

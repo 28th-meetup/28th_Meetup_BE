@@ -26,4 +26,19 @@ public class OrderController {
         return new CommonResponse<>(orderService.orderFood(dto));
     }
 
+    @Operation(summary = "주문 내역 확인하기")
+    @GetMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<OrderDto> getOrderDetail(@PathVariable Long orderId) {
+        return new CommonResponse<>(orderService.getOrderDetail(orderId));
+    }
+
+    @Operation(summary = "주문내역의 주문 상태 변경하기")
+    @PutMapping("/{orderId}/process")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<String> processOrder(@PathVariable Long orderId, @RequestParam("new-status") String newStatus) {
+        orderService.processOrder(orderId, newStatus);
+        return new CommonResponse<>("주문 상태 변경에 성공했습니다.");
+    }
+
 }
