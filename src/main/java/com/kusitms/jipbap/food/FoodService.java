@@ -12,16 +12,12 @@ import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -73,5 +69,24 @@ public class FoodService {
                 .collect(Collectors.toList());
 
         return bestSellingFoodResponseList;
+    }
+
+    public List<FoodDto> getFoodByCategory(Long categoryId){
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
+
+        List<Food> foodList = foodRepository.findAllByCategory(category);
+
+        List<FoodDto> foodDtoList = foodList.stream()
+                .map(food -> new FoodDto(
+                        food.getId(),
+                        food.getStore().getId(),
+                        food.getCategory().getId(),
+                        food.getName(),
+                        food.getPrice(),
+                        food.getDescription()
+                ))
+                .collect(Collectors.toList());
+
+        return foodDtoList;
     }
 }

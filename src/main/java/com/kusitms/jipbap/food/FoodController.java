@@ -45,6 +45,13 @@ public class FoodController {
     public CommonResponse<List<BestSellingFoodResponse>> getBestSellingFoodByRegion(@Auth AuthInfo authInfo) {
         return new CommonResponse<>(foodService.getBestSellingFoodByRegion(authInfo.getEmail()));
     }
+
+    @Operation(summary = "특정 카테고리에 속하는 메뉴 조회하기")
+    @GetMapping("/category/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<List<FoodDto>> getFoodByCategory(@PathVariable Long categoryId) {
+        return new CommonResponse<>(foodService.getFoodByCategory(categoryId));
+    }
 }
 
 
