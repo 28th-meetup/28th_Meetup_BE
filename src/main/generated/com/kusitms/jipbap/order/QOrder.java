@@ -57,7 +57,7 @@ public class QOrder extends EntityPathBase<Order> {
     public QOrder(Class<? extends Order> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.food = inits.isInitialized("food") ? new com.kusitms.jipbap.food.QFood(forProperty("food"), inits.get("food")) : null;
-        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

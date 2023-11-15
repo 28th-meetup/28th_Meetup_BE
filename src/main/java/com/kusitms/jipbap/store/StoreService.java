@@ -1,9 +1,8 @@
 package com.kusitms.jipbap.store;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
-import com.kusitms.jipbap.common.utils.S3Util;
+import com.kusitms.jipbap.common.utils.S3Utils;
 import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
 import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
@@ -51,7 +50,7 @@ public class StoreService {
         //이미지가 null이 아닌 경우 s3 업로드
         if(image!=null) {
             try {
-                imageUri = S3Util.saveFile(amazonS3, bucket, image);
+                imageUri = S3Utils.saveFile(amazonS3, bucket, image);
             } catch (IOException e) {
                 throw new S3RegisterFailureException("가게 이미지 저장 중 오류가 발생했습니다.");
             }

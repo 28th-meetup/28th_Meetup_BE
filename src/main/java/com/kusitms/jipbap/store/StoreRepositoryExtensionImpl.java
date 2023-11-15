@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.store;
 
-import com.kusitms.jipbap.common.utils.QueryDslUtil;
+import com.kusitms.jipbap.common.utils.QueryDslUtils;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
 import com.kusitms.jipbap.user.User;
@@ -133,19 +133,19 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
                 switch (order.getProperty()) {
                     // 기본 정렬조건: 추천순
                     case "bookmark": // 추천순
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, store, "bookmarkCount"));
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, store, "id"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(direction, store, "bookmarkCount"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(Order.DESC, store, "id"));
                         break;
                     case "review": // 후기순
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, store, "reviewCount"));
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, store, "id"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(direction, store, "reviewCount"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(Order.DESC, store, "id"));
                         break;
                     case "rate": // 평점순
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, store, "avgRate"));
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, store, "id"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(direction, store, "avgRate"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(Order.DESC, store, "id"));
                         break;
                     case "id": // 최신순
-                        orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, store, "id"));
+                        orderSpecifierList.add(QueryDslUtils.getSortedColumn(direction, store, "id"));
                         break;
                     default:
                         break;

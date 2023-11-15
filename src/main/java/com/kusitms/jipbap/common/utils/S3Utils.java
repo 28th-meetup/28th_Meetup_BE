@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
-public class S3Util {
+public class S3Utils {
 
     // originalFilename에 Random UUID 붙여서 같은 파일명 덮어쓰기 방지
     public static String saveFile(AmazonS3 amazonS3, String bucket, MultipartFile multipartFile) throws IOException {
