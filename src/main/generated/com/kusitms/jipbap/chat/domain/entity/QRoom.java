@@ -57,7 +57,7 @@ public class QRoom extends EntityPathBase<Room> {
     public QRoom(Class<? extends Room> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.store = inits.isInitialized("store") ? new com.kusitms.jipbap.store.QStore(forProperty("store"), inits.get("store")) : null;
-        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

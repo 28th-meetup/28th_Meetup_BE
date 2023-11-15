@@ -70,7 +70,7 @@ public class QStore extends EntityPathBase<Store> {
 
     public QStore(Class<? extends Store> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.owner = inits.isInitialized("owner") ? new com.kusitms.jipbap.user.QUser(forProperty("owner")) : null;
+        this.owner = inits.isInitialized("owner") ? new com.kusitms.jipbap.user.QUser(forProperty("owner"), inits.get("owner")) : null;
     }
 
 }
