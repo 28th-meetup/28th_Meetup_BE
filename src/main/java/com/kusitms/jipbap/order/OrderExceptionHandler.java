@@ -19,6 +19,6 @@ public class OrderExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResponse<?> handleOrderNotExistsException(OrderNotExistsException e, HttpServletRequest request) {
         log.warn("ORDER-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.STORE_NOT_FOUND_ERROR);
+        return new CommonResponse<>(ErrorCode.ORDER_NOT_EXISTS_ERROR);
     }
 }
