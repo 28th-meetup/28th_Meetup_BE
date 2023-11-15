@@ -2,7 +2,10 @@ package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.common.response.ErrorCode;
+import com.kusitms.jipbap.order.exception.OrderNotExistsByOrderStatusException;
 import com.kusitms.jipbap.order.exception.OrderNotExistsException;
+import com.kusitms.jipbap.order.exception.OrderNotFoundException;
+import com.kusitms.jipbap.order.exception.OrderStatusFromStringError;
 import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,4 +24,26 @@ public class OrderExceptionHandler {
         log.warn("ORDER-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.ORDER_NOT_EXISTS_ERROR);
     }
+
+    @ExceptionHandler(OrderStatusFromStringError.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleOrderStatusFromStringError(OrderStatusFromStringError e, HttpServletRequest request) {
+        log.warn("ORDER-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.ORDER_STATUS_FROM_STRING_ERROR);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleOrderNotFoundException(OrderNotFoundException e, HttpServletRequest request) {
+        log.warn("ORDER-003> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.ORDER_NOT_FOUND_ERROR);
+    }
+
+    @ExceptionHandler(OrderNotExistsByOrderStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleOrderNotExistsByOrderStatusException(OrderNotExistsByOrderStatusException e, HttpServletRequest request) {
+        log.warn("ORDER-004> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.ORDER_NOT_EXISTS_BY_ORDER_STATUS_ERROR);
+    }
+
 }

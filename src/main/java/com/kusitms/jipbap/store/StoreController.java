@@ -2,6 +2,8 @@ package com.kusitms.jipbap.store;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
+import com.kusitms.jipbap.order.OrderService;
+import com.kusitms.jipbap.order.dto.OrderDto;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
@@ -27,6 +29,7 @@ public class StoreController {
 
     private final int PAGESIZE = 3;
     private final StoreService storeService;
+    private final OrderService orderService;
 
     @Operation(summary = "가게 등록하기")
     @PostMapping
@@ -65,7 +68,6 @@ public class StoreController {
         return new CommonResponse<>(storeService.searchStoreList(authInfo.getEmail(), pageable, keyword, field, direction, lastId));
     }
 
-
     @Operation(summary = "가게 상세정보")
     @GetMapping("/{storeId}")
     public CommonResponse<StoreDetailResponseDto> storeDetail(@Auth AuthInfo authInfo, @PathVariable Long storeId) {
@@ -88,5 +90,12 @@ public class StoreController {
     @GetMapping("/{storeId}/menu")
     public CommonResponse<List<FoodDetailByStoreResponse>> getAllMenuListByStoreId(@PathVariable Long storeId) {
         return new CommonResponse<>(storeService.getAllMenuListByStoreId(storeId));
+    }
+
+    @GetMapping("/{storeId}/orders/{orderStatus}")
+    public CommonResponse<List<OrderDto>> getStoreOrderHistoryByOrderStatus(
+            @PathVariable Long storeId,
+            @PathVariable String orderStatus) {
+        return new CommonResponse<>(orderService.getStoreOrderHistoryByOrderStatus(storeId, orderStatus));
     }
 }

@@ -45,6 +45,9 @@ public enum ErrorCode {
 
     //order
     ORDER_NOT_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 주문입니다."),
+    ORDER_STATUS_FROM_STRING_ERROR(false, HttpStatus.BAD_REQUEST.value(), "주문 상태를 확인할 수 없습니다. 다시 확인해주세요."),
+    ORDER_NOT_FOUND_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문번호를 찾을 수 없습니다."),
+    ORDER_NOT_EXISTS_BY_ORDER_STATUS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문 상태의 주문이 존재하지 않습니다."),
     ;
 
     private Boolean isSuccess;
