@@ -1,6 +1,7 @@
 package com.kusitms.jipbap.store;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
+import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/store")
@@ -82,4 +84,9 @@ public class StoreController {
         return new CommonResponse<>(storeService.findBookmarkedStore(authInfo.getEmail()));
     }
 
+    @Operation(summary = "특정 가게의 메뉴 모두 가져오기")
+    @GetMapping("/{storeId}/menu")
+    public CommonResponse<List<FoodDetailByStoreResponse>> getAllMenuListByStoreId(@PathVariable Long storeId) {
+        return new CommonResponse<>(storeService.getAllMenuListByStoreId(storeId));
+    }
 }

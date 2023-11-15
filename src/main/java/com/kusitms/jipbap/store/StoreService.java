@@ -1,5 +1,8 @@
 package com.kusitms.jipbap.store;
 
+import com.kusitms.jipbap.food.Food;
+import com.kusitms.jipbap.food.FoodRepository;
+import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
 import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
 import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,6 +31,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreBookmarkRepository storeBookmarkRepository;
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
 
     @Transactional
     public StoreDto registerStore(String email, RegisterStoreRequestDto dto) {
@@ -35,7 +40,7 @@ public class StoreService {
             throw new StoreExistsException("이미 가게를 생성한 유저입니다.");
         }
         Store store = storeRepository.save(
-                new Store(null, user, dto.getName(), dto.getDescription(), dto.getKoreanYn(), 0D, dto.getMinOrderAmount(),null, 0L, 0L,  0L)
+                new Store(null, user, user.getGlobalRegion(), dto.getName(), dto.getDescription(), dto.getKoreanYn(), 0D, dto.getMinOrderAmount(),null, 0L, 0L,  0L)
         );
         return new StoreDto(store.getId(), store.getName(), store.getDescription(), store.getKoreanYn(), store.getAvgRate(), store.getBookmarkCount(), store.getImage());
     }
@@ -109,5 +114,18 @@ public class StoreService {
 
     private Boolean isStoreBookmarked(User user, Store store){
         return storeBookmarkRepository.existsByUserAndStore(user, store);
+    }
+
+    public List<FoodDetailByStoreResponse> getAllMenuListByStoreId(Long storeId) {
+        //유효한 storeId인지 검사
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: " + storeId + "에 해당하는 가게가 존재하지 않습니다."));
+        List<Food> foodList = foodRepository.findAllByStore(store);
+
+        List<FoodDetailByStoreResponse> foodDetailByStoreResponseList = foodList.stream()
+                .map(FoodDetailByStoreResponse::new)
+                .collect(Collectors.toList());
+
+        return foodDetailByStoreResponseList;
     }
 }
