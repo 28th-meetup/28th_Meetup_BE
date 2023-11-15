@@ -28,5 +28,5 @@ public class Review extends DateEntity {
 
     private Long rating;
     private String message;
-
+    private String image;
 }

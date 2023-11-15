@@ -18,6 +18,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,8 +35,12 @@ public class StoreController {
     @Operation(summary = "가게 등록하기")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<StoreDto> registerStore(@Auth AuthInfo authInfo, @Valid @RequestBody RegisterStoreRequestDto dto){
-        return new CommonResponse<>(storeService.registerStore(authInfo.getEmail(), dto));
+    public CommonResponse<StoreDto> registerStore(
+            @Auth AuthInfo authInfo,
+            @RequestPart(value = "dto") RegisterStoreRequestDto dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ){
+        return new CommonResponse<>(storeService.registerStore(authInfo.getEmail(), dto, image));
     }
 
     /**

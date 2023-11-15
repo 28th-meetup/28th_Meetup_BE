@@ -55,7 +55,7 @@ public class QStoreBookmark extends EntityPathBase<StoreBookmark> {
     public QStoreBookmark(Class<? extends StoreBookmark> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.store = inits.isInitialized("store") ? new QStore(forProperty("store"), inits.get("store")) : null;
-        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

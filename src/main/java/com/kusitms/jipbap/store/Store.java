@@ -62,6 +62,6 @@ public class Store extends DateEntity {
     }
 
     public void updateAvgRate(Double newRate) {
-        this.avgRate = (avgRate*rateCount+newRate)/(rateCount+1);
+        this.avgRate = (avgRate*rateCount+newRate)/(++rateCount);
     }
 }

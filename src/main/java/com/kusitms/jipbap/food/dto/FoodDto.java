@@ -17,4 +17,5 @@ public class FoodDto {
     private String name;
     private Long price;
     private String description;
+    private String image;
 }
