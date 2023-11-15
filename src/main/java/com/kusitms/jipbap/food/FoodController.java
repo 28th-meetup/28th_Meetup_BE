@@ -44,6 +44,13 @@ public class FoodController {
         return new CommonResponse<>(foodService.getFoodDetail(foodId));
     }
 
+    @Operation(summary = "메뉴 당 옵션 상세조회")
+    @GetMapping("/{foodId}/option")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<List<FoodOptionResponse>> getFoodDetailByOption(@PathVariable Long foodId ) {
+        return new CommonResponse<>(foodService.getFoodDetailByOption(foodId));
+    }
+
     @Operation(summary = "홈에서 현재 지역 내에서 인기메뉴 조회하기")
     @GetMapping("/home")
     @ResponseStatus(HttpStatus.OK)

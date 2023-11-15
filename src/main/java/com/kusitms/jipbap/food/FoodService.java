@@ -111,6 +111,14 @@ public class FoodService {
         return new FoodDetailResponse(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage(), foodOptionResponseList);
     }
 
+    public List<FoodOptionResponse> getFoodDetailByOption(Long foodId) {
+        Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
+        List<FoodOptionResponse> foodOptionResponseList = foodOptionRepository.findAllByFood(food).stream()
+                .map(foodOption -> new FoodOptionResponse(foodOption.getId(), foodOption.getName(), foodOption.getDollarPrice(), foodOption.getCanadaPrice()))
+                .collect(Collectors.toList());
+        return foodOptionResponseList;
+    }
+
     public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
