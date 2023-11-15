@@ -26,4 +26,11 @@ public class OrderController {
         return new CommonResponse<>(orderService.orderFood(dto));
     }
 
+    @Operation(summary = "주문 내역 확인하기")
+    @GetMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<OrderDto> getOrderDetail(@PathVariable Long orderId) {
+        return new CommonResponse<>(orderService.getOrderDetail(orderId));
+    }
+
 }

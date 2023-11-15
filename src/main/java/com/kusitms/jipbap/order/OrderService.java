@@ -7,6 +7,7 @@ import com.kusitms.jipbap.food.dto.CategoryDto;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.order.dto.OrderDto;
 import com.kusitms.jipbap.order.dto.OrderFoodRequestDto;
+import com.kusitms.jipbap.order.exception.OrderNotExistsException;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
@@ -28,9 +29,20 @@ public class OrderService {
         Food food = foodRepository.findById(dto.getFood()).orElseThrow(()-> new FoodNotExistsException("해당 음식은 유효하지 않습니다."));
 
         Order order = orderRepository.save(
-                new Order(null, user, food, dto.getOrderCount(), dto.getTotalPrice(), user.getGlobalRegion().getId())
+                Order.builder()
+                        .user(user)
+                        .food(food)
+                        .orderCount(dto.getOrderCount())
+                        .totalPrice(dto.getTotalPrice())
+                        .regionId(user.getGlobalRegion().getId())
+                        .status(OrderStatus.PENDING)
+                        .build()
         );
+        return new OrderDto(order);
+    }
 
-        return new OrderDto(order.getId(), user.getId(), food.getId(), order.getOrderCount(), order.getTotalPrice());
+    public OrderDto getOrderDetail(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotExistsException("해당 주문은 유효하지 않습니다."));
+        return new OrderDto(order);
     }
 }

@@ -6,6 +6,8 @@ import com.kusitms.jipbap.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @Entity
 @Table(name = "tb_order")
 @Builder
@@ -28,10 +30,16 @@ public class Order extends DateEntity {
     @JoinColumn(name = "food_id")
     private Food food;
 
+    @NotNull
     private Long orderCount;
+
+    @NotNull
     private Long totalPrice;
+
+    @NotNull
     private Long regionId; // 관계로 묶으면 너무 많아질 것 같아서 일단 Long으로
 
-//    @Enumerated(EnumType.STRING)
-//    private OrderStatus status;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 }
