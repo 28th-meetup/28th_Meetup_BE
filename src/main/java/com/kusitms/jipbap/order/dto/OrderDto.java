@@ -10,12 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-
     private Long id;
-
     private Long user;
-
     private Long food;
-
     private Long orderCount;
+    private Long totalPrice;
 }

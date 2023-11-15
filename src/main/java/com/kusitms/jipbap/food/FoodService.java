@@ -1,11 +1,9 @@
 package com.kusitms.jipbap.food;
 
-import com.kusitms.jipbap.food.dto.CategoryDto;
-import com.kusitms.jipbap.food.dto.FoodDto;
-import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
-import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
+import com.kusitms.jipbap.food.dto.*;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
+import com.kusitms.jipbap.order.OrderRepository;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -14,8 +12,16 @@ import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +32,7 @@ public class FoodService {
     private final StoreRepository storeRepository;
     private final FoodRepository foodRepository;
     private final CategoryRepository categoryRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional
     public CategoryDto registerCategory(RegisterCategoryRequestDto dto) {
@@ -50,5 +57,21 @@ public class FoodService {
     public FoodDto getFoodDetail(Long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
         return new FoodDto(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getPrice(), food.getDescription());
+    }
+
+    public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(user.getGlobalRegion().getId());
+
+        List<BestSellingFoodResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
+                .map(food -> new BestSellingFoodResponse(
+                        food.getName(),
+                        food.getStore().getName(),
+                        food.getPrice()
+                ))
+                .collect(Collectors.toList());
+
+        return bestSellingFoodResponseList;
     }
 }

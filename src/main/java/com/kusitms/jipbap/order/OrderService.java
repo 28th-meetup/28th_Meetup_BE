@@ -28,9 +28,9 @@ public class OrderService {
         Food food = foodRepository.findById(dto.getFood()).orElseThrow(()-> new FoodNotExistsException("해당 음식은 유효하지 않습니다."));
 
         Order order = orderRepository.save(
-                new Order(null, user, food, dto.getOrderCount())
+                new Order(null, user, food, dto.getOrderCount(), dto.getTotalPrice(), user.getGlobalRegion().getId())
         );
 
-        return new OrderDto(order.getId(), user.getId(), food.getId(), order.getOrderCount());
+        return new OrderDto(order.getId(), user.getId(), food.getId(), order.getOrderCount(), order.getTotalPrice());
     }
 }
