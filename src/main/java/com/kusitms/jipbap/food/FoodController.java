@@ -40,7 +40,7 @@ public class FoodController {
     @Operation(summary = "메뉴 하나 상세조회")
     @GetMapping("/{foodId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<FoodDto> getFoodDetail(@PathVariable Long foodId) {
+    public CommonResponse<FoodDetailResponse> getFoodDetail(@PathVariable Long foodId) {
         return new CommonResponse<>(foodService.getFoodDetail(foodId));
     }
 

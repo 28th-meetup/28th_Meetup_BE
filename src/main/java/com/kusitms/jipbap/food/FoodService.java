@@ -103,9 +103,12 @@ public class FoodService {
          return new FoodDto(food.getId(), store.getId(), category.getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage());
     }
 
-    public FoodDto getFoodDetail(Long foodId) {
+    public FoodDetailResponse getFoodDetail(Long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
-        return new FoodDto(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage());
+        List<FoodOptionResponse> foodOptionResponseList = foodOptionRepository.findAllByFood(food).stream()
+                .map(foodOption -> new FoodOptionResponse(foodOption.getId(), foodOption.getName(), foodOption.getDollarPrice(), foodOption.getCanadaPrice()))
+                .collect(Collectors.toList());
+        return new FoodDetailResponse(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage(), foodOptionResponseList);
     }
 
     public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
