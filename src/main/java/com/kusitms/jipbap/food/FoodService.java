@@ -14,6 +14,7 @@ import com.kusitms.jipbap.order.OrderRepository;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
+import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -109,7 +110,8 @@ public class FoodService {
                         food.getCategory().getId(),
                         food.getName(),
                         food.getPrice(),
-                        food.getDescription()
+                        food.getDescription(),
+                        food.getImage()
                 ))
                 .collect(Collectors.toList());
 

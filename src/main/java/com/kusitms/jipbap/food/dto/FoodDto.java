@@ -18,4 +18,6 @@ public class FoodDto {
     private Long price;
     private String description;
     private String image;
+
+
 }
