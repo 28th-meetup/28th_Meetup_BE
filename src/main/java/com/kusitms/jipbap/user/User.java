@@ -49,6 +49,9 @@ public class User extends DateEntity {
 
     private String image; //프로필 사진
 
+    @Enumerated(EnumType.STRING)
+    private CountryPhoneCode countryPhoneCode; //국가 전화번호 코드
+
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
