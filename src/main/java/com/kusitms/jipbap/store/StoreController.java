@@ -38,7 +38,7 @@ public class StoreController {
     public CommonResponse<StoreDto> registerStore(
             @Auth AuthInfo authInfo,
             @RequestPart(value = "dto") RegisterStoreRequestDto dto,
-            @RequestPart(value = "image", required = false) MultipartFile image
+            @RequestPart(value = "image", required = false) List<MultipartFile> image
     ){
         return new CommonResponse<>(storeService.registerStore(authInfo.getEmail(), dto, image));
     }

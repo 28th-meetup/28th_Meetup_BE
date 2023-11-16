@@ -17,5 +17,5 @@ public class StoreDto {
     private Boolean koreanYn;
     private Double avgRate; // 가게 평점
     private Long minOrderAmount; //최소 주문 금액
-    private String image;
+    private String[] images;
 }

@@ -45,27 +45,52 @@ public class StoreService {
     private String bucket;
 
     @Transactional
-    public StoreDto registerStore(String email, RegisterStoreRequestDto dto, MultipartFile image) {
+    public StoreDto registerStore(String email, RegisterStoreRequestDto dto, List<MultipartFile> image) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        String imageUri = null;
+        String[] imageUri = new String[3];
         if(storeRepository.existsByOwner(user)) {
             throw new StoreExistsException("이미 가게를 생성한 유저입니다.");
         }
 
         //이미지가 null이 아닌 경우 s3 업로드
-        if(image!=null) {
-            try {
-                imageUri = S3Utils.saveFile(amazonS3, bucket, image);
-            } catch (IOException e) {
-                throw new S3RegisterFailureException("가게 이미지 저장 중 오류가 발생했습니다.");
+        for(int i=0; i<3; i++) {
+            if(image.get(i)!=null) {
+                try {
+                    imageUri[i] = S3Utils.saveFile(amazonS3, bucket, image.get(i));
+                } catch (IOException e) {
+                    throw new S3RegisterFailureException("가게 이미지 저장 중 오류가 발생했습니다.");
+                }
             }
         }
 
         Store store = storeRepository.save(
-                new Store(null, user, user.getGlobalRegion(), dto.getName(), dto.getDescription(), dto.getKoreanYn(), 0D, dto.getMinOrderAmount(),null, 0L, 0L,  0L)
+                Store.builder()
+                        .id(null)
+                        .owner(user)
+                        .globalRegion(user.getGlobalRegion())
+                        .name(dto.getName())
+                        .description(dto.getDescription())
+                        .koreanYn(dto.getKoreanYn())
+                        .avgRate(0D)
+                        .minOrderAmount(dto.getMinOrderAmount())
+                        .image(imageUri[0])
+                        .image2(imageUri[1])
+                        .image3(imageUri[2])
+                        .reviewCount(0L)
+                        .bookmarkCount(0L)
+                        .rateCount(0L)
+                        .build()
         );
 
-        return new StoreDto(store.getId(), store.getName(), store.getDescription(), store.getKoreanYn(), store.getAvgRate(), store.getBookmarkCount(), store.getImage());
+        return new StoreDto(
+                store.getId(),
+                store.getName(),
+                store.getDescription(),
+                store.getKoreanYn(),
+                store.getAvgRate(),
+                store.getBookmarkCount(),
+                imageUri
+                );
     }
 
     @Transactional
@@ -82,6 +107,7 @@ public class StoreService {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+
         return new StoreDetailResponseDto(
                 new StoreDto(
                     store.getId(),
@@ -90,7 +116,7 @@ public class StoreService {
                     store.getKoreanYn(),
                     store.getAvgRate(),
                     store.getMinOrderAmount(),
-                    store.getImage()
+                    new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 ),
                 isStoreBookmarked(user, store)
         );
@@ -111,7 +137,7 @@ public class StoreService {
                 store.getKoreanYn(),
                 store.getAvgRate(),
                 store.getMinOrderAmount(),
-                store.getImage()
+                new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 );
     }
 
@@ -122,6 +148,7 @@ public class StoreService {
         List<StoreBookmark> storeBookmarks = storeBookmarkRepository.findByUser(user);
         List<StoreDto> sbList = new ArrayList<>();
 
+
         for (StoreBookmark sb : storeBookmarks) {
             sbList.add(new StoreDto(
                     sb.getId(),
@@ -130,7 +157,7 @@ public class StoreService {
                     sb.getStore().getKoreanYn(),
                     sb.getStore().getAvgRate(),
                     sb.getStore().getMinOrderAmount(),
-                    sb.getStore().getImage()
+                    new String[]{sb.getStore().getImage(), sb.getStore().getImage2(), sb.getStore().getImage3()}
                 )
             );
         }
