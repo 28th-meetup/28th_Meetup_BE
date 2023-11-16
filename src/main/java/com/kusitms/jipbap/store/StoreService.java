@@ -53,12 +53,14 @@ public class StoreService {
         }
 
         //이미지가 null이 아닌 경우 s3 업로드
-        for(int i=0; i<3; i++) {
-            if(image.get(i)!=null) {
-                try {
-                    imageUri[i] = S3Utils.saveFile(amazonS3, bucket, image.get(i));
-                } catch (IOException e) {
-                    throw new S3RegisterFailureException("가게 이미지 저장 중 오류가 발생했습니다.");
+        if(image != null && image.size() != 0) {
+            for(int i=0; i<3; i++) {
+                if(image.get(i)!=null) {
+                    try {
+                        imageUri[i] = S3Utils.saveFile(amazonS3, bucket, image.get(i));
+                    } catch (IOException e) {
+                        throw new S3RegisterFailureException("가게 이미지 저장 중 오류가 발생했습니다.");
+                    }
                 }
             }
         }
