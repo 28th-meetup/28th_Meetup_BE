@@ -47,6 +47,8 @@ public class Store extends DateEntity {
     private Double avgRate; // 가게 평점
     private Long minOrderAmount; //최소 주문 금액
     private String image;
+    private String image2;
+    private String image3;
 
     private Long reviewCount; // 가게 후기 개수
     private Long bookmarkCount; // 가게 즐겨찾기 횟수 (추천순)

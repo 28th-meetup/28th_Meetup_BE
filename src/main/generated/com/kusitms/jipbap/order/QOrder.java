@@ -33,6 +33,12 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final NumberPath<Long> orderCount = createNumber("orderCount", Long.class);
 
+    public final NumberPath<Long> regionId = createNumber("regionId", Long.class);
+
+    public final EnumPath<OrderStatus> status = createEnum("status", OrderStatus.class);
+
+    public final NumberPath<Long> totalPrice = createNumber("totalPrice", Long.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 

@@ -33,9 +33,15 @@ public class QStore extends EntityPathBase<Store> {
 
     public final StringPath description = createString("description");
 
+    public final com.kusitms.jipbap.user.entity.QGlobalRegion globalRegion;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath image = createString("image");
+
+    public final StringPath image2 = createString("image2");
+
+    public final StringPath image3 = createString("image3");
 
     public final BooleanPath koreanYn = createBoolean("koreanYn");
 
@@ -70,6 +76,7 @@ public class QStore extends EntityPathBase<Store> {
 
     public QStore(Class<? extends Store> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.globalRegion = inits.isInitialized("globalRegion") ? new com.kusitms.jipbap.user.entity.QGlobalRegion(forProperty("globalRegion")) : null;
         this.owner = inits.isInitialized("owner") ? new com.kusitms.jipbap.user.QUser(forProperty("owner"), inits.get("owner")) : null;
     }
 

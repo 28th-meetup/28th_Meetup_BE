@@ -43,6 +43,10 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
         List<StoreDetailResponseDto> dtoList = new ArrayList<>();
 
         for(Store s: storeList) {
+            String[] strArr = new String[3];
+            strArr[0] = s.getImage();
+            strArr[1] = s.getImage2();
+            strArr[2] = s.getImage3();
             dtoList.add(new StoreDetailResponseDto(
                     new StoreDto(
                         s.getId(),
@@ -51,7 +55,7 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
                         s.getKoreanYn(),
                         s.getAvgRate(),
                         s.getMinOrderAmount(),
-                        s.getImage()
+                        strArr
                     ),
                     isUserBookmarkedStore(user, s)
             ));
@@ -77,8 +81,8 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
     private BooleanExpression lastStore(Pageable pageable, List<OrderSpecifier<?>> specifiers, Long id) {
         if(id==null) return null;
 
-        Store stdStore = queryFactory.selectFrom(QStore.store)
-                .where(QStore.store.id.eq(id))
+        Store stdStore = queryFactory.selectFrom(store)
+                .where(store.id.eq(id))
                 .fetchFirst();
 
         for (Sort.Order order : pageable.getSort()) {
