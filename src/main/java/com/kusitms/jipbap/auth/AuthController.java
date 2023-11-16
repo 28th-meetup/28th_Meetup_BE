@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(summary = "일반 회원 가입")
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<String> signUp(@Valid @RequestBody SignUpRequestDto dto) {
         authService.signUp(dto);
@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @Operation(summary = "로그인")
-    @PostMapping("/signIn")
+    @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<SignInResponseDto> signIn(@Valid @RequestBody SignInRequestDto dto) {
         return new CommonResponse<>(authService.signIn(dto.getEmail(), dto.getPassword()));
