@@ -11,6 +11,7 @@ import com.kusitms.jipbap.auth.dto.SignUpRequestDto;
 import com.kusitms.jipbap.auth.exception.*;
 import com.kusitms.jipbap.security.jwt.JwtTokenProvider;
 import com.kusitms.jipbap.security.jwt.TokenInfo;
+import com.kusitms.jipbap.user.CountryPhoneCode;
 import com.kusitms.jipbap.user.Role;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
@@ -60,7 +61,7 @@ public class AuthService {
                         .email(dto.getEmail())
                         .password(passwordEncoder.encode(dto.getPassword()))
                         .username(dto.getUsername())
-                        .address(dto.getAddress())
+                        .countryPhoneCode(dto.getCountryPhoneCode())
                         .phoneNum(dto.getPhoneNum())
                         .role(dto.getRole())
                         .refreshToken(null)
@@ -151,7 +152,7 @@ public class AuthService {
                     kakaoUser.getEmail(),
                     kakaoUser.getPassword(),
                     kakaoUser.getUsername(),
-                    kakaoUser.getAddress(),
+                    CountryPhoneCode.KOREA, // 카카오
                     kakaoUser.getPhoneNum(),
                     Role.USER,
                     kakaoUser.getImage()
