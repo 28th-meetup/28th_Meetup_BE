@@ -24,6 +24,8 @@ public class QFood extends EntityPathBase<Food> {
 
     public final com.kusitms.jipbap.common.entity.QDateEntity _super = new com.kusitms.jipbap.common.entity.QDateEntity(this);
 
+    public final NumberPath<Long> canadaPrice = createNumber("canadaPrice", Long.class);
+
     public final QCategory category;
 
     //inherited
@@ -31,13 +33,15 @@ public class QFood extends EntityPathBase<Food> {
 
     public final StringPath description = createString("description");
 
+    public final NumberPath<Long> dollarPrice = createNumber("dollarPrice", Long.class);
+
+    public final StringPath foodPackage = createString("foodPackage");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath image = createString("image");
 
     public final StringPath name = createString("name");
-
-    public final NumberPath<Long> price = createNumber("price", Long.class);
 
     public final NumberPath<Long> recommendCount = createNumber("recommendCount", Long.class);
 

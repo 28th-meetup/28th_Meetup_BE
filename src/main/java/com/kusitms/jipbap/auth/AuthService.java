@@ -134,7 +134,8 @@ public class AuthService {
      * @return
      */
     @Transactional
-    public SignInResponseDto kakaoAutoSignIn(KakaoProfileDto profile) {
+    public KakaoSignInResponseDto kakaoAutoSignIn(KakaoProfileDto profile) {
+        boolean isSignUp = false;
         User kakaoUser = User.builder()
                 .email(profile.getKakao_account().getEmail())
                 .username(profile.getProperties().getNickname())
@@ -145,6 +146,7 @@ public class AuthService {
 
         if(userRepository.findByEmail(kakaoUser.getEmail()).isEmpty()) {
             log.info(profile.getKakao_account().getEmail()+": 기존 회원이 아니므로 자동 회원가입 후 로그인을 진행합니다.");
+            isSignUp = true;
             signUp(new SignUpRequestDto(
                     kakaoUser.getEmail(),
                     kakaoUser.getPassword(),
@@ -160,7 +162,7 @@ public class AuthService {
 
         User findUser = userRepository.findByEmail(kakaoUser.getEmail()).orElseThrow(()->new UserNotFoundException("카카오 회원가입 도중 문제가 발생했습니다."));
         findUser.updateOAuth(KAKAO);
-        return signIn(kakaoUser.getEmail(), kakaoUser.getPassword());
+        return new KakaoSignInResponseDto(signIn(kakaoUser.getEmail(), kakaoUser.getPassword()), isSignUp);
     }
 
     /**
