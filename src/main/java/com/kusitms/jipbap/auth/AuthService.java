@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kusitms.jipbap.auth.dto.KakaoProfileDto;
-import com.kusitms.jipbap.auth.dto.ReissueResponseDto;
-import com.kusitms.jipbap.auth.dto.SignInResponseDto;
-import com.kusitms.jipbap.auth.dto.SignUpRequestDto;
+import com.kusitms.jipbap.auth.dto.*;
 import com.kusitms.jipbap.auth.exception.*;
 import com.kusitms.jipbap.security.jwt.JwtTokenProvider;
 import com.kusitms.jipbap.security.jwt.TokenInfo;
+import com.kusitms.jipbap.user.CountryPhoneCode;
 import com.kusitms.jipbap.user.Role;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
@@ -50,24 +48,24 @@ public class AuthService {
      * @param dto
      */
     @Transactional
-    public void signUp(SignUpRequestDto dto) {
+    public SignUpResponseDto signUp(SignUpRequestDto dto) {
 
         if(userRepository.existsByEmail(dto.getEmail())) throw new EmailExistsException("이미 가입한 이메일입니다.");
         if(userRepository.existsByUsername(dto.getUsername())) throw new UsernameExistsException("이미 존재하는 닉네임입니다.");
-        userRepository.save(
+        User user = userRepository.save(
                 User.builder()
                         .id(null)
                         .email(dto.getEmail())
                         .password(passwordEncoder.encode(dto.getPassword()))
                         .username(dto.getUsername())
-                        .address(dto.getAddress())
+                        .countryPhoneCode(dto.getCountryPhoneCode())
                         .phoneNum(dto.getPhoneNum())
                         .role(dto.getRole())
                         .refreshToken(null)
                         .oauth(INAPP)
                         .build()
         );
-
+        return new SignUpResponseDto(user.getId(), user.getEmail(), user.getUsername());
     }
 
     /**
@@ -151,7 +149,7 @@ public class AuthService {
                     kakaoUser.getEmail(),
                     kakaoUser.getPassword(),
                     kakaoUser.getUsername(),
-                    kakaoUser.getAddress(),
+                    CountryPhoneCode.KOREA, // 카카오
                     kakaoUser.getPhoneNum(),
                     Role.USER,
                     kakaoUser.getImage()

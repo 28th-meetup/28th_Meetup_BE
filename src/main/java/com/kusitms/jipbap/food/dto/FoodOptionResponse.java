@@ -9,9 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BestSellingFoodResponse {
+public class FoodOptionResponse {
+    private Long id;
     private String name;
-    private String storeName;
     private Long dollarPrice;
     private Long canadaPrice;
 }

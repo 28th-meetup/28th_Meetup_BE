@@ -40,6 +40,7 @@ public class FoodService {
     private final FoodRepository foodRepository;
     private final CategoryRepository categoryRepository;
     private final OrderRepository orderRepository;
+    private final FoodOptionRepository foodOptionRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -72,14 +73,50 @@ public class FoodService {
         }
 
         Food food = foodRepository.save(
-                new Food(null, store, category, dto.getName(), dto.getPrice(), dto.getDescription(), 0L, imageUri)
+                Food.builder()
+                        .store(store)
+                        .category(category)
+                        .name(dto.getName())
+                        .dollarPrice(dto.getDollarPrice())
+                        .canadaPrice(dto.getCanadaPrice())
+                        .description(dto.getDescription())
+                        .recommendCount(0L)
+                        .image(imageUri)
+                        .foodPackage(dto.getFoodPackage())
+                        .build()
         );
-        return new FoodDto(food.getId(), store.getId(), category.getId(), food.getName(), food.getPrice(), food.getDescription(), food.getImage());
+
+        // FoodOption 저장
+        if (dto.getFoodOptionRequestList() != null && !dto.getFoodOptionRequestList().isEmpty()) {
+            for (FoodOptionRequest foodOptionRequest : dto.getFoodOptionRequestList()) {
+                FoodOption foodOption = FoodOption.builder()
+                        .food(food)
+                        .name(foodOptionRequest.getName())
+                        .dollarPrice(foodOptionRequest.getDollarPrice())
+                        .canadaPrice(foodOptionRequest.getCanadaPrice())
+                        .build();
+
+                foodOptionRepository.save(foodOption);
+            }
+        }
+
+         return new FoodDto(food.getId(), store.getId(), category.getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage());
     }
 
-    public FoodDto getFoodDetail(Long foodId) {
+    public FoodDetailResponse getFoodDetail(Long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
-        return new FoodDto(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getPrice(), food.getDescription(), food.getImage());
+        List<FoodOptionResponse> foodOptionResponseList = foodOptionRepository.findAllByFood(food).stream()
+                .map(foodOption -> new FoodOptionResponse(foodOption.getId(), foodOption.getName(), foodOption.getDollarPrice(), foodOption.getCanadaPrice()))
+                .collect(Collectors.toList());
+        return new FoodDetailResponse(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getDescription(), food.getImage(), foodOptionResponseList);
+    }
+
+    public List<FoodOptionResponse> getFoodDetailByOption(Long foodId) {
+        Food food = foodRepository.findById(foodId).orElseThrow(()-> new FoodNotExistsException("해당 음식 Id는 유효하지 않습니다."));
+        List<FoodOptionResponse> foodOptionResponseList = foodOptionRepository.findAllByFood(food).stream()
+                .map(foodOption -> new FoodOptionResponse(foodOption.getId(), foodOption.getName(), foodOption.getDollarPrice(), foodOption.getCanadaPrice()))
+                .collect(Collectors.toList());
+        return foodOptionResponseList;
     }
 
     public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
@@ -91,7 +128,8 @@ public class FoodService {
                 .map(food -> new BestSellingFoodResponse(
                         food.getName(),
                         food.getStore().getName(),
-                        food.getPrice()
+                        food.getDollarPrice(),
+                        food.getCanadaPrice()
                 ))
                 .collect(Collectors.toList());
 
@@ -109,7 +147,8 @@ public class FoodService {
                         food.getStore().getId(),
                         food.getCategory().getId(),
                         food.getName(),
-                        food.getPrice(),
+                        food.getDollarPrice(),
+                        food.getCanadaPrice(),
                         food.getDescription(),
                         food.getImage()
                 ))
