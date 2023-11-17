@@ -26,6 +26,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath address = createString("address");
 
+    public final EnumPath<CountryPhoneCode> countryPhoneCode = createEnum("countryPhoneCode", CountryPhoneCode.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

@@ -35,7 +35,7 @@ public class AuthController {
     @Operation(summary = "카카오 회원 가입(로그인)")
     @PostMapping("/kakao")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<SignInResponseDto> kakaoVerification(@RequestBody KakaoSignInRequestDto dto) {
+    public CommonResponse<KakaoSignInResponseDto> kakaoVerification(@RequestBody KakaoSignInRequestDto dto) {
         return new CommonResponse<>(authService.kakaoAutoSignIn(authService.getKakaoProfile(dto.getToken())));
     }
 
