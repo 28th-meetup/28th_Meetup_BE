@@ -20,5 +20,4 @@ public class FoodDto {
     private String description;
     private String image;
 
-
 }

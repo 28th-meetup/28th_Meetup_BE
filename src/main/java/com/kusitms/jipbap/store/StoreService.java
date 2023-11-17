@@ -114,7 +114,7 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         List<FoodDto> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
-                .stream().map(f -> new FoodDto(f.getId(), f.getStore().getId(), f.getCategory().getId(), f.getName(), f.getPrice(), f.getDescription(), f.getImage()))
+                .stream().map(f -> new FoodDto(f.getId(), f.getStore().getId(), f.getCategory().getId(), f.getName(), f.getDollarPrice(), f.getCanadaPrice(), f.getDescription(), f.getImage()))
                 .collect(Collectors.toList());
 
 
