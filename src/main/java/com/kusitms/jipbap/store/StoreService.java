@@ -51,8 +51,8 @@ public class StoreService {
         }
 
         //이미지가 null이 아닌 경우 s3 업로드
-        for(int i=0; i<3; i++) {
-            if(image.get(i)!=null) {
+        if(image != null) {
+            for(int i=0; i<image.size(); i++) {
                 try {
                     imageUri[i] = S3Utils.saveFile(amazonS3, bucket, image.get(i));
                 } catch (IOException e) {
