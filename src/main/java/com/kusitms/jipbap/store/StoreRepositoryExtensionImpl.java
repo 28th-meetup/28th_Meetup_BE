@@ -1,6 +1,7 @@
 package com.kusitms.jipbap.store;
 
 import com.kusitms.jipbap.common.utils.QueryDslUtils;
+import com.kusitms.jipbap.food.Food;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
 import com.kusitms.jipbap.user.User;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kusitms.jipbap.food.QFood.food;
 import static com.kusitms.jipbap.store.QStore.store;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -29,7 +31,7 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
     @Override
     public Slice<StoreDetailResponseDto> searchByKeywordOrderBySort(User user, Pageable pageable, String keyword, String standard, String order, Long lastId) {
 
-        List<OrderSpecifier<?>> orderSpecifiers = getAllOrderSpecifiers(pageable);
+        List<OrderSpecifier<?>> orderSpecifiers = getAllOrderSpecifiersByPageable(pageable);
 
         List<Store> storeList = queryFactory.selectFrom(store)
                 .where(
@@ -69,6 +71,19 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
         }
 
         return new SliceImpl<>(dtoList, pageable, hasNext);
+    }
+
+    @Override
+    public List<Store> searchByNameOrderBySort(User user, Pageable pageable, String keyword, String standard, String order) {
+
+        List<OrderSpecifier<?>> orderSpecifiers = getAllOrderSpecifiersByPageable(pageable);
+
+        return queryFactory.selectFrom(store)
+                .where(
+                        containsKeyword(keyword)
+                )
+                .orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new))
+                .fetch();
     }
 
     // user가 즐겨찾기한 store인지 검사
@@ -125,7 +140,7 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
         return store.name.contains(keyword);
     }
 
-    private List<OrderSpecifier<?>> getAllOrderSpecifiers(Pageable pageable) {
+    private List<OrderSpecifier<?>> getAllOrderSpecifiersByPageable(Pageable pageable) {
 
         List<OrderSpecifier<?>> orderSpecifierList = new ArrayList<>();
 

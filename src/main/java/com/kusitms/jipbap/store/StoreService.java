@@ -6,10 +6,8 @@ import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
 import com.amazonaws.services.s3.AmazonS3;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
-import com.kusitms.jipbap.store.dto.BookmarkedStoreListResponseDto;
-import com.kusitms.jipbap.store.dto.RegisterStoreRequestDto;
-import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
-import com.kusitms.jipbap.store.dto.StoreDto;
+import com.kusitms.jipbap.food.dto.FoodDto;
+import com.kusitms.jipbap.store.dto.*;
 import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import com.kusitms.jipbap.user.User;
@@ -100,6 +98,27 @@ public class StoreService {
             storeRepository.findById(lastId).orElseThrow(()-> new StoreNotExistsException("lastId: "+lastId+"에 해당하는 가게가 존재하지 않습니다."));
 
         return storeRepository.searchByKeywordOrderBySort(user, pageable, keyword, standard, order, lastId);
+    }
+
+    @Transactional
+    public StoreFoodResponseDto searchStoresAndFoods(String email, Pageable pageable, String keyword, String standard, String order) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        List<StoreDetailResponseDto> storeList = storeRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
+                .stream().map(s -> new StoreDetailResponseDto(
+                        new StoreDto(
+                                s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), s.getAvgRate(), s.getMinOrderAmount(),
+                                new String[]{s.getImage(), s.getImage2(), s.getImage3()}
+                        ), storeBookmarkRepository.existsByUserAndStore(user, s))
+                )
+                .collect(Collectors.toList());
+
+        List<FoodDto> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
+                .stream().map(f -> new FoodDto(f.getId(), f.getStore().getId(), f.getCategory().getId(), f.getName(), f.getPrice(), f.getDescription(), f.getImage()))
+                .collect(Collectors.toList());
+
+
+        return new StoreFoodResponseDto(storeList, foodList);
     }
 
     @Transactional
