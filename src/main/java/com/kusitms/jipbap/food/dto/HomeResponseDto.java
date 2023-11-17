@@ -5,15 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BestSellingFoodResponse {
-    private Long foodId;
-    private String name;
-    private String storeName;
-    private Long dollarPrice;
-    private Long canadaPrice;
-    private Double avgRate;
+public class HomeResponseDto {
+    private Long globalRegionId;
+    List<BestSellingFoodResponse> bestSellingFoodList;
+    List<BestSellingFoodResponse> recentSetFoodList;
 }

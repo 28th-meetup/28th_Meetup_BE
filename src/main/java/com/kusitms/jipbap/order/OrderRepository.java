@@ -15,4 +15,7 @@ public interface OrderRepository extends JpaRepository <Order, Long> {
 
     Optional<List<Order>> findByFood_Store_IdAndStatus(Long storeId, OrderStatus status);
 
+    @Query("SELECT o.food FROM Order o WHERE o.regionId = :regionId ORDER BY o.id DESC LIMIT 4")
+    List<Food> findLatestFoodsByRegionId(@Param("regionId") Long regionId);
+
 }
