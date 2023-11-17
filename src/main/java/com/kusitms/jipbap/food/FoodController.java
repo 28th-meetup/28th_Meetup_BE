@@ -51,11 +51,11 @@ public class FoodController {
         return new CommonResponse<>(foodService.getFoodDetailByOption(foodId));
     }
 
-    @Operation(summary = "홈에서 현재 지역 내에서 인기메뉴 조회하기")
+    @Operation(summary = "홈에서 데이터 조회하기")
     @GetMapping("/home")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<BestSellingFoodResponse>> getBestSellingFoodByRegion(@Auth AuthInfo authInfo) {
-        return new CommonResponse<>(foodService.getBestSellingFoodByRegion(authInfo.getEmail()));
+    public CommonResponse<HomeResponseDto> getInfoFromHome(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(foodService.getInfoFromHome(authInfo.getEmail()));
     }
 
     @Operation(summary = "특정 카테고리에 속하는 메뉴 조회하기")

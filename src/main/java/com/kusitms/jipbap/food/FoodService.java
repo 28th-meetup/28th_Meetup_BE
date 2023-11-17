@@ -119,21 +119,50 @@ public class FoodService {
         return foodOptionResponseList;
     }
 
-    public List<BestSellingFoodResponse> getBestSellingFoodByRegion(String email) {
+    public HomeResponseDto getInfoFromHome(String email){
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
-        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(user.getGlobalRegion().getId());
+        Long globalRegionId = user.getGlobalRegion().getId();
+        List<BestSellingFoodResponse> bestSellingFoodResponseList = getBestSellingFoodByRegion(globalRegionId);
+        List<BestSellingFoodResponse> latestSellingFoodResponseList = getLatestSellingFoodByRegion(globalRegionId);
+
+        return new HomeResponseDto(globalRegionId, bestSellingFoodResponseList,latestSellingFoodResponseList);
+    }
+
+    private List<BestSellingFoodResponse> getBestSellingFoodByRegion(Long globalRegionId){
+
+        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(globalRegionId);
 
         List<BestSellingFoodResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
                 .map(food -> new BestSellingFoodResponse(
+                        food.getId(),
                         food.getName(),
                         food.getStore().getName(),
                         food.getDollarPrice(),
-                        food.getCanadaPrice()
+                        food.getCanadaPrice(),
+                        food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
 
         return bestSellingFoodResponseList;
+    }
+
+    private List<BestSellingFoodResponse> getLatestSellingFoodByRegion(Long globalRegionId){
+
+        List<Food> latestFoodsInRegionList = orderRepository.findLatestFoodsByRegionId(globalRegionId);
+
+        List<BestSellingFoodResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
+                .map(food -> new BestSellingFoodResponse(
+                        food.getId(),
+                        food.getName(),
+                        food.getStore().getName(),
+                        food.getDollarPrice(),
+                        food.getCanadaPrice(),
+                        food.getStore().getAvgRate()
+                ))
+                .collect(Collectors.toList());
+
+        return latestSellingFoodResponseList;
     }
 
     public List<FoodDto> getFoodByCategory(Long categoryId){
