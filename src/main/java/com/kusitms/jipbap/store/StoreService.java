@@ -12,7 +12,10 @@ import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
+import com.kusitms.jipbap.user.entity.GlobalRegion;
+import com.kusitms.jipbap.user.exception.RegionNotFoundException;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
+import com.kusitms.jipbap.user.repository.GlobalRegionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +39,7 @@ public class StoreService {
     private final StoreBookmarkRepository storeBookmarkRepository;
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
+    private final GlobalRegionRepository globalRegionRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -43,8 +47,9 @@ public class StoreService {
     private String bucket;
 
     @Transactional
-    public StoreDto registerStore(String email, RegisterStoreRequestDto dto, List<MultipartFile> image) {
+    public RegisterStoreResponse registerStore(String email, RegisterStoreRequestDto dto, List<MultipartFile> image) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        GlobalRegion globalRegion = globalRegionRepository.findById(dto.getGlobalRegionId()).orElseThrow(()-> new RegionNotFoundException("지역정보가 존재하지 않습니다."));
         String[] imageUri = new String[3];
         if(storeRepository.existsByOwner(user)) {
             throw new StoreExistsException("이미 가게를 생성한 유저입니다.");
@@ -63,31 +68,33 @@ public class StoreService {
 
         Store store = storeRepository.save(
                 Store.builder()
-                        .id(null)
                         .owner(user)
-                        .globalRegion(user.getGlobalRegion())
+                        .globalRegion(globalRegion)
+                        .address(dto.getAddress())
+                        .detailAddress(dto.getDetailAddress())
                         .name(dto.getName())
                         .description(dto.getDescription())
                         .koreanYn(dto.getKoreanYn())
-                        .avgRate(0D)
                         .minOrderAmount(dto.getMinOrderAmount())
                         .image(imageUri[0])
                         .image2(imageUri[1])
                         .image3(imageUri[2])
+                        .countryPhoneCode(dto.getCountryPhoneCode())
+                        .phoneNum(dto.getPhoneNum())
+                        .deliveryRegion(dto.getDeliveryRegion())
+                        .operationTime(dto.getOperationTime())
+                        .foodChangeYn(dto.getFoodChangeYn())
+                        .avgRate(0D)
                         .reviewCount(0L)
                         .bookmarkCount(0L)
                         .rateCount(0L)
                         .build()
         );
 
-        return new StoreDto(
+        return new RegisterStoreResponse(
                 store.getId(),
                 store.getName(),
-                store.getDescription(),
-                store.getKoreanYn(),
-                store.getAvgRate(),
-                store.getBookmarkCount(),
-                imageUri
+                store.getDescription()
                 );
     }
 
