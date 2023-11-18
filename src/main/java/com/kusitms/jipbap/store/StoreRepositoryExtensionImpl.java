@@ -82,10 +82,12 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
     public List<Store> searchByNameOrderBySort(User user, Pageable pageable, String keyword, String standard, String order) {
 
         List<OrderSpecifier<?>> orderSpecifiers = getAllOrderSpecifiersByPageable(pageable);
+        Long globalRegionId = user.getGlobalRegion().getId();
 
         return queryFactory.selectFrom(store)
                 .where(
-                        containsKeyword(keyword)
+                        containsKeyword(keyword),
+                        isUserStoreRegionMatches(globalRegionId)
                 )
                 .orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new))
                 .fetch();
@@ -94,6 +96,10 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
     // user가 즐겨찾기한 store인지 검사
     private Boolean isUserBookmarkedStore(User user, Store store) {
         return storeBookmarkRepository.existsByUserAndStore(user, store);
+    }
+
+    private BooleanExpression isUserStoreRegionMatches(Long regionId) {
+        return store.globalRegion.id.eq(regionId);
     }
 
     // no-offset 방식 처리하는 메서드
