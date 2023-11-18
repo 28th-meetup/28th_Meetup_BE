@@ -2,8 +2,6 @@ package com.kusitms.jipbap.user;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.user.dto.address.*;
-import com.kusitms.jipbap.user.entity.GlobalRegion;
-import com.kusitms.jipbap.user.repository.GlobalRegionRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

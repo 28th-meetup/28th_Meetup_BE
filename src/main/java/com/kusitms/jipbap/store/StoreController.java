@@ -32,7 +32,7 @@ public class StoreController {
     @Operation(summary = "가게 등록하기")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<StoreDto> registerStore(
+    public CommonResponse<RegisterStoreResponse> registerStore(
             @Auth AuthInfo authInfo,
             @RequestPart(value = "dto") RegisterStoreRequestDto dto,
             @RequestPart(value = "image", required = false) List<MultipartFile> image
