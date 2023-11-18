@@ -26,6 +26,7 @@ import java.util.List;
 public class StoreController {
 
     private final int PAGESIZE = 3;
+    private final int LARGE_PAGESIZE = 10000;
     private final StoreService storeService;
     private final OrderService orderService;
 
@@ -92,7 +93,7 @@ public class StoreController {
         } else {
             sort = Sort.by(Sort.Direction.DESC, field);
         }
-        Pageable pageable = PageRequest.of(0, 10000, sort);
+        Pageable pageable = PageRequest.of(0, LARGE_PAGESIZE, sort);
         return new CommonResponse<>(storeService.searchStoresAndFoods(authInfo.getEmail(), pageable, keyword, field, direction));
     }
 
