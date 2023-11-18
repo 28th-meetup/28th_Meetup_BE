@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
@@ -17,13 +18,20 @@ import java.util.List;
 @AllArgsConstructor
 public class RegisterFoodRequestDto {
 
+    @NotBlank
     private Long storeId;
+    @NotBlank
     private Long categoryId;
+    @NotBlank
     private String name;
     private Long dollarPrice;
     private Long canadaPrice;
+    @NotBlank
     private String description;
     private List<FoodOptionRequest> foodOptionRequestList;
+    @NotBlank
     private String foodPackage;
+    @NotBlank
+    private String ingredient;
 
 }

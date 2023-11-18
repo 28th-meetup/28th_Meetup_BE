@@ -56,12 +56,13 @@ public class FoodService {
     }
 
     @Transactional
-    public FoodDto registerFood(String email, RegisterFoodRequestDto dto, MultipartFile image) {
+    public FoodDto registerFood(String email, RegisterFoodRequestDto dto, MultipartFile image, MultipartFile informationDescriptionImage) {
         userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
         Store store = storeRepository.findById(dto.getStoreId()).orElseThrow(()-> new StoreNotExistsException("해당 가게 id는 유효하지 않습니다."));
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 id는 유효하지 않습니다."));
 
         String imageUri = null;
+        String informationDescriptionImageUri = null;
 
         // 이미지가 null이 아닌 경우 s3 업로드
         if(image!=null) {
@@ -69,6 +70,13 @@ public class FoodService {
                 imageUri = S3Utils.saveFile(amazonS3, bucket, image);
             } catch (IOException e) {
                 throw new S3RegisterFailureException("메뉴 이미지 저장 중 오류가 발생했습니다.");
+            }
+        }
+        if(informationDescriptionImageUri != null){
+            try {
+                informationDescriptionImageUri = S3Utils.saveFile(amazonS3, bucket, informationDescriptionImage);
+            } catch (IOException e) {
+                throw new S3RegisterFailureException("메뉴 설명 이미지 저장 중 오류가 발생했습니다.");
             }
         }
 
@@ -79,10 +87,12 @@ public class FoodService {
                         .name(dto.getName())
                         .dollarPrice(dto.getDollarPrice())
                         .canadaPrice(dto.getCanadaPrice())
-                        .description(dto.getDescription())
-                        .recommendCount(0L)
                         .image(imageUri)
+                        .description(dto.getDescription())
                         .foodPackage(dto.getFoodPackage())
+                        .informationDescription(informationDescriptionImageUri)
+                        .ingredient(dto.getIngredient())
+                        .recommendCount(0L)
                         .build()
         );
 

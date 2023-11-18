@@ -32,9 +32,10 @@ public class FoodController {
     public CommonResponse<FoodDto> registerFood(
             @Auth AuthInfo authInfo,
             @RequestPart(value = "dto") RegisterFoodRequestDto dto,
-            @RequestPart(value = "image", required = false) MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "informationImage", required = false) MultipartFile informationDescriptionImage
         ) {
-        return new CommonResponse<>(foodService.registerFood(authInfo.getEmail(), dto, image));
+        return new CommonResponse<>(foodService.registerFood(authInfo.getEmail(), dto, image, informationDescriptionImage));
     }
 
     @Operation(summary = "메뉴 하나 상세조회")
