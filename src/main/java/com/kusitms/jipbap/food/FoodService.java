@@ -11,11 +11,13 @@ import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.order.OrderRepository;
+import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import com.kusitms.jipbap.user.User;
 import com.kusitms.jipbap.user.UserRepository;
+import com.kusitms.jipbap.user.entity.GlobalRegion;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -179,10 +181,13 @@ public class FoodService {
         return latestSellingFoodResponseList;
     }
 
-    public List<FoodPreviewResponse> getFoodByCategory(Long categoryId){
+    public List<FoodPreviewResponse> getFoodByCategory(AuthInfo authInfo, Long categoryId){
+        User user = userRepository.findByEmail(authInfo.getEmail()).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
         Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
 
-        List<Food> foodList = foodRepository.findAllByCategory(category);
+        GlobalRegion globalRegion = user.getGlobalRegion();
+
+        List<Food> foodList = foodRepository.findByStoreGlobalRegionAndCategory(globalRegion, category);
 
         List<FoodPreviewResponse> foodDtoList = foodList.stream()
                 .map(food -> new FoodPreviewResponse(
