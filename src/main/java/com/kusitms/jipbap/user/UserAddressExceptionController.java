@@ -3,6 +3,7 @@ package com.kusitms.jipbap.user;
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.common.response.ErrorCode;
 import com.kusitms.jipbap.user.exception.*;
+import jakarta.persistence.ElementCollection;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,12 @@ public class UserAddressExceptionController {
     public CommonResponse<?> GeocodingQueryMissingException(GeocodingQueryMissingException e, HttpServletRequest request) {
         log.warn("UserAddress-006> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.GEOCODING_QUERY_MISSING_ERROR);
+    }
+
+    @ExceptionHandler(PostalCodeNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> PostalCodeNotFoundError(PostalCodeNotFoundException e, HttpServletRequest request) {
+        log.warn("UserAddress-007> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.POSTAL_CODE_NOT_FOUND_ERROR);
     }
 }

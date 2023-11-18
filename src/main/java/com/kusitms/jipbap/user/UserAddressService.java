@@ -118,6 +118,9 @@ public class UserAddressService {
                 if (types != null && types.contains("postal_code")) {
                     postalCode = addressComponent.getLongName();
                 }
+                else{
+                    throw new PostalCodeNotFoundException("우편번호를 찾을 수 없습니다. 주소를 다시 입력해주세요.");
+                }
             }
             return new PostalAddressDto(formattedAddress, postalCode);
         } catch (NullPointerException e) {
