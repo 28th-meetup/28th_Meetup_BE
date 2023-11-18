@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class HomeResponseDto {
     private Long globalRegionId;
-    List<BestSellingFoodResponse> bestSellingFoodList;
-    List<BestSellingFoodResponse> recentSetFoodList;
+    List<FoodPreviewResponse> bestSellingFoodList;
+    List<FoodPreviewResponse> recentSetFoodList;
 }

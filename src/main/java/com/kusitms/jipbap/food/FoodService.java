@@ -123,23 +123,25 @@ public class FoodService {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
         Long globalRegionId = user.getGlobalRegion().getId();
-        List<BestSellingFoodResponse> bestSellingFoodResponseList = getBestSellingFoodByRegion(globalRegionId);
-        List<BestSellingFoodResponse> latestSellingFoodResponseList = getLatestSellingFoodByRegion(globalRegionId);
+        List<FoodPreviewResponse> bestSellingFoodResponseList = getBestSellingFoodByRegion(globalRegionId);
+        List<FoodPreviewResponse> latestSellingFoodResponseList = getLatestSellingFoodByRegion(globalRegionId);
 
         return new HomeResponseDto(globalRegionId, bestSellingFoodResponseList,latestSellingFoodResponseList);
     }
 
-    private List<BestSellingFoodResponse> getBestSellingFoodByRegion(Long globalRegionId){
+    private List<FoodPreviewResponse> getBestSellingFoodByRegion(Long globalRegionId){
 
         List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(globalRegionId);
 
-        List<BestSellingFoodResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
-                .map(food -> new BestSellingFoodResponse(
+        List<FoodPreviewResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
+                .map(food -> new FoodPreviewResponse (
                         food.getId(),
                         food.getName(),
+                        food.getStore().getId(),
                         food.getStore().getName(),
                         food.getDollarPrice(),
                         food.getCanadaPrice(),
+                        food.getImage(),
                         food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
@@ -147,17 +149,19 @@ public class FoodService {
         return bestSellingFoodResponseList;
     }
 
-    private List<BestSellingFoodResponse> getLatestSellingFoodByRegion(Long globalRegionId){
+    private List<FoodPreviewResponse> getLatestSellingFoodByRegion(Long globalRegionId){
 
         List<Food> latestFoodsInRegionList = orderRepository.findLatestFoodsByRegionId(globalRegionId);
 
-        List<BestSellingFoodResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
-                .map(food -> new BestSellingFoodResponse(
+        List<FoodPreviewResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
+                .map(food -> new FoodPreviewResponse(
                         food.getId(),
                         food.getName(),
+                        food.getStore().getId(),
                         food.getStore().getName(),
                         food.getDollarPrice(),
                         food.getCanadaPrice(),
+                        food.getImage(),
                         food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
@@ -165,21 +169,21 @@ public class FoodService {
         return latestSellingFoodResponseList;
     }
 
-    public List<FoodDto> getFoodByCategory(Long categoryId){
+    public List<FoodPreviewResponse> getFoodByCategory(Long categoryId){
         Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
 
         List<Food> foodList = foodRepository.findAllByCategory(category);
 
-        List<FoodDto> foodDtoList = foodList.stream()
-                .map(food -> new FoodDto(
+        List<FoodPreviewResponse> foodDtoList = foodList.stream()
+                .map(food -> new FoodPreviewResponse(
                         food.getId(),
-                        food.getStore().getId(),
-                        food.getCategory().getId(),
                         food.getName(),
+                        food.getStore().getId(),
+                        food.getStore().getName(),
                         food.getDollarPrice(),
                         food.getCanadaPrice(),
-                        food.getDescription(),
-                        food.getImage()
+                        food.getImage(),
+                        food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
 
