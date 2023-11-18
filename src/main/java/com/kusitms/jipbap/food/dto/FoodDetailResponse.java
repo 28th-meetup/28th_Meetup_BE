@@ -18,7 +18,10 @@ public class FoodDetailResponse {
     private String name;
     private Long dollarPrice;
     private Long canadaPrice;
-    private String description;
     private String image;
+    private String description;
+    private String foodPackage;
+    private String informationDescription;
+    private String ingredient;
     private List<FoodOptionResponse> foodOptionResponseList;
 }

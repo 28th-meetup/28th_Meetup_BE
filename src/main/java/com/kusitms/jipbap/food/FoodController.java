@@ -62,8 +62,8 @@ public class FoodController {
     @Operation(summary = "특정 카테고리에 속하는 메뉴 조회하기")
     @GetMapping("/category/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<FoodPreviewResponse>> getFoodByCategory(@PathVariable Long categoryId) {
-        return new CommonResponse<>(foodService.getFoodByCategory(categoryId));
+    public CommonResponse<List<FoodPreviewResponse>> getFoodByCategory(@Auth AuthInfo authInfo, @PathVariable Long categoryId) {
+        return new CommonResponse<>(foodService.getFoodByCategory(authInfo, categoryId));
     }
 }
 
