@@ -24,14 +24,24 @@ public class QStore extends EntityPathBase<Store> {
 
     public final com.kusitms.jipbap.common.entity.QDateEntity _super = new com.kusitms.jipbap.common.entity.QDateEntity(this);
 
+    public final StringPath address = createString("address");
+
     public final NumberPath<Double> avgRate = createNumber("avgRate", Double.class);
 
     public final NumberPath<Long> bookmarkCount = createNumber("bookmarkCount", Long.class);
 
+    public final EnumPath<com.kusitms.jipbap.user.CountryPhoneCode> countryPhoneCode = createEnum("countryPhoneCode", com.kusitms.jipbap.user.CountryPhoneCode.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final StringPath deliveryRegion = createString("deliveryRegion");
+
     public final StringPath description = createString("description");
+
+    public final StringPath detailAddress = createString("detailAddress");
+
+    public final BooleanPath foodChangeYn = createBoolean("foodChangeYn");
 
     public final com.kusitms.jipbap.user.entity.QGlobalRegion globalRegion;
 
@@ -49,7 +59,11 @@ public class QStore extends EntityPathBase<Store> {
 
     public final StringPath name = createString("name");
 
+    public final StringPath operationTime = createString("operationTime");
+
     public final com.kusitms.jipbap.user.QUser owner;
+
+    public final StringPath phoneNum = createString("phoneNum");
 
     public final NumberPath<Long> rateCount = createNumber("rateCount", Long.class);
 

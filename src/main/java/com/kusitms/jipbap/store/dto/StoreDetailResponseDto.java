@@ -13,4 +13,5 @@ public class StoreDetailResponseDto {
 
     private StoreDto storeDto;
     private Boolean isBookmarked;
+    private Boolean isFoodChangeable;
 }

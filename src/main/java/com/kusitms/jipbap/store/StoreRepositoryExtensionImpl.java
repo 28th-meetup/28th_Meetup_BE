@@ -1,7 +1,6 @@
 package com.kusitms.jipbap.store;
 
 import com.kusitms.jipbap.common.utils.QueryDslUtils;
-import com.kusitms.jipbap.food.Food;
 import com.kusitms.jipbap.store.dto.StoreDetailResponseDto;
 import com.kusitms.jipbap.store.dto.StoreDto;
 import com.kusitms.jipbap.user.User;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kusitms.jipbap.food.QFood.food;
 import static com.kusitms.jipbap.store.QStore.store;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -28,6 +26,9 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
     private final JPAQueryFactory queryFactory;
     private final StoreBookmarkRepository storeBookmarkRepository;
 
+    /**
+     * 페이지네이션 적용 키워드로 store 검색하기
+     */
     @Override
     public Slice<StoreDetailResponseDto> searchByKeywordOrderBySort(User user, Pageable pageable, String keyword, String standard, String order, Long lastId) {
 
@@ -59,7 +60,8 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
                         s.getMinOrderAmount(),
                         strArr
                     ),
-                    isUserBookmarkedStore(user, s)
+                    isUserBookmarkedStore(user, s),
+                    s.getFoodChangeYn()
             ));
         }
 
@@ -73,6 +75,9 @@ public class StoreRepositoryExtensionImpl implements StoreRepositoryExtension{
         return new SliceImpl<>(dtoList, pageable, hasNext);
     }
 
+    /**
+     * 페이지네이션 미적용 가게 조회
+     */
     @Override
     public List<Store> searchByNameOrderBySort(User user, Pageable pageable, String keyword, String standard, String order) {
 
