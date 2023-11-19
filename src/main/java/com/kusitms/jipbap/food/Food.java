@@ -37,7 +37,7 @@ public class Food extends DateEntity {
     private Long canadaPrice;
     private String image;
     private String description;
-    private String foodPackage; // 배달포장 모두 가능, 배달 모두 가능, 포장 모두 가능
+    private String foodPackage; // 배달포장 모두 가능, 배달 가능, 포장 가능
     private String informationDescription; // 상품 정보 설명(이미지)
     private String ingredient; //구성 성분(텍스트)
     private Long recommendCount;

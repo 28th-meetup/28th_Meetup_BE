@@ -50,4 +50,7 @@ public class Order extends DateEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetail;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Review review;
 }

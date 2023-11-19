@@ -1,10 +1,12 @@
 package com.kusitms.jipbap.order;
 
+import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.food.Food;
 import com.kusitms.jipbap.food.FoodRepository;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.OrderNotExistsByOrderStatusException;
+import com.kusitms.jipbap.order.exception.OrderNotExistsException;
 import com.kusitms.jipbap.order.exception.OrderNotFoundException;
 import com.kusitms.jipbap.order.exception.UnauthorizedAccessException;
 import com.kusitms.jipbap.security.AuthInfo;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,6 +125,21 @@ public class OrderService {
         // 알림 등 로직 추가 가능
 
         orderRepository.save(order);
+    }
+
+    public List<OrderHistoryResponse> getMyOrderHistory(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        List<Order> myOrderList = orderRepository.findByUser_Id(user.getId())
+                .orElse(Collections.emptyList());
+
+        List<OrderHistoryResponse> orderFoodResponseList = myOrderList
+                .stream()
+                .map(OrderHistoryResponse::new)
+                .collect(Collectors.toList());
+
+        return orderFoodResponseList;
     }
 
 }

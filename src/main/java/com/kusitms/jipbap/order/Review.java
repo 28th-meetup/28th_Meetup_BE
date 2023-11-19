@@ -22,7 +22,7 @@ public class Review extends DateEntity {
     @Column(name ="id")
     private Long id; //고유 pk
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
