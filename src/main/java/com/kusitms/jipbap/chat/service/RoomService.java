@@ -62,14 +62,15 @@ public class RoomService {
     // 채팅방 생성
     public MessageResponseDto createRoom(MessageRequestDto dto, String email) {
         User sender = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
-        User receiver = userRepository.findById(dto.getReceiverId()).orElseThrow(()->new InvalidEmailException("수신 회원정보가 존재하지 않습니다."));
+//        User receiver = userRepository.findById(dto.getReceiverId()).orElseThrow(()->new InvalidEmailException("수신 회원정보가 존재하지 않습니다."));
         Store store = storeRepository.findById(dto.getStoreId()).orElseThrow(()->new StoreNotExistsException("가게 정보를 찾을 수 없습니다."));
+        User receiver = store.getOwner();
 
         // 4. 다른 사람들은 들어올 수 없도록 1:1 (구매자:판매자) 채팅방 구성하기
         Room messageRoom = roomRepository.findBySenderNameAndReceiverName(sender.getUsername(), receiver.getUsername());
         // 5. room 생성하기 - (이미 생성된 채팅방이 아닌 경우)
         if (messageRoom == null) {
-            RoomDto roomDto = RoomDto.create(dto, sender);
+            RoomDto roomDto = RoomDto.create(receiver.getUsername(), sender);
             opsHashMessageRoom.put(Message_Rooms, roomDto.getRoomId(), roomDto);      // redis hash 에 채팅방 저장해서, 서버간 채팅방 공유 가능
             messageRoom = roomRepository.save(new Room(roomDto.getId(), roomDto.getRoomName(), roomDto.getSenderName(), roomDto.getRoomId(), roomDto.getReceiverName(), sender, store));
 
@@ -145,7 +146,7 @@ public class RoomService {
         );
 
         // 9. sender & receiver 모두 messageRoom 조회 가능
-        room = roomRepository.findByRoomIdAndUserOrRoomIdAndReceiverName(roomId, user, roomId, user.getUsername());
+        room = roomRepository.findByRoomIdAndUserOrRoomIdAndReceiverName(roomId, user, roomId, room.getReceiverName());
         if (room == null) {
             throw new IllegalArgumentException("채팅방이 존재하지 않습니다.");
         }
