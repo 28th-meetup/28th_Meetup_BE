@@ -4,6 +4,8 @@ import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.order.dto.OrderDto;
 import com.kusitms.jipbap.order.dto.OrderFoodRequest;
 import com.kusitms.jipbap.order.dto.OrderFoodResponse;
+import com.kusitms.jipbap.security.Auth;
+import com.kusitms.jipbap.security.AuthInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,8 @@ public class OrderController {
     @Operation(summary = "음식 주문하기")
     @PostMapping("/food")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<OrderFoodResponse> orderFood(@Valid @RequestBody OrderFoodRequest dto) {
-        return new CommonResponse<>(orderService.orderFood(dto));
+    public CommonResponse<OrderFoodResponse> orderFood(@Auth AuthInfo authInfo, @Valid @RequestBody OrderFoodRequest dto) {
+        return new CommonResponse<>(orderService.orderFood(authInfo.getEmail(), dto));
     }
 
     @Operation(summary = "주문 내역 확인하기")

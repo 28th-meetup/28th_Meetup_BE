@@ -45,7 +45,6 @@ public class OrderFoodResponse {
 
     private List<OrderFoodDetailResponse> setOrderFoodDetailList(List<OrderDetail> orderDetailList) {
        return orderDetailList.stream().map(item -> {
-           System.out.println("id" + item.getId());
             return new OrderFoodDetailResponse(item);
         }).collect(Collectors.toList());
     }

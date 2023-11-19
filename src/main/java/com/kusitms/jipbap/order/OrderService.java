@@ -7,6 +7,7 @@ import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.OrderNotExistsByOrderStatusException;
 import com.kusitms.jipbap.order.exception.OrderNotFoundException;
 import com.kusitms.jipbap.order.exception.UnauthorizedAccessException;
+import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -36,9 +37,11 @@ public class OrderService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public OrderFoodResponse orderFood(OrderFoodRequest dto) {
-        User user = userRepository.findById(dto.getUser()).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findById(dto.getStore()).orElseThrow(()-> new StoreNotExistsException("해당 가게는 유효하지 않습니다."));
+    public OrderFoodResponse orderFood(String email, OrderFoodRequest dto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+        Store store = storeRepository.findById(dto.getStore())
+                .orElseThrow(()-> new StoreNotExistsException("해당 가게는 존재하지 않습니다."));
 
         Order order = orderRepository.save(
                 Order.builder()
@@ -55,20 +58,13 @@ public class OrderService {
         List<OrderDetail> orderedFoodList = saveOrderFoodDetail(order.getId(), dto.getOrderFoodDetailList());
         order.setOrderDetail(orderedFoodList);
 
-        System.out.println("가나다");
-        orderedFoodList.forEach(item -> {
-            System.out.println("여기id: " + item.getId());
-        });
-
-
         return new OrderFoodResponse(order);
     }
 
     @Transactional
     public List<OrderDetail> saveOrderFoodDetail(Long orderId, List<OrderFoodDetailRequest> orderFoodDetailList){
-        System.out.println("Order" + orderId + "orderFoodDetailList: " + orderFoodDetailList);
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("해당 주문은 유효하지 않습니다."));
+                .orElseThrow(() -> new OrderNotFoundException("주문 아이디를 찾을 수 없습니다."));
         return orderFoodDetailList.stream()
                 .map(item -> {
                     Food food = foodRepository.findById(item.getFoodId())
@@ -80,11 +76,7 @@ public class OrderService {
                             .orderAmount(item.getOrderAmount())
                             .order(order)
                             .build();
-
                     orderDetailRepository.save(orderDetail);
-
-                    System.out.println("OrderDetail id: " + orderDetail.getId());
-
                     return orderDetail;
                 })
                 .collect(Collectors.toList());

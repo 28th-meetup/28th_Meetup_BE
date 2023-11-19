@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderFoodRequest {
-    private Long user;
     private Long store;
     private Long totalPrice;
     private Long totalCount;
