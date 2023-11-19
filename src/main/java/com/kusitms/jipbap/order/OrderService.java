@@ -1,6 +1,5 @@
 package com.kusitms.jipbap.order;
 
-import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.food.Food;
 import com.kusitms.jipbap.food.FoodOption;
 import com.kusitms.jipbap.food.FoodOptionRepository;
@@ -8,11 +7,7 @@ import com.kusitms.jipbap.food.FoodRepository;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
 import com.kusitms.jipbap.order.dto.*;
-import com.kusitms.jipbap.order.exception.OrderNotExistsByOrderStatusException;
-import com.kusitms.jipbap.order.exception.OrderNotExistsException;
-import com.kusitms.jipbap.order.exception.OrderNotFoundException;
-import com.kusitms.jipbap.order.exception.UnauthorizedAccessException;
-import com.kusitms.jipbap.security.AuthInfo;
+import com.kusitms.jipbap.order.exception.*;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -21,9 +16,6 @@ import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,7 +89,7 @@ public class OrderService {
         return new OrderDto(order);
     }
 
-    public List<OrderPreviewResponse> getStoreOrderHistoryByOrderStatus(String email, String orderStatus) {
+    public OwnerOrderStatusResponse getStoreOrderHistoryByOrderStatus(String email, String orderStatus) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
@@ -116,27 +108,26 @@ public class OrderService {
         List<OrderPreviewResponse> orderPreviewResponses = orderList.stream()
                 .map(OrderPreviewResponse::new)
                 .collect(Collectors.toList());
-        return orderPreviewResponses;
+
+        return new OwnerOrderStatusResponse(orderPreviewResponses.size(), orderPreviewResponses);
     }
 
     @Transactional
-    public void processOrder(Long orderId, String status) {
+    public void processOrder(String email, Long orderId, String status) {
+        User seller = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다.")); //현재 사용자 정보
+
         OrderStatus newStatus = OrderStatus.fromString(status);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("주문을 찾을 수 없습니다. orderId: " + orderId));
-
-        // 판매자의 권한 확인 (현재 사용자 정보와 주문내역의 판매자 정보가 같은지 확인)
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String sellerUsername = userDetails.getUsername();
-
-        User seller = userRepository.findByUsername(sellerUsername)
-                .orElseThrow(() -> new UserNotFoundException("판매자를 찾을 수 없습니다."));
 
         if (!seller.getId().equals(order.getStore().getOwner().getId())) {
             throw new UnauthorizedAccessException("주문 상태를 변경할 권한이 없습니다.");
         }
 
+        if(order.getStatus() == newStatus){
+            throw new OrderStatusAlreadyExistsException("이미 해당 주문 상태입니다.");
+        }
         order.setStatus(newStatus); // 주문 상태 변경
         // 알림 등 로직 추가 가능
 
