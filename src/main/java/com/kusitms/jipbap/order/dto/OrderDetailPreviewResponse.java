@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.order.dto;
 
-
+import com.kusitms.jipbap.food.FoodOptionRepository;
 import com.kusitms.jipbap.order.OrderDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,19 +11,21 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderFoodDetailResponse {
-    private Long orderDetailId; //고유 pk
+public class OrderDetailPreviewResponse {
+    private Long orderDetailId;
     private Long foodId;
-    private Long foodOptionId; //foodOptionId로 설정
-    private Long orderCount; //품목 개수
-    private Long orderAmount; //품목당 가격
+    private String foodName;
+    private Long foodOptionId;
+    private String foodOptionName;
+    private Long orderCount;
 
-    public OrderFoodDetailResponse(OrderDetail orderDetail){
-        System.out.println(orderDetail.getId());
+    public OrderDetailPreviewResponse(OrderDetail orderDetail){
         this.orderDetailId = orderDetail.getId();
         this.foodId = orderDetail.getFood().getId();
+        this.foodName = orderDetail.getFood().getName();
         this.foodOptionId = orderDetail.getFoodOption().getId();
+        this.foodOptionName = orderDetail.getFoodOption().getName();
         this.orderCount = orderDetail.getOrderCount();
-        this.orderAmount = orderDetail.getOrderAmount();
     }
+
 }

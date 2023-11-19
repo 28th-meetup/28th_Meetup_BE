@@ -4,6 +4,7 @@ import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.common.response.ErrorCode;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
+import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
 import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,14 @@ public class FoodExceptionHandler {
     public CommonResponse<?> handelFoodNotExistsException(FoodNotExistsException e, HttpServletRequest request) {
         log.warn("FOOD-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.FOOD_NOT_FOUND_ERROR);
+    }
+
+
+    @ExceptionHandler(FoodOptionNotExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handelFoodOptionNotExistsException(FoodOptionNotExistsException e, HttpServletRequest request) {
+        log.warn("FOOD-003> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.FOOD_OPTION_NOT_FOUND_ERROR);
     }
 
 }

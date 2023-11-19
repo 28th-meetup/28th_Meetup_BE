@@ -50,4 +50,12 @@ public class OrderExceptionHandler {
         return new CommonResponse<>(ErrorCode.UNAUTHORIZED_ACCESS_ERROR);
     }
 
+    @ExceptionHandler(OrderStatusAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleOrderStatusAlreadyExistsException(OrderStatusAlreadyExistsException e, HttpServletRequest request) {
+        log.warn("ORDER-006> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.ORDER_STATUS_ALREADY_EXISTS_ERROR);
+    }
+
+
 }
