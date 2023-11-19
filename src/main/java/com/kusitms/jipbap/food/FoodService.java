@@ -10,6 +10,8 @@ import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
 import com.kusitms.jipbap.food.dto.RegisterFoodRequestDto;
 import com.kusitms.jipbap.food.exception.CategoryNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
+import com.kusitms.jipbap.order.OrderDetail;
+import com.kusitms.jipbap.order.OrderDetailRepository;
 import com.kusitms.jipbap.order.OrderRepository;
 import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.Store;
@@ -28,7 +30,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -43,6 +48,7 @@ public class FoodService {
     private final CategoryRepository categoryRepository;
     private final OrderRepository orderRepository;
     private final FoodOptionRepository foodOptionRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -131,7 +137,6 @@ public class FoodService {
         return foodOptionResponseList;
     }
 
-    /*
     public HomeResponseDto getInfoFromHome(String email){
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
@@ -143,30 +148,61 @@ public class FoodService {
     }
 
     private List<FoodPreviewResponse> getBestSellingFoodByRegion(Long globalRegionId){
+        List<OrderDetail> orderDetails = orderDetailRepository.findTop10ByOrder_Store_GlobalRegion_IdOrderByOrderCountDesc(globalRegionId);
 
-        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(globalRegionId);
+        Map<Food, Long> foodSalesMap = orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getFood, Collectors.summingLong(OrderDetail::getOrderCount)));
 
-        List<FoodPreviewResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
-                .map(food -> new FoodPreviewResponse (
-                        food.getId(),
-                        food.getName(),
-                        food.getStore().getId(),
-                        food.getStore().getName(),
-                        food.getDollarPrice(),
-                        food.getCanadaPrice(),
-                        food.getImage(),
-                        food.getStore().getAvgRate()
-                ))
+        List<Map.Entry<Food, Long>> sortedFoodSales = new ArrayList<>(foodSalesMap.entrySet());
+        sortedFoodSales.sort((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()));
+
+        List<Food> top10FoodList = sortedFoodSales.stream()
+                .limit(10)
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
+        List<FoodPreviewResponse> bestSellingFoodResponseList = top10FoodList.stream()
+        .map(food -> new FoodPreviewResponse (
+                food.getId(),
+                food.getName(),
+                food.getStore().getId(),
+                food.getStore().getName(),
+                food.getDollarPrice(),
+                food.getCanadaPrice(),
+                food.getImage(),
+                food.getStore().getAvgRate()
+        ))
+        .collect(Collectors.toList());
+
+//        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(globalRegionId);
+//
+//        List<FoodPreviewResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
+//                .map(food -> new FoodPreviewResponse (
+//                        food.getId(),
+//                        food.getName(),
+//                        food.getStore().getId(),
+//                        food.getStore().getName(),
+//                        food.getDollarPrice(),
+//                        food.getCanadaPrice(),
+//                        food.getImage(),
+//                        food.getStore().getAvgRate()
+//                ))
+//                .collect(Collectors.toList());
+//
         return bestSellingFoodResponseList;
     }
 
     private List<FoodPreviewResponse> getLatestSellingFoodByRegion(Long globalRegionId){
+        List<OrderDetail> orderDetails = orderDetailRepository.findTop4ByOrder_Store_GlobalRegion_IdOrderByOrder_CreatedAtDesc(globalRegionId);
 
-        List<Food> latestFoodsInRegionList = orderRepository.findLatestFoodsByRegionId(globalRegionId);
+        Map<Long, List<OrderDetail>> orderDetailsByRegion = orderDetails.stream()
+                .collect(Collectors.groupingBy(orderDetail -> orderDetail.getOrder().getStore().getGlobalRegion().getId()));
 
-        List<FoodPreviewResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
+        List<FoodPreviewResponse> latestSellingFoodResponseList = orderDetailsByRegion.values().stream()
+                .flatMap(regionOrderDetails -> regionOrderDetails.stream())
+                .map(OrderDetail::getFood)
+                .distinct()
+                .limit(4)
                 .map(food -> new FoodPreviewResponse(
                         food.getId(),
                         food.getName(),
@@ -178,8 +214,24 @@ public class FoodService {
                         food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
-
         return latestSellingFoodResponseList;
+
+//        List<Food> latestFoodsInRegionList = orderRepository.findLatestFoodsByRegionId(globalRegionId);
+//
+//        List<FoodPreviewResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
+//                .map(food -> new FoodPreviewResponse(
+//                        food.getId(),
+//                        food.getName(),
+//                        food.getStore().getId(),
+//                        food.getStore().getName(),
+//                        food.getDollarPrice(),
+//                        food.getCanadaPrice(),
+//                        food.getImage(),
+//                        food.getStore().getAvgRate()
+//                ))
+//                .collect(Collectors.toList());
+//
+//        return latestSellingFoodResponseList;
     }
 
     public List<FoodPreviewResponse> getFoodByCategory(AuthInfo authInfo, Long categoryId){
@@ -206,5 +258,4 @@ public class FoodService {
         return foodDtoList;
     }
 
-     */
 }

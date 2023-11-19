@@ -2,6 +2,10 @@ package com.kusitms.jipbap.order;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+import java.util.List;
 
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+    List<OrderDetail> findTop10ByOrder_Store_GlobalRegion_IdOrderByOrderCountDesc(Long regionId);
+
+    List<OrderDetail> findTop4ByOrder_Store_GlobalRegion_IdOrderByOrder_CreatedAtDesc(Long regionId);
 }
