@@ -80,7 +80,7 @@ public class FoodService {
                 throw new S3RegisterFailureException("메뉴 이미지 저장 중 오류가 발생했습니다.");
             }
         }
-        if(informationDescriptionImageUri != null){
+        if(informationDescriptionImage != null){
             try {
                 informationDescriptionImageUri = S3Utils.saveFile(amazonS3, bucket, informationDescriptionImage);
             } catch (IOException e) {
