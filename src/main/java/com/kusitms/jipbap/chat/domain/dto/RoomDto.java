@@ -29,12 +29,12 @@ public class RoomDto implements Serializable {
     private RoomDto() {
 
     }
-    public static RoomDto create(MessageRequestDto messageRequestDto, User user) {
+    public static RoomDto create(String receiverName, User user) {
         RoomDto roomDto = new RoomDto();
-        roomDto.roomName = messageRequestDto.getReceiverName();
+        roomDto.roomName = receiverName;
         roomDto.roomId = UUID.randomUUID().toString();
         roomDto.senderName = user.getUsername();
-        roomDto.receiverName = messageRequestDto.getReceiverName();
+        roomDto.receiverName = receiverName;
 
         return roomDto;
     }
