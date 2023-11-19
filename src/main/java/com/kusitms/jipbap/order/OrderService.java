@@ -2,8 +2,11 @@ package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.food.Food;
+import com.kusitms.jipbap.food.FoodOption;
+import com.kusitms.jipbap.food.FoodOptionRepository;
 import com.kusitms.jipbap.food.FoodRepository;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
+import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
 import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.OrderNotExistsByOrderStatusException;
 import com.kusitms.jipbap.order.exception.OrderNotExistsException;
@@ -37,6 +40,7 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
+    private final FoodOptionRepository foodOptionRepository;
     private final StoreRepository storeRepository;
 
     @Transactional
@@ -72,9 +76,11 @@ public class OrderService {
                 .map(item -> {
                     Food food = foodRepository.findById(item.getFoodId())
                                     .orElseThrow(()-> new FoodNotExistsException("해당 음식은 유효하지 않습니다."));
+                    FoodOption foodOption = foodOptionRepository.findById(item.getFoodOptionId())
+                            .orElseThrow(()-> new FoodOptionNotExistsException("해당 음식 옵션은 유효하지 않습니다."));
                     OrderDetail orderDetail = OrderDetail.builder()
                             .food(food)
-                            .foodOptionId(item.getFoodOptionId())
+                            .foodOption(foodOption) // 수정
                             .orderCount(item.getOrderCount())
                             .orderAmount(item.getOrderAmount())
                             .order(order)
@@ -91,16 +97,26 @@ public class OrderService {
         return new OrderDto(order);
     }
 
-    public List<OrderDto> getStoreOrderHistoryByOrderStatus(Long storeId, String orderStatus) {
+    public List<OrderPreviewResponse> getStoreOrderHistoryByOrderStatus(String email, String orderStatus) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(() -> new StoreNotExistsException("해당 유저의 가게를 찾을 수 없습니다."));
+
         OrderStatus status = OrderStatus.fromString(orderStatus);
-        List<Order> orders = orderRepository.findByStore_IdAndStatus(storeId, status)
-        //List<Order> orders = orderRepository.findByFood_Store_IdAndStatus(storeId, status)
+
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status)
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
-        if (orders.isEmpty()) {
+
+        if (orderList.isEmpty()) {
             throw new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다.");
         }
 
-        return orders.stream().map(OrderDto::new).collect(Collectors.toList());
+        List<OrderPreviewResponse> orderPreviewResponses = orderList.stream()
+                .map(OrderPreviewResponse::new)
+                .collect(Collectors.toList());
+        return orderPreviewResponses;
     }
 
     @Transactional

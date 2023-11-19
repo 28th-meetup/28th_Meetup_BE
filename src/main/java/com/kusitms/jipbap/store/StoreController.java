@@ -4,6 +4,7 @@ import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.food.dto.FoodDetailByStoreResponse;
 import com.kusitms.jipbap.order.OrderService;
 import com.kusitms.jipbap.order.dto.OrderDto;
+import com.kusitms.jipbap.order.dto.OrderPreviewResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.store.dto.*;
@@ -121,10 +122,11 @@ public class StoreController {
         return new CommonResponse<>(storeService.getAllMenuListByStoreId(storeId));
     }
 
-    @GetMapping("/{storeId}/orders/{orderStatus}")
-    public CommonResponse<List<OrderDto>> getStoreOrderHistoryByOrderStatus(
-            @PathVariable Long storeId,
+    @Operation(summary = "가게의 주문내역에 맞는 주문 리스트 가져오기")
+    @GetMapping("order-history/{orderStatus}")
+    public CommonResponse<List<OrderPreviewResponse>> getStoreOrderHistoryByOrderStatus(
+            @Auth AuthInfo authInfo,
             @PathVariable String orderStatus) {
-        return new CommonResponse<>(orderService.getStoreOrderHistoryByOrderStatus(storeId, orderStatus));
+        return new CommonResponse<>(orderService.getStoreOrderHistoryByOrderStatus(authInfo.getEmail(), orderStatus));
     }
 }

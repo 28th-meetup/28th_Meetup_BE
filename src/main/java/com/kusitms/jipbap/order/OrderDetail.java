@@ -1,6 +1,7 @@
 package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.food.Food;
+import com.kusitms.jipbap.food.FoodOption;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,9 @@ public class OrderDetail {
     @JoinColumn(name = "food_id")
     private Food food;
 
-    private Long foodOptionId; //foodOptionId로 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_option_id")
+    private FoodOption foodOption;
 
     @NotNull
     private Long orderCount; //품목 개수
