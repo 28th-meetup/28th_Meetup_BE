@@ -15,7 +15,7 @@ public class GlobalRegion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long Id;
+    private Long id;
 
     @Column(name = "country_long_name")
     private String countryLongName;

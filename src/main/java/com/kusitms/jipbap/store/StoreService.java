@@ -116,7 +116,10 @@ public class StoreService {
                         new StoreDto(
                                 s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), s.getAvgRate(), s.getMinOrderAmount(),
                                 new String[]{s.getImage(), s.getImage2(), s.getImage3()}
-                        ), storeBookmarkRepository.existsByUserAndStore(user, s))
+                            )
+                        , storeBookmarkRepository.existsByUserAndStore(user, s)
+                        , s.getFoodChangeYn()
+                    )
                 )
                 .collect(Collectors.toList());
 
@@ -143,8 +146,9 @@ public class StoreService {
                     store.getAvgRate(),
                     store.getMinOrderAmount(),
                     new String[]{store.getImage(), store.getImage2(), store.getImage3()}
-                ),
-                isStoreBookmarked(user, store)
+                )
+                , isStoreBookmarked(user, store)
+                , store.getFoodChangeYn()
         );
     }
 
