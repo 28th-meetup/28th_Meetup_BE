@@ -149,4 +149,49 @@ public class OrderService {
         return orderFoodResponseList;
     }
 
+    public StoreProcessingResponse getStoreProcessingOrder(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(() -> new StoreNotExistsException("해당 유저의 가게를 찾을 수 없습니다."));
+
+        //전체 주문내역에서 해당 가게에 속하는 주문내역만 가져오기
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED)
+                .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
+
+        if (orderList.isEmpty()) {
+            throw new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다.");
+        }
+
+        //주문내역 중에서 음식별로 묶기
+        List<OrderDetail> orderDetailList = orderList.stream()
+                .flatMap(order -> order.getOrderDetail().stream())
+                .collect(Collectors.toList());
+
+        //음식 옵션별로 묶어서 음식별로 묶기
+        List<ProcessingFoodResponse> processingFoodResponseList = orderDetailList.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getFood))
+                .entrySet().stream()
+                .map(entry -> {
+                    Food food = entry.getKey();
+                    List<ProcessingFoodDetailResponse> processingFoodDetailResponseList = entry.getValue().stream()
+                            .collect(Collectors.groupingBy(OrderDetail::getFoodOption,
+                                    Collectors.summingLong(OrderDetail::getOrderCount)))
+                            .entrySet().stream()
+                            .map(entry2 -> new ProcessingFoodDetailResponse(
+                                    entry2.getKey().getId(),
+                                    entry2.getKey().getName(),
+                                    entry2.getValue()))
+                            .collect(Collectors.toList());
+                    long totalOrderCount = processingFoodDetailResponseList.stream()
+                            .mapToLong(ProcessingFoodDetailResponse::getOrderCount)
+                            .sum();
+                    return new ProcessingFoodResponse(food.getId(), food.getName(), totalOrderCount, processingFoodDetailResponseList);
+                })
+                .collect(Collectors.toList());
+
+        return new StoreProcessingResponse(orderList.size(), processingFoodResponseList);
+
+    }
 }

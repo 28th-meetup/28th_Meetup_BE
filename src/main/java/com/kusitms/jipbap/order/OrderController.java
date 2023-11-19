@@ -1,10 +1,7 @@
 package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
-import com.kusitms.jipbap.order.dto.OrderDto;
-import com.kusitms.jipbap.order.dto.OrderFoodRequest;
-import com.kusitms.jipbap.order.dto.OrderFoodResponse;
-import com.kusitms.jipbap.order.dto.OrderHistoryResponse;
+import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,5 +51,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<List<OrderHistoryResponse>> getMyOrderHistory(@Auth AuthInfo authInfo) {
         return new CommonResponse<>(orderService.getMyOrderHistory(authInfo.getEmail()));
+    }
+
+    @Operation(summary = "주문내역 중 진행 중인 메뉴 조회하기")
+    @GetMapping("/processing")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<StoreProcessingResponse> getStoreProcessingOrder(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(orderService.getStoreProcessingOrder(authInfo.getEmail()));
     }
 }
