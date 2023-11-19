@@ -126,7 +126,22 @@ public class FoodService {
         List<FoodOptionResponse> foodOptionResponseList = foodOptionRepository.findAllByFood(food).stream()
                 .map(foodOption -> new FoodOptionResponse(foodOption.getId(), foodOption.getName(), foodOption.getDollarPrice(), foodOption.getCanadaPrice()))
                 .collect(Collectors.toList());
-        return new FoodDetailResponse(food.getId(), food.getStore().getId(), food.getCategory().getId(), food.getName(), food.getDollarPrice(), food.getCanadaPrice(), food.getImage(), food.getDescription(), food.getFoodPackage(), food.getInformationDescription(), food.getIngredient(), foodOptionResponseList);
+
+        return FoodDetailResponse.builder()
+                .id(food.getId())
+                .storeId(food.getStore().getId())
+                .categoryId(food.getCategory().getId())
+                .name(food.getName())
+                .dollarPrice(food.getDollarPrice())
+                .canadaPrice(food.getCanadaPrice())
+                .image(food.getImage())
+                .description(food.getDescription())
+                .foodPackage(food.getFoodPackage())
+                .informationDescription(food.getInformationDescription())
+                .ingredient(food.getIngredient())
+                .minOrderAmount(food.getStore().getMinOrderAmount())
+                .foodOptionResponseList(foodOptionResponseList)
+                .build();
     }
 
     public List<FoodOptionResponse> getFoodDetailByOption(Long foodId) {

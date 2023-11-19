@@ -1,9 +1,6 @@
 package com.kusitms.jipbap.food.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FoodDetailResponse {
     private Long id;
     private Long storeId;
@@ -23,5 +21,6 @@ public class FoodDetailResponse {
     private String foodPackage;
     private String informationDescription;
     private String ingredient;
+    private Long minOrderAmount; // 최소 주문 금액 추가
     private List<FoodOptionResponse> foodOptionResponseList;
 }
