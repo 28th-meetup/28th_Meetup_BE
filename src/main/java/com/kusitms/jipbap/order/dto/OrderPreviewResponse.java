@@ -21,6 +21,7 @@ public class OrderPreviewResponse {
     private String userName;
     private String addressAndPostalCode;
     private String detailAddress;
+    private String selectedOption;
     private String orderedAt;
     private List<OrderDetailPreviewResponse> orderDetailPreviewList;
 
@@ -29,6 +30,7 @@ public class OrderPreviewResponse {
         this.userName = order.getUser().getUsername();
         this.addressAndPostalCode = setAddress(order.getUser());
         this.detailAddress = order.getUser().getDetailAddress();
+        this.selectedOption = order.getSelectedOption();
         this.orderedAt = setOrderedAt(order.getCreatedAt());
         this.orderDetailPreviewList = order.getOrderDetail().stream()
                 .map(OrderDetailPreviewResponse::new)
