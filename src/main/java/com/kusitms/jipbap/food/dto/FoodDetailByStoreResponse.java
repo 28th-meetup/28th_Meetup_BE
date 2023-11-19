@@ -19,6 +19,7 @@ public class FoodDetailByStoreResponse {
     private Long canadaPrice;
     private String description;
     private Long recommendCount;
+    private String image;
 
     public FoodDetailByStoreResponse(Food food){
         this.id = food.getId();
@@ -28,5 +29,6 @@ public class FoodDetailByStoreResponse {
         this.canadaPrice = food.getCanadaPrice();
         this.description = food.getDescription();
         this.recommendCount = food.getRecommendCount();
+        this.image = food.getImage();
     }
 }

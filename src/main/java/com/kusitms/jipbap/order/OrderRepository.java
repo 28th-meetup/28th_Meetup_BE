@@ -10,12 +10,14 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository <Order, Long> {
 
-    @Query("SELECT o.food, SUM(o.orderCount) as totalSales FROM Order o WHERE o.regionId= :regionId GROUP BY o.food ORDER BY totalSales DESC, MAX(o.createdAt) DESC")
-    List<Food> findTop10BestSellingFoodsInRegion(@Param("regionId") Long regionId);
+//    @Query("SELECT o.orderDetail.food, SUM(o.orderCount) as totalSales FROM Order o WHERE o.regionId= :regionId GROUP BY o.food ORDER BY totalSales DESC, MAX(o.createdAt) DESC")
+//    List<Food> findTop10BestSellingFoodsInRegion(@Param("regionId") Long regionId);
 
-    Optional<List<Order>> findByFood_Store_IdAndStatus(Long storeId, OrderStatus status);
+    Optional<List<Order>> findByStore_IdAndStatus(Long storeId, OrderStatus status);
 
-    @Query("SELECT o.food FROM Order o WHERE o.regionId = :regionId ORDER BY o.id DESC LIMIT 4")
-    List<Food> findLatestFoodsByRegionId(@Param("regionId") Long regionId);
+//    @Query("SELECT o.food FROM Order o WHERE o.regionId = :regionId ORDER BY o.id DESC LIMIT 4")
+//    List<Food> findLatestFoodsByRegionId(@Param("regionId") Long regionId);
+
+    Optional<List<Order>> findByUser_Id(Long userId);
 
 }

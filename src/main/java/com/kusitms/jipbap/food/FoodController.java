@@ -48,9 +48,10 @@ public class FoodController {
     @Operation(summary = "메뉴 당 옵션 상세조회")
     @GetMapping("/{foodId}/option")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<FoodOptionResponse>> getFoodDetailByOption(@PathVariable Long foodId ) {
+    public CommonResponse<List<FoodOptionResponse>> getFoodDetailByOption(@PathVariable Long foodId) {
         return new CommonResponse<>(foodService.getFoodDetailByOption(foodId));
     }
+
 
     @Operation(summary = "홈에서 데이터 조회하기")
     @GetMapping("/home")
@@ -58,6 +59,7 @@ public class FoodController {
     public CommonResponse<HomeResponseDto> getInfoFromHome(@Auth AuthInfo authInfo) {
         return new CommonResponse<>(foodService.getInfoFromHome(authInfo.getEmail()));
     }
+
 
     @Operation(summary = "특정 카테고리에 속하는 메뉴 조회하기")
     @GetMapping("/category/{categoryId}")
