@@ -65,8 +65,8 @@ public class FoodService {
 
     @Transactional
     public FoodDto registerFood(String email, RegisterFoodRequestDto dto, MultipartFile image, MultipartFile informationDescriptionImage) {
-        userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findById(dto.getStoreId()).orElseThrow(()-> new StoreNotExistsException("해당 가게 id는 유효하지 않습니다."));
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("해당 가게 id는 유효하지 않습니다."));
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 id는 유효하지 않습니다."));
 
         String imageUri = null;

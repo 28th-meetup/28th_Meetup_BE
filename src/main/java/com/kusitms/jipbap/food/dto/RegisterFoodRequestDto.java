@@ -19,8 +19,6 @@ import java.util.List;
 public class RegisterFoodRequestDto {
 
     @NotBlank
-    private Long storeId;
-    @NotBlank
     private Long categoryId;
     @NotBlank
     private String name;
