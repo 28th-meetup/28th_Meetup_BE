@@ -27,15 +27,21 @@ public class QOrder extends EntityPathBase<Order> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final com.kusitms.jipbap.food.QFood food;
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> orderCount = createNumber("orderCount", Long.class);
+    public final ListPath<OrderDetail, QOrderDetail> orderDetail = this.<OrderDetail, QOrderDetail>createList("orderDetail", OrderDetail.class, QOrderDetail.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> regionId = createNumber("regionId", Long.class);
 
+    public final QReview review;
+
+    public final StringPath selectedOption = createString("selectedOption");
+
     public final EnumPath<OrderStatus> status = createEnum("status", OrderStatus.class);
+
+    public final com.kusitms.jipbap.store.QStore store;
+
+    public final NumberPath<Long> totalCount = createNumber("totalCount", Long.class);
 
     public final NumberPath<Long> totalPrice = createNumber("totalPrice", Long.class);
 
@@ -62,7 +68,8 @@ public class QOrder extends EntityPathBase<Order> {
 
     public QOrder(Class<? extends Order> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.food = inits.isInitialized("food") ? new com.kusitms.jipbap.food.QFood(forProperty("food"), inits.get("food")) : null;
+        this.review = inits.isInitialized("review") ? new QReview(forProperty("review"), inits.get("review")) : null;
+        this.store = inits.isInitialized("store") ? new com.kusitms.jipbap.store.QStore(forProperty("store"), inits.get("store")) : null;
         this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
