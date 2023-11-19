@@ -77,7 +77,7 @@ public class RoomService {
             return new MessageResponseDto(messageRoom);
         // 6. 이미 생성된 채팅방인 경우 기존 채팅방 이동
         } else {
-            return new MessageResponseDto(messageRoom.getRoomId());
+            return new MessageResponseDto(messageRoom);
         }
     }
 
