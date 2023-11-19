@@ -18,8 +18,8 @@ import java.util.Date;
 public class OrderDto {
     private Long id;
     private Long user;
-    private Long food;
-    private Long orderCount;
+    //private Long food;
+    //private Long orderCount;
     private Long totalPrice;
     private String orderedAt;
     private String status;
@@ -27,8 +27,8 @@ public class OrderDto {
     public OrderDto(Order order) {
         this.id = order.getId();
         this.user = order.getUser().getId();
-        this.food = order.getFood().getId();
-        this.orderCount = order.getOrderCount();
+//        this.food = order.getFood().getId();
+//        this.orderCount = order.getOrderCount();
         this.totalPrice = order.getTotalPrice();
         this.orderedAt = setOrderedAt(order.getCreatedAt());
         this.status = order.getStatus().toString();

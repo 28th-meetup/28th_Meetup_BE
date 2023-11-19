@@ -5,13 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderFoodRequestDto {
+public class OrderFoodRequest {
     private Long user;
-    private Long food;
-    private Long orderCount;
+    private Long store;
     private Long totalPrice;
+    private Long totalCount;
+    private String selectedOption;
+    private List<OrderFoodDetailRequest> orderFoodDetailList;
 }

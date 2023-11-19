@@ -28,7 +28,6 @@ public class ReviewRepositoryExtensionImpl implements ReviewRepositoryExtension 
     public List<Review> findAllReviewsByStore(Store store) {
         return queryFactory.selectFrom(review)
                 .join(review.order, order)
-                .join(order.food, food)
                 .where(food.store.eq(store))
                 .fetch();
     }

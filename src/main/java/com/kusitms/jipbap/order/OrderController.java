@@ -1,10 +1,9 @@
 package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.response.CommonResponse;
-import com.kusitms.jipbap.food.dto.CategoryDto;
-import com.kusitms.jipbap.food.dto.RegisterCategoryRequestDto;
 import com.kusitms.jipbap.order.dto.OrderDto;
-import com.kusitms.jipbap.order.dto.OrderFoodRequestDto;
+import com.kusitms.jipbap.order.dto.OrderFoodRequest;
+import com.kusitms.jipbap.order.dto.OrderFoodResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class OrderController {
     @Operation(summary = "음식 주문하기")
     @PostMapping("/food")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<OrderDto> orderFood(@Valid @RequestBody OrderFoodRequestDto dto) {
+    public CommonResponse<OrderFoodResponse> orderFood(@Valid @RequestBody OrderFoodRequest dto) {
         return new CommonResponse<>(orderService.orderFood(dto));
     }
 

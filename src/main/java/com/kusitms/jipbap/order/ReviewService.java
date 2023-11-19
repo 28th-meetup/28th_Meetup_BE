@@ -43,7 +43,7 @@ public class ReviewService {
     public ReviewDto registerReview(String email, RegisterReviewRequestDto dto, MultipartFile image) {
         userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
         Order order = orderRepository.findById(dto.getOrderId()).orElseThrow(()-> new OrderNotExistsException("orderId: "+dto.getOrderId()+"에 해당하는 주문이 존재하지 않습니다."));
-        Store store = order.getFood().getStore();
+        Store store = order.getStore();
 
         String imageUri = null;
 
