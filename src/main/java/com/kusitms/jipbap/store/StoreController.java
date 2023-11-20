@@ -130,6 +130,13 @@ public class StoreController {
         return new CommonResponse<>(storeService.getAllMenuListByStoreId(storeId));
     }
 
+    @Operation(summary = "내 가게의 모든 메뉴 가져오기")
+    @GetMapping("/menu")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<List<FoodDetailByStoreResponse>> getMyStoreMenu(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(storeService.getMyStoreMenu(authInfo.getEmail()));
+    }
+
     @Operation(summary = "가게의 주문내역에 맞는 주문 리스트 가져오기")
     @GetMapping("order-history/{orderStatus}")
     public CommonResponse<OwnerOrderStatusResponse> getStoreOrderHistoryByOrderStatus(

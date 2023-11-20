@@ -227,4 +227,10 @@ public class StoreService {
         return foodDetailByStoreResponseList;
     }
 
+    public List<FoodDetailByStoreResponse> getMyStoreMenu(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
+
+        return getAllMenuListByStoreId(store.getId());
+    }
 }
