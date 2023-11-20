@@ -130,6 +130,7 @@ public class FoodService {
         return FoodDetailResponse.builder()
                 .id(food.getId())
                 .storeId(food.getStore().getId())
+                .storeName(food.getStore().getName())
                 .categoryId(food.getCategory().getId())
                 .name(food.getName())
                 .dollarPrice(food.getDollarPrice())
