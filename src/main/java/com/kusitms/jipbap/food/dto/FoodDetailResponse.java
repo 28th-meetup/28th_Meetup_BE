@@ -12,6 +12,7 @@ import java.util.List;
 public class FoodDetailResponse {
     private Long id;
     private Long storeId;
+    private String storeName;
     private Long categoryId;
     private String name;
     private Long dollarPrice;
