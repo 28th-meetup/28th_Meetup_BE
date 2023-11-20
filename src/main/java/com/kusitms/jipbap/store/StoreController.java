@@ -43,6 +43,13 @@ public class StoreController {
         return new CommonResponse<>(storeService.registerStore(authInfo.getEmail(), dto, image));
     }
 
+    @Operation(summary = "내 가게 아이디 조회하기")
+    @GetMapping("/my-store-id")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<StoreDto> getMyStore(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(storeService.getMyStore(authInfo.getEmail()));
+    }
+
     /**
      * 가게 검색 api - 페이지네이션 적용
      * api의 복잡도와 성능을 희생하는 대신, 데이터 중복/삭제 현상을 감안함
@@ -130,4 +137,6 @@ public class StoreController {
             @PathVariable String orderStatus) {
         return new CommonResponse<>(orderService.getStoreOrderHistoryByOrderStatus(authInfo.getEmail(), orderStatus));
     }
+
+
 }
