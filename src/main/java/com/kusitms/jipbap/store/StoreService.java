@@ -98,6 +98,21 @@ public class StoreService {
                 );
     }
 
+    public StoreDto getMyStore(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
+
+        return new StoreDto(
+                store.getId(),
+                store.getName(),
+                store.getDescription(),
+                store.getKoreanYn(),
+                store.getAvgRate(),
+                store.getMinOrderAmount(),
+                new String[]{store.getImage(), store.getImage2(), store.getImage3()}
+        );
+    }
+
     @Transactional
     public Slice<StoreDetailResponseDto> searchStoreList(String email, Pageable pageable, String keyword, String standard, String order, Long lastId) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
