@@ -6,6 +6,8 @@ import com.kusitms.jipbap.food.FoodOptionRepository;
 import com.kusitms.jipbap.food.FoodRepository;
 import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
+import com.kusitms.jipbap.notification.FCMNotificationService;
+import com.kusitms.jipbap.notification.FCMRequestDto;
 import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.*;
 import com.kusitms.jipbap.store.Store;
@@ -34,6 +36,7 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final FoodOptionRepository foodOptionRepository;
     private final StoreRepository storeRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Transactional
     public OrderFoodResponse orderFood(String email, OrderFoodRequest dto) {
@@ -56,6 +59,12 @@ public class OrderService {
 
         List<OrderDetail> orderedFoodList = saveOrderFoodDetail(order.getId(), dto.getOrderFoodDetailList());
         order.setOrderDetail(orderedFoodList);
+
+        // 알림 등 로직 추가 가능
+        FCMRequestDto fcmRequestDto = new FCMRequestDto(store.getOwner().getId(), "주문이 들어왔습니다", "주문을 확인해주세요.");
+        String ans = fcmNotificationService.sendNotificationByToken(fcmRequestDto);
+        log.info(ans);
+        orderRepository.save(order);
 
         return new OrderFoodResponse(order);
     }
@@ -128,8 +137,11 @@ public class OrderService {
             throw new OrderStatusAlreadyExistsException("이미 해당 주문 상태입니다.");
         }
         order.setStatus(newStatus); // 주문 상태 변경
-        // 알림 등 로직 추가 가능
 
+        // 알림 등 로직 추가 가능
+        FCMRequestDto dto = new FCMRequestDto(seller.getId(), "주문이 들어왔습니다", "주문을 확인해주세요.");
+        String ans = fcmNotificationService.sendNotificationByToken(dto);
+        log.info(ans);
         orderRepository.save(order);
     }
 
