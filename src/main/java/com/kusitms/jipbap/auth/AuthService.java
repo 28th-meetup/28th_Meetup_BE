@@ -88,7 +88,7 @@ public class AuthService {
         TokenInfo refreshToken = tokenProvider.createRefreshToken(user.getEmail(), user.getRole());
         user.updateRefreshToken(refreshToken.getToken());
         return new SignInResponseDto(
-                user.getId(), user.getEmail(), user.getImage(), user.getRole(), accessToken.getToken(), refreshToken.getToken(), accessToken.getExpireTime(), refreshToken.getExpireTime()
+                user.getId(), user.getEmail(), user.getUsername(), user.getImage(), user.getRole(), accessToken.getToken(), refreshToken.getToken(), accessToken.getExpireTime(), refreshToken.getExpireTime()
         );
 
     }
