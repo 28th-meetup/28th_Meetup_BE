@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.notifiication;
+package com.kusitms.jipbap.notification;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
 import com.kusitms.jipbap.user.User;

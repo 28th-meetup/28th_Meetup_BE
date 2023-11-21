@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.user.dto.address;
+package com.kusitms.jipbap.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAddressRequest {
-    Long userId;
-    Long globalRegionId;
-    String address;
-    String detailAddress;
-    String postalCode;
+public class FCMValidRequestDto {
     String fcmToken;
 }
