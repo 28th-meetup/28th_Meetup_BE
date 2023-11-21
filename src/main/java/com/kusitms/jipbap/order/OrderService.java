@@ -61,7 +61,7 @@ public class OrderService {
     }
 
     @Transactional
-    public List<OrderDetail> saveOrderFoodDetail(Long orderId, List<OrderFoodDetailRequest> orderFoodDetailList){
+    public List<OrderDetail> saveOrderFoodDetail(Long orderId, List<OrderFoodDetailRequest> orderFoodDetailList) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("주문 아이디를 찾을 수 없습니다."));
         return orderFoodDetailList.stream()
@@ -101,14 +101,13 @@ public class OrderService {
         List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status)
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
 
-        if (orderList.isEmpty()) {
-            throw new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다.");
-        }
-
         List<OrderPreviewResponse> orderPreviewResponses = orderList.stream()
                 .map(OrderPreviewResponse::new)
                 .collect(Collectors.toList());
 
+        if (orderList.isEmpty()) {
+            return new OwnerOrderStatusResponse(0, Collections.emptyList());
+        }
         return new OwnerOrderStatusResponse(orderPreviewResponses.size(), orderPreviewResponses);
     }
 
@@ -149,7 +148,7 @@ public class OrderService {
         return orderFoodResponseList;
     }
 
-    public StoreProcessingResponse getStoreProcessingOrder(String email){
+    public StoreProcessingResponse getStoreProcessingOrder(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
@@ -159,10 +158,6 @@ public class OrderService {
         //전체 주문내역에서 해당 가게에 속하는 주문내역만 가져오기
         List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED)
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
-
-        if (orderList.isEmpty()) {
-            throw new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다.");
-        }
 
         //주문내역 중에서 음식별로 묶기
         List<OrderDetail> orderDetailList = orderList.stream()
@@ -191,7 +186,9 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
 
+        if (orderList.isEmpty()) {
+            return new StoreProcessingResponse(0, Collections.emptyList());
+        }
         return new StoreProcessingResponse(orderList.size(), processingFoodResponseList);
-
     }
 }
