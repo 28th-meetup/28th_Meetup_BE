@@ -145,5 +145,10 @@ public class StoreController {
         return new CommonResponse<>(orderService.getStoreOrderHistoryByOrderStatus(authInfo.getEmail(), orderStatus));
     }
 
+    @Operation(summary = "가게 정보")
+    @GetMapping("/info/{storeId}")
+    public CommonResponse<StoreInfoResponse> getStoreInfoDetail(@Auth AuthInfo authInfo, @PathVariable Long storeId) {
+        return new CommonResponse<>(storeService.getStoreInfoDetail(authInfo.getEmail(), storeId));
+    }
 
 }

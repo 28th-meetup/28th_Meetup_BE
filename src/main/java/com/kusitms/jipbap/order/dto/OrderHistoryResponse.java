@@ -21,9 +21,13 @@ public class OrderHistoryResponse {
     private Long id;
     private Long userId;
     private Long storeId;
+    private String storeName;
+    private String storeImage;
+    private String storeImage2;
+    private String storeImage3;
     private Long totalCount;
     private Long totalPrice;
-    private String selectedOption;
+    private String selectedOption; //배달 포장
     private String orderedAt;
     private String status;
     private Boolean isReviewed; //리뷰 작성 여부
@@ -33,6 +37,10 @@ public class OrderHistoryResponse {
         this.id = order.getId();
         this.userId = order.getUser().getId();
         this.storeId = order.getStore().getId();
+        this.storeName = order.getStore().getName();
+        this.storeImage = order.getStore().getImage();
+        this.storeImage2 = order.getStore().getImage2();
+        this.storeImage3 = order.getStore().getImage3();
         this.totalCount = order.getTotalCount();
         this.totalPrice = order.getTotalPrice();
         this.selectedOption = order.getSelectedOption();

@@ -233,4 +233,17 @@ public class StoreService {
 
         return getAllMenuListByStoreId(store.getId());
     }
+
+    public StoreInfoResponse getStoreInfoDetail(String email, Long storeId){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new StoreNotExistsException("storeId: " + storeId + " 에 해당하는 가게가 존재하지 않습니다."));
+
+        return new StoreInfoResponse(
+                new StoreInfoDto(store),
+                isStoreBookmarked(user, store),
+                store.getFoodChangeYn()
+        );
+    }
 }
