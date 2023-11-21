@@ -35,7 +35,7 @@ public class MessageService {
         );
 
         // DB 저장
-        Message message = new Message(messageDto.getSenderName(), room, messageDto.getMessage());
+        Message message = new Message(messageDto.getSenderName(), room, messageDto.getMessage(), messageDto.getSentTime());
         messageRepository.save(message);
 
         // 1. 직렬화
