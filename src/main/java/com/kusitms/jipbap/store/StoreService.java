@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
 import com.kusitms.jipbap.food.dto.FoodDto;
+import com.kusitms.jipbap.food.dto.FoodPreviewResponse;
 import com.kusitms.jipbap.store.dto.*;
 import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -138,8 +139,8 @@ public class StoreService {
                 )
                 .collect(Collectors.toList());
 
-        List<FoodDto> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
-                .stream().map(f -> new FoodDto(f.getId(), f.getStore().getId(), f.getCategory().getId(), f.getName(), f.getDollarPrice(), f.getCanadaPrice(), f.getDescription(), f.getImage()))
+        List<FoodPreviewResponse> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
+                .stream().map(f -> new FoodPreviewResponse(f.getId(), f.getName(), f.getStore().getId(), f.getStore().getName(), f.getDollarPrice(), f.getCanadaPrice(), f.getImage(), f.getStore().getAvgRate()))
                 .collect(Collectors.toList());
 
 
