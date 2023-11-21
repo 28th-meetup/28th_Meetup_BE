@@ -30,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -250,13 +247,18 @@ public class FoodService {
 //        return latestSellingFoodResponseList;
     }
 
-    public List<FoodPreviewResponse> getFoodByCategory(AuthInfo authInfo, Long categoryId){
-        User user = userRepository.findByEmail(authInfo.getEmail()).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
+    public List<FoodPreviewResponse> getFoodByCategory(AuthInfo authInfo, Long categoryId, SortingType sortingType){
+        User user = userRepository.findByEmail(authInfo.getEmail())
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 Id는 유효하지 않습니다."));
 
         GlobalRegion globalRegion = user.getGlobalRegion();
 
         List<Food> foodList = foodRepository.findByStoreGlobalRegionAndCategory(globalRegion, category);
+
+        System.out.println("sortingType" + sortingType);
+        foodList = sortFoodList(foodList, sortingType);
 
         List<FoodPreviewResponse> foodDtoList = foodList.stream()
                 .map(food -> new FoodPreviewResponse(
@@ -272,6 +274,32 @@ public class FoodService {
                 .collect(Collectors.toList());
 
         return foodDtoList;
+    }
+
+    private List<Food> sortFoodList(List<Food> foodList, SortingType sortingType) {
+        switch (sortingType) {
+            case REVIEW_HIGH:
+                foodList.sort(Comparator.comparingLong(food -> -food.getStore().getReviewCount()));
+                break;
+            case RATING_HIGH:
+                foodList.sort(Comparator.comparingDouble(food -> -food.getStore().getAvgRate()));
+                break;
+            case PRICE_HIGH:
+                foodList.sort(Comparator.comparingLong(Food::getDollarPrice).reversed());
+                break;
+            case PRICE_LOW:
+                foodList.sort(Comparator.comparingLong(Food::getDollarPrice));
+                break;
+            case RECENTLY_ADDED:
+                foodList.sort(Comparator.comparing(Food::getCreatedAt).reversed());
+                break;
+            default:
+                // 기본은 추천 순으로 정렬
+                // 추천 순으로 정렬할 기준이 없다면 아무 처리도 하지 않습니다.
+                foodList.sort(Comparator.comparingLong(Food::getRecommendCount).reversed());
+                break;
+        }
+        return foodList;
     }
 
 }
