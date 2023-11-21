@@ -14,7 +14,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -29,14 +31,15 @@ public class MessageService {
     private final ObjectMapper objectMapper;
 
     // 메세지 저장
+    @Transactional
     public void saveMessage(MessageDto messageDto) {
         Room room = roomRepository.findByRoomId(messageDto.getRoomId()).orElseThrow(
                 ()->new RoomNotExistsException("채팅방이 더 이상 존재하지 않습니다.")
         );
 
         // DB 저장
-        Message message = new Message(messageDto.getSenderName(), room, messageDto.getMessage(), messageDto.getSentTime());
-        messageRepository.save(message);
+        Message message = messageRepository.save(new Message(messageDto.getSenderName(), room, messageDto.getMessage()));
+        message.updateSentTime(message.getCreatedAt().toString());
 
         // 1. 직렬화
         redisTemplateMessage.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
@@ -49,6 +52,7 @@ public class MessageService {
     }
 
     // 6. 대화 조회 - Redis & DB (TLB 캐시전략 유사)
+    @Transactional
     public List<MessageDto> loadMessage(String roomId) {
         List<MessageDto> messageList = new ArrayList<>();
 

@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +61,7 @@ public class RoomService {
     }
 
     // 채팅방 생성
+    @Transactional
     public MessageResponseDto createRoom(MessageRequestDto dto, String email) {
         User sender = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
 //        User receiver = userRepository.findById(dto.getReceiverId()).orElseThrow(()->new InvalidEmailException("수신 회원정보가 존재하지 않습니다."));
@@ -82,6 +84,7 @@ public class RoomService {
     }
 
     // 7. 사용자 관련 채팅방 전체 조회 (생성, 수신)
+    @Transactional
     public List<MessageResponseDto> findAllRoomByUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
         List<Room> messageRooms = roomRepository.findByUserOrReceiverName(user, user.getUsername());      // sender & receiver 모두 해당 채팅방 조회 가능 (1:1 대화)
@@ -130,6 +133,7 @@ public class RoomService {
     }
 
     // 사용자 관련 채팅방 선택 조회
+    @Transactional
     public RoomDto findRoom(String roomId, String email) {
         Room room = roomRepository.findByRoomId(roomId).orElseThrow(
                 ()->new RoomNotExistsException("채팅방 정보를 찾을 수 없습니다.")
@@ -163,6 +167,7 @@ public class RoomService {
     }
 
     // 10. 채팅방 삭제
+    @Transactional
     public void deleteRoom(Long id, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
 

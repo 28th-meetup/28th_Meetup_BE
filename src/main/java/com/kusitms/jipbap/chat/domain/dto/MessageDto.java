@@ -15,7 +15,6 @@ public class MessageDto {
     private String senderName;
     private String roomId;
     private String message;
-    private String sentTime;
 
     // 대화 조회
     public MessageDto(Message message) {

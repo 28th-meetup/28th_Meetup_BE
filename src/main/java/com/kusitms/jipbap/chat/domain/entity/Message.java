@@ -29,10 +29,13 @@ public class Message extends DateEntity {
     private Room room;
 
     // 대화 저장
-    public Message(String senderName, Room room, String message, String sentTime) {
+    public Message(String senderName, Room room, String message) {
         this.senderName = senderName;
         this.room = room;
         this.message = message;
+    }
+
+    public void updateSentTime(String sentTime) {
         this.sentTime = sentTime;
     }
 }
