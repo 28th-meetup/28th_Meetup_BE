@@ -15,4 +15,5 @@ public class UserAddressRequest {
     String address;
     String detailAddress;
     String postalCode;
+    String fcmToken;
 }

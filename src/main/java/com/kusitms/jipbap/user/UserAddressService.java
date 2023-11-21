@@ -99,6 +99,7 @@ public class UserAddressService {
         user.setAddress(dto.getAddress());
         user.setDetailAddress(dto.getDetailAddress());
         user.setPostalCode(dto.getPostalCode());
+        user.setFcmToken(dto.getFcmToken());
     }
 
     private PostalAddressDto findPostalAddress(GeocodingAddressDto geocodingAddressDto) {
