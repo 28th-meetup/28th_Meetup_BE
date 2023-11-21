@@ -17,7 +17,7 @@ public class MessageResponseDto {
     private String roomId;
     private String receiver;
     private String message;
-    private String createdAt;
+    private String lastMessageSentTime; // (채팅방 조회시) 메세지 마지막 전송 시각
 
     // 채팅방 생성
     public MessageResponseDto(Room room) {
@@ -46,6 +46,6 @@ public class MessageResponseDto {
     }
 
     public void setLatestMessageCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+        this.lastMessageSentTime = createdAt;
     }
 }

@@ -34,4 +34,8 @@ public class Message extends DateEntity {
         this.room = room;
         this.message = message;
     }
+
+    public void updateSentTime(String sentTime) {
+        this.sentTime = sentTime;
+    }
 }
