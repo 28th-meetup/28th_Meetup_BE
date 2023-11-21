@@ -14,15 +14,18 @@ import lombok.Setter;
 public class OrderFoodDetailResponse {
     private Long orderDetailId; //고유 pk
     private Long foodId;
+    private String foodName;
     private Long foodOptionId; //foodOptionId로 설정
+    private String foodOptionName;
     private Long orderCount; //품목 개수
     private Long orderAmount; //품목당 가격
 
     public OrderFoodDetailResponse(OrderDetail orderDetail){
-        System.out.println(orderDetail.getId());
         this.orderDetailId = orderDetail.getId();
         this.foodId = orderDetail.getFood().getId();
+        this.foodName = orderDetail.getFood().getName();
         this.foodOptionId = orderDetail.getFoodOption().getId();
+        this.foodOptionName = orderDetail.getFoodOption().getName();
         this.orderCount = orderDetail.getOrderCount();
         this.orderAmount = orderDetail.getOrderAmount();
     }
