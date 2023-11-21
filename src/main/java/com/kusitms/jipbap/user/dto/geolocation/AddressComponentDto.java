@@ -15,5 +15,6 @@ public class AddressComponentDto {
     @JsonProperty("short_name")
     private String shortName;
 
+    @JsonProperty("types")
     private List<String> types;
 }
