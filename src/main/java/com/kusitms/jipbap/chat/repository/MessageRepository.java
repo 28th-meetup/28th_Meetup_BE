@@ -11,4 +11,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findTop100ByRoomOrderById(Room room);
 
     Message findTopByRoomOrderById(Room room);
+    Message findTopByRoomOrderBySentTimeDesc(Room room);
 }

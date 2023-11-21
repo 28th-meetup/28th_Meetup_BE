@@ -102,7 +102,7 @@ public class RoomService {
                         messageRoom.getReceiverName());
 
                 // 8. 가장 최신 메시지 & 생성 시간 조회
-                Message latestMessage = messageRepository.findTopByRoomOrderById(messageRoom);
+                Message latestMessage = messageRepository.findTopByRoomOrderBySentTimeDesc(messageRoom);
                 if (latestMessage != null) {
                     messageRoomDto.setLatestMessageCreatedAt(latestMessage.getSentTime());
                     messageRoomDto.setLatestMessageContent(latestMessage.getMessage());
@@ -119,7 +119,7 @@ public class RoomService {
                         messageRoom.getReceiverName());
 
                 // 가장 최신 메시지 & 생성 시간 조회
-                Message latestMessage = messageRepository.findTopByRoomOrderById(messageRoom);
+                Message latestMessage = messageRepository.findTopByRoomOrderBySentTimeDesc(messageRoom);
                 if (latestMessage != null) {
                     messageRoomDto.setLatestMessageCreatedAt(latestMessage.getSentTime());
                     messageRoomDto.setLatestMessageContent(latestMessage.getMessage());
