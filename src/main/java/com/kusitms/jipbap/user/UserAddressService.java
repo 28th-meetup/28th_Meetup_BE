@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -106,22 +107,21 @@ public class UserAddressService {
         try {
             String formattedAddress = geocodingAddressDto.getFormattedAddress(); // 실제 데이터베이스에 저장할 주소
 
-            Double lat = geocodingAddressDto.getGeometry().getLocation().getLat();
-            Double lng = geocodingAddressDto.getGeometry().getLocation().getLng();
-
             String countryName = null;
             String postalCode = null;
+
             for (AddressComponentDto addressComponent : geocodingAddressDto.getAddressComponentList()) {
                 List<String> types = addressComponent.getTypes();
+
                 if (types != null && types.contains("country")) {
                     countryName = addressComponent.getLongName();
                 }
                 if (types != null && types.contains("postal_code")) {
                     postalCode = addressComponent.getLongName();
                 }
-                else{
-                    throw new PostalCodeNotFoundException("우편번호를 찾을 수 없습니다. 주소를 다시 입력해주세요.");
-                }
+            }
+            if (postalCode == null || postalCode.isEmpty()){
+                throw new PostalCodeNotFoundException("우편번호를 찾을 수 없습니다. 주소를 다시 입력해주세요.");
             }
             return new PostalAddressDto(formattedAddress, postalCode);
         } catch (NullPointerException e) {
