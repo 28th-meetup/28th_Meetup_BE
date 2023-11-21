@@ -72,6 +72,8 @@ dependencies {
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 	implementation 'org.json:json:20210307'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//firebase
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 tasks.named('test') {

@@ -1,4 +1,4 @@
-package com.kusitms.jipbap.notifiication;
+package com.kusitms.jipbap.notification;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
