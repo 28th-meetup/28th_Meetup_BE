@@ -4,6 +4,7 @@ import com.kusitms.jipbap.auth.dto.*;
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.Auth;
 import com.kusitms.jipbap.security.AuthInfo;
+import com.kusitms.jipbap.user.dto.NicknameValidateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<KakaoSignInResponseDto> kakaoVerification(@RequestBody KakaoSignInRequestDto dto) {
         return new CommonResponse<>(authService.kakaoAutoSignIn(authService.getKakaoProfile(dto.getToken())));
+    }
+
+    @Operation(summary = "닉네임 중복 여부 확인")
+    @PostMapping("/nickname/duplicate")
+    public CommonResponse<String> checkNicknameIsDuplicate(@RequestBody NicknameValidateRequest dto) {
+        return new CommonResponse<>(authService.checkNicknameIsDuplicate(dto.getNickname()));
     }
 
 }
