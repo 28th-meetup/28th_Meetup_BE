@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderFoodRequest {
     private Long store;
-    private Long totalPrice;
+    private Double totalPrice;
     private Long totalCount;
     private String selectedOption;
     private List<OrderFoodDetailRequest> orderFoodDetailList;

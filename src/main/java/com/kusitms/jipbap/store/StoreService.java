@@ -76,7 +76,7 @@ public class StoreService {
                         .name(dto.getName())
                         .description(dto.getDescription())
                         .koreanYn(dto.getKoreanYn())
-                        .minOrderAmount(dto.getMinOrderAmount())
+                        .minOrderAmount(roundToTwoDecimals(dto.getMinOrderAmount()))
                         .image(imageUri[0])
                         .image2(imageUri[1])
                         .image3(imageUri[2])
@@ -100,8 +100,10 @@ public class StoreService {
     }
 
     public StoreDto getMyStore(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
 
         return new StoreDto(
                 store.getId(),
@@ -109,14 +111,15 @@ public class StoreService {
                 store.getDescription(),
                 store.getKoreanYn(),
                 store.getAvgRate(),
-                store.getMinOrderAmount(),
+                roundToTwoDecimals(store.getMinOrderAmount()),
                 new String[]{store.getImage(), store.getImage2(), store.getImage3()}
         );
     }
 
     @Transactional
     public Slice<StoreDetailResponseDto> searchStoreList(String email, Pageable pageable, String keyword, String standard, String order, Long lastId) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
         if(lastId!=null)
             storeRepository.findById(lastId).orElseThrow(()-> new StoreNotExistsException("lastId: "+lastId+"에 해당하는 가게가 존재하지 않습니다."));
 
@@ -125,12 +128,13 @@ public class StoreService {
 
     @Transactional
     public StoreFoodResponseDto searchStoresAndFoods(String email, Pageable pageable, String keyword, String standard, String order) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
         List<StoreDetailResponseDto> storeList = storeRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
                 .stream().map(s -> new StoreDetailResponseDto(
                         new StoreDto(
-                                s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), s.getAvgRate(), s.getMinOrderAmount(),
+                                s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), s.getAvgRate(), roundToTwoDecimals(s.getMinOrderAmount()),
                                 new String[]{s.getImage(), s.getImage2(), s.getImage3()}
                             )
                         , storeBookmarkRepository.existsByUserAndStore(user, s)
@@ -140,7 +144,7 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         List<FoodPreviewResponse> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
-                .stream().map(f -> new FoodPreviewResponse(f.getId(), f.getName(), f.getStore().getId(), f.getStore().getName(), f.getDollarPrice(), f.getCanadaPrice(), f.getImage(), f.getStore().getAvgRate()))
+                .stream().map(f -> new FoodPreviewResponse(f.getId(), f.getName(), f.getStore().getId(), f.getStore().getName(), roundToTwoDecimals(f.getDollarPrice()), roundToTwoDecimals(f.getCanadaPrice()), f.getImage(), f.getStore().getAvgRate()))
                 .collect(Collectors.toList());
 
 
@@ -149,9 +153,10 @@ public class StoreService {
 
     @Transactional
     public StoreDetailResponseDto getStoreDetail(String email, Long storeId) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-
-        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
 
         return new StoreDetailResponseDto(
                 new StoreDto(
@@ -160,7 +165,7 @@ public class StoreService {
                     store.getDescription(),
                     store.getKoreanYn(),
                     store.getAvgRate(),
-                    store.getMinOrderAmount(),
+                    roundToTwoDecimals(store.getMinOrderAmount()),
                     new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 )
                 , isStoreBookmarked(user, store)
@@ -170,8 +175,10 @@ public class StoreService {
 
     @Transactional
     public StoreDto bookmarkStore(String email, Long storeId) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
 
         storeBookmarkRepository.save(new StoreBookmark(null, user, store));
         store.increaseBookmarkCount();
@@ -182,18 +189,18 @@ public class StoreService {
                 store.getDescription(),
                 store.getKoreanYn(),
                 store.getAvgRate(),
-                store.getMinOrderAmount(),
+                roundToTwoDecimals(store.getMinOrderAmount()),
                 new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 );
     }
 
     @Transactional
     public BookmarkedStoreListResponseDto findBookmarkedStore(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
 
         List<StoreBookmark> storeBookmarks = storeBookmarkRepository.findByUser(user);
         List<StoreDto> sbList = new ArrayList<>();
-
 
         for (StoreBookmark sb : storeBookmarks) {
             sbList.add(new StoreDto(
@@ -202,7 +209,7 @@ public class StoreService {
                     sb.getStore().getDescription(),
                     sb.getStore().getKoreanYn(),
                     sb.getStore().getAvgRate(),
-                    sb.getStore().getMinOrderAmount(),
+                    roundToTwoDecimals(sb.getStore().getMinOrderAmount()),
                     new String[]{sb.getStore().getImage(), sb.getStore().getImage2(), sb.getStore().getImage3()}
                 )
             );
@@ -217,7 +224,6 @@ public class StoreService {
 
     public List<FoodDetailByStoreResponse> getAllMenuListByStoreId(Long storeId) {
         //유효한 storeId인지 검사
-
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: " + storeId + "에 해당하는 가게가 존재하지 않습니다."));
         List<Food> foodList = foodRepository.findAllByStore(store);
 
@@ -229,8 +235,10 @@ public class StoreService {
     }
 
     public List<FoodDetailByStoreResponse> getMyStoreMenu(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
 
         return getAllMenuListByStoreId(store.getId());
     }
@@ -247,4 +255,9 @@ public class StoreService {
                 store.getFoodChangeYn()
         );
     }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
+    }
+
 }

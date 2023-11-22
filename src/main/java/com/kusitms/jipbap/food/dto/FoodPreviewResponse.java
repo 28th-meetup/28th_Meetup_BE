@@ -14,8 +14,8 @@ public class FoodPreviewResponse {
     private String name;
     private Long storeId;
     private String storeName;
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
     private String image;
     private Double avgRate;
 }

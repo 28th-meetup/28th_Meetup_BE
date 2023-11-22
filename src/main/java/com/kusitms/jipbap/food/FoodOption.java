@@ -23,8 +23,7 @@ public class FoodOption {
 
     private String name;
 
-    private Long dollarPrice;
-
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
 
 }

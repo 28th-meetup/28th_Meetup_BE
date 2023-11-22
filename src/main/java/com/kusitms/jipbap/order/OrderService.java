@@ -37,7 +37,6 @@ public class OrderService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final FoodOptionRepository foodOptionRepository;
-    private final NotificationRepository notificationRepository;
     private final StoreRepository storeRepository;
     private final FCMNotificationService fcmNotificationService;
 
@@ -47,12 +46,11 @@ public class OrderService {
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
         Store store = storeRepository.findById(dto.getStore())
                 .orElseThrow(()-> new StoreNotExistsException("해당 가게는 존재하지 않습니다."));
-
         Order order = orderRepository.save(
                 Order.builder()
                         .user(user)
                         .store(store)
-                        .totalPrice(dto.getTotalPrice())
+                        .totalPrice(roundToTwoDecimals(dto.getTotalPrice()))
                         .totalCount(dto.getTotalCount())
                         .regionId(user.getGlobalRegion().getId())
                         .selectedOption(dto.getSelectedOption())
@@ -76,6 +74,7 @@ public class OrderService {
     public List<OrderDetail> saveOrderFoodDetail(Long orderId, List<OrderFoodDetailRequest> orderFoodDetailList) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("주문 아이디를 찾을 수 없습니다."));
+
         return orderFoodDetailList.stream()
                 .map(item -> {
                     Food food = foodRepository.findById(item.getFoodId())
@@ -86,7 +85,7 @@ public class OrderService {
                             .food(food)
                             .foodOption(foodOption) // 수정
                             .orderCount(item.getOrderCount())
-                            .orderAmount(item.getOrderAmount())
+                            .orderAmount(roundToTwoDecimals(item.getOrderAmount()))
                             .order(order)
                             .build();
                     orderDetailRepository.save(orderDetail);
@@ -104,7 +103,6 @@ public class OrderService {
     public OwnerOrderStatusResponse getStoreOrderHistoryByOrderStatus(String email, String orderStatus) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
-
         Store store = storeRepository.findByOwner(user)
                 .orElseThrow(() -> new StoreNotExistsException("해당 유저의 가게를 찾을 수 없습니다."));
 
@@ -148,7 +146,6 @@ public class OrderService {
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 수락했습니다.", "맛있는 한식 집밥이 곧 찾아갑니다!");
             String ans = fcmNotificationService.sendNotificationByToken(dto);
             log.info("판매자가 주문을 수락, 구매자에게 알림 전송 결과: " + ans);
-
         }
         else if(newStatus.equals(OrderStatus.REJECTED)) { //판매자가 주문을 취소함
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 취소했습니다.", "다른 상품을 주문해 주세요.");
@@ -219,5 +216,9 @@ public class OrderService {
             return new StoreProcessingResponse(0, Collections.emptyList());
         }
         return new StoreProcessingResponse(orderList.size(), processingFoodResponseList);
+    }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
     }
 }

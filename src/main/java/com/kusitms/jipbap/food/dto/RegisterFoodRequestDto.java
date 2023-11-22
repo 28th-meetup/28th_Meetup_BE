@@ -22,8 +22,8 @@ public class RegisterFoodRequestDto {
     private Long categoryId;
     @NotBlank
     private String name;
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
     @NotBlank
     private String description;
     private List<FoodOptionRequest> foodOptionRequestList;

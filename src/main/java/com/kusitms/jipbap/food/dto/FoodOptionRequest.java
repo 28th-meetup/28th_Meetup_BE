@@ -12,7 +12,7 @@ import lombok.Setter;
 public class FoodOptionRequest {
     private String name;
 
-    private Long dollarPrice;
+    private Double dollarPrice;
 
-    private Long canadaPrice;
+    private Double canadaPrice;
 }
