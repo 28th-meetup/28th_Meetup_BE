@@ -12,6 +12,6 @@ import lombok.Setter;
 public class FoodOptionResponse {
     private Long id;
     private String name;
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
 }

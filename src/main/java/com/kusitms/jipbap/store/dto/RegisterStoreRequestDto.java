@@ -16,7 +16,7 @@ public class RegisterStoreRequestDto {
     private String name;
 
     @NotBlank
-    private Long minOrderAmount;
+    private Double minOrderAmount;
     @NotBlank
     private String description;
 

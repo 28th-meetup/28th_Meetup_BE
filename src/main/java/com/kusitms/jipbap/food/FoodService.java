@@ -62,9 +62,14 @@ public class FoodService {
 
     @Transactional
     public FoodDto registerFood(String email, RegisterFoodRequestDto dto, MultipartFile image, MultipartFile informationDescriptionImage) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Store store = storeRepository.findByOwner(user).orElseThrow(()-> new StoreNotExistsException("해당 가게 id는 유효하지 않습니다."));
-        Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 id는 유효하지 않습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(()-> new StoreNotExistsException("해당 가게 id는 유효하지 않습니다."));
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(()-> new CategoryNotExistsException("해당 카테고리 id는 유효하지 않습니다."));
 
         String imageUri = null;
         String informationDescriptionImageUri = null;
@@ -90,8 +95,8 @@ public class FoodService {
                         .store(store)
                         .category(category)
                         .name(dto.getName())
-                        .dollarPrice(dto.getDollarPrice())
-                        .canadaPrice(dto.getCanadaPrice())
+                        .dollarPrice(roundToTwoDecimals(dto.getDollarPrice()))
+                        .canadaPrice(roundToTwoDecimals(dto.getCanadaPrice()))
                         .image(imageUri)
                         .description(dto.getDescription())
                         .foodPackage(dto.getFoodPackage())
@@ -107,8 +112,8 @@ public class FoodService {
                 FoodOption foodOption = FoodOption.builder()
                         .food(food)
                         .name(foodOptionRequest.getName())
-                        .dollarPrice(foodOptionRequest.getDollarPrice())
-                        .canadaPrice(foodOptionRequest.getCanadaPrice())
+                        .dollarPrice(roundToTwoDecimals(foodOptionRequest.getDollarPrice()))
+                        .canadaPrice(roundToTwoDecimals(foodOptionRequest.getCanadaPrice()))
                         .build();
 
                 foodOptionRepository.save(foodOption);
@@ -130,8 +135,8 @@ public class FoodService {
                 .storeName(food.getStore().getName())
                 .categoryId(food.getCategory().getId())
                 .name(food.getName())
-                .dollarPrice(food.getDollarPrice())
-                .canadaPrice(food.getCanadaPrice())
+                .dollarPrice(roundToTwoDecimals(food.getDollarPrice()))
+                .canadaPrice(roundToTwoDecimals(food.getCanadaPrice()))
                 .image(food.getImage())
                 .description(food.getDescription())
                 .foodPackage(food.getFoodPackage())
@@ -180,28 +185,13 @@ public class FoodService {
                 food.getName(),
                 food.getStore().getId(),
                 food.getStore().getName(),
-                food.getDollarPrice(),
-                food.getCanadaPrice(),
+                roundToTwoDecimals(food.getDollarPrice()),
+                roundToTwoDecimals(food.getCanadaPrice()),
                 food.getImage(),
                 food.getStore().getAvgRate()
         ))
         .collect(Collectors.toList());
 
-//        List<Food> bestSellingFoodsInRegionList = orderRepository.findTop10BestSellingFoodsInRegion(globalRegionId);
-//
-//        List<FoodPreviewResponse> bestSellingFoodResponseList = bestSellingFoodsInRegionList.stream()
-//                .map(food -> new FoodPreviewResponse (
-//                        food.getId(),
-//                        food.getName(),
-//                        food.getStore().getId(),
-//                        food.getStore().getName(),
-//                        food.getDollarPrice(),
-//                        food.getCanadaPrice(),
-//                        food.getImage(),
-//                        food.getStore().getAvgRate()
-//                ))
-//                .collect(Collectors.toList());
-//
         return bestSellingFoodResponseList;
     }
 
@@ -221,30 +211,14 @@ public class FoodService {
                         food.getName(),
                         food.getStore().getId(),
                         food.getStore().getName(),
-                        food.getDollarPrice(),
-                        food.getCanadaPrice(),
+                        roundToTwoDecimals(food.getDollarPrice()),
+                        roundToTwoDecimals(food.getCanadaPrice()),
                         food.getImage(),
                         food.getStore().getAvgRate()
                 ))
                 .collect(Collectors.toList());
         return latestSellingFoodResponseList;
 
-//        List<Food> latestFoodsInRegionList = orderRepository.findLatestFoodsByRegionId(globalRegionId);
-//
-//        List<FoodPreviewResponse> latestSellingFoodResponseList = latestFoodsInRegionList.stream()
-//                .map(food -> new FoodPreviewResponse(
-//                        food.getId(),
-//                        food.getName(),
-//                        food.getStore().getId(),
-//                        food.getStore().getName(),
-//                        food.getDollarPrice(),
-//                        food.getCanadaPrice(),
-//                        food.getImage(),
-//                        food.getStore().getAvgRate()
-//                ))
-//                .collect(Collectors.toList());
-//
-//        return latestSellingFoodResponseList;
     }
 
     public List<FoodPreviewResponse> getFoodByCategory(AuthInfo authInfo, Long categoryId, SortingType sortingType){
@@ -257,7 +231,6 @@ public class FoodService {
 
         List<Food> foodList = foodRepository.findByStoreGlobalRegionAndCategory(globalRegion, category);
 
-        System.out.println("sortingType" + sortingType);
         foodList = sortFoodList(foodList, sortingType);
 
         List<FoodPreviewResponse> foodDtoList = foodList.stream()
@@ -266,8 +239,8 @@ public class FoodService {
                         food.getName(),
                         food.getStore().getId(),
                         food.getStore().getName(),
-                        food.getDollarPrice(),
-                        food.getCanadaPrice(),
+                        roundToTwoDecimals(food.getDollarPrice()),
+                        roundToTwoDecimals(food.getCanadaPrice()),
                         food.getImage(),
                         food.getStore().getAvgRate()
                 ))
@@ -285,21 +258,24 @@ public class FoodService {
                 foodList.sort(Comparator.comparingDouble(food -> -food.getStore().getAvgRate()));
                 break;
             case PRICE_HIGH:
-                foodList.sort(Comparator.comparingLong(Food::getDollarPrice).reversed());
+                foodList.sort(Comparator.comparingDouble(Food::getDollarPrice).reversed());
                 break;
             case PRICE_LOW:
-                foodList.sort(Comparator.comparingLong(Food::getDollarPrice));
+                foodList.sort(Comparator.comparingDouble(Food::getDollarPrice));
                 break;
             case RECENTLY_ADDED:
                 foodList.sort(Comparator.comparing(Food::getCreatedAt).reversed());
                 break;
             default:
                 // 기본은 추천 순으로 정렬
-                // 추천 순으로 정렬할 기준이 없다면 아무 처리도 하지 않습니다.
                 foodList.sort(Comparator.comparingLong(Food::getRecommendCount).reversed());
                 break;
         }
         return foodList;
+    }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
     }
 
 }

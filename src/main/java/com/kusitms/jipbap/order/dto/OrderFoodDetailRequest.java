@@ -13,5 +13,5 @@ public class OrderFoodDetailRequest {
     private Long foodId;
     private Long foodOptionId;
     private Long orderCount;
-    private Long orderAmount;
+    private Double orderAmount;
 }

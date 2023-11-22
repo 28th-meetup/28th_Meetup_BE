@@ -15,13 +15,13 @@ public class FoodDetailResponse {
     private String storeName;
     private Long categoryId;
     private String name;
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
     private String image;
     private String description;
     private String foodPackage;
     private String informationDescription;
     private String ingredient;
-    private Long minOrderAmount; // 최소 주문 금액 추가
+    private Double minOrderAmount; // 최소 주문 금액 추가
     private List<FoodOptionResponse> foodOptionResponseList;
 }

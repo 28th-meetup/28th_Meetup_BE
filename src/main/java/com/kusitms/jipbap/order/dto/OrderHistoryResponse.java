@@ -26,7 +26,7 @@ public class OrderHistoryResponse {
     private String storeImage2;
     private String storeImage3;
     private Long totalCount;
-    private Long totalPrice;
+    private Double totalPrice;
     private String selectedOption; //배달 포장
     private String orderedAt;
     private String status;
@@ -42,7 +42,7 @@ public class OrderHistoryResponse {
         this.storeImage2 = order.getStore().getImage2();
         this.storeImage3 = order.getStore().getImage3();
         this.totalCount = order.getTotalCount();
-        this.totalPrice = order.getTotalPrice();
+        this.totalPrice = roundToTwoDecimals(order.getTotalPrice());
         this.selectedOption = order.getSelectedOption();
         this.orderedAt = setOrderedAt(order.getCreatedAt());
         this.orderFoodDetailList = setOrderFoodDetailList(order.getOrderDetail());
@@ -66,4 +66,9 @@ public class OrderHistoryResponse {
         }
         return true;
     }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
+    }
+
 }

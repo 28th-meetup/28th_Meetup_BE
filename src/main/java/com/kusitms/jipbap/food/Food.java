@@ -33,8 +33,8 @@ public class Food extends DateEntity {
     @Column(name = "food_name")
     private String name;
 
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
     private String image;
     private String description;
     private String foodPackage; // 배달포장 모두 가능(ALL), 배달 가능(DELIVERY), 포장 가능(PACKAGE)

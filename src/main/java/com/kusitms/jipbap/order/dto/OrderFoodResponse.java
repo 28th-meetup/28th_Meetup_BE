@@ -21,7 +21,7 @@ public class OrderFoodResponse {
     private Long userId;
     private Long storeId;
     private Long totalCount;
-    private Long totalPrice;
+    private Double totalPrice;
     private String selectedOption;
     private String orderedAt;
     private String status;
@@ -32,7 +32,7 @@ public class OrderFoodResponse {
         this.userId = order.getUser().getId();
         this.storeId = order.getStore().getId();
         this.totalCount = order.getTotalCount();
-        this.totalPrice = order.getTotalPrice();
+        this.totalPrice = roundToTwoDecimals(order.getTotalPrice());
         this.selectedOption = order.getSelectedOption();
         this.orderedAt = setOrderedAt(order.getCreatedAt());
         this.orderFoodDetailList = setOrderFoodDetailList(order.getOrderDetail());
@@ -48,4 +48,9 @@ public class OrderFoodResponse {
             return new OrderFoodDetailResponse(item);
         }).collect(Collectors.toList());
     }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
+    }
+
 }

@@ -34,7 +34,7 @@ public class Order extends DateEntity {
     private Store store;
 
     @NotNull
-    private Long totalPrice; //총 주문 결제 금액
+    private Double totalPrice; //총 주문 결제 금액
     private Long totalCount; //총 주문한 메뉴 개수
 
     @NotNull

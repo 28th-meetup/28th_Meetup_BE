@@ -18,7 +18,7 @@ public class OrderFoodDetailResponse {
     private Long foodOptionId; //foodOptionId로 설정
     private String foodOptionName;
     private Long orderCount; //품목 개수
-    private Long orderAmount; //품목당 가격
+    private Double orderAmount; //품목당 가격
 
     public OrderFoodDetailResponse(OrderDetail orderDetail){
         this.orderDetailId = orderDetail.getId();
@@ -27,6 +27,10 @@ public class OrderFoodDetailResponse {
         this.foodOptionId = orderDetail.getFoodOption().getId();
         this.foodOptionName = orderDetail.getFoodOption().getName();
         this.orderCount = orderDetail.getOrderCount();
-        this.orderAmount = orderDetail.getOrderAmount();
+        this.orderAmount = roundToTwoDecimals(orderDetail.getOrderAmount());
+    }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
     }
 }

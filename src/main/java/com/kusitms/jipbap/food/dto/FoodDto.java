@@ -15,8 +15,8 @@ public class FoodDto {
     private Long storeId;
     private Long categoryId;
     private String name;
-    private Long dollarPrice;
-    private Long canadaPrice;
+    private Double dollarPrice;
+    private Double canadaPrice;
     private String description;
     private String image;
 

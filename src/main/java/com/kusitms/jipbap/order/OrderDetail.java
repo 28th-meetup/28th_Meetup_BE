@@ -32,7 +32,7 @@ public class OrderDetail {
     private Long orderCount; //품목 개수
 
     @NotNull
-    private Long orderAmount; //품목당 가격
+    private Double orderAmount; //품목당 가격
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")

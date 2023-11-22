@@ -48,7 +48,7 @@ public class Store extends DateEntity {
     @Column(columnDefinition = "TINYINT(1)", name="korean_yn")
     private Boolean koreanYn; //한국인 인증 여부
 
-    private Long minOrderAmount; //최소 주문 금액
+    private Double minOrderAmount; //최소 주문 금액
     private String image;
     private String image2;
     private String image3;
