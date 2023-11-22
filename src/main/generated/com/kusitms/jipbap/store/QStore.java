@@ -55,7 +55,7 @@ public class QStore extends EntityPathBase<Store> {
 
     public final BooleanPath koreanYn = createBoolean("koreanYn");
 
-    public final NumberPath<Long> minOrderAmount = createNumber("minOrderAmount", Long.class);
+    public final NumberPath<Double> minOrderAmount = createNumber("minOrderAmount", Double.class);
 
     public final StringPath name = createString("name");
 

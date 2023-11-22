@@ -22,9 +22,9 @@ public class QFoodOption extends EntityPathBase<FoodOption> {
 
     public static final QFoodOption foodOption = new QFoodOption("foodOption");
 
-    public final NumberPath<Long> canadaPrice = createNumber("canadaPrice", Long.class);
+    public final NumberPath<Double> canadaPrice = createNumber("canadaPrice", Double.class);
 
-    public final NumberPath<Long> dollarPrice = createNumber("dollarPrice", Long.class);
+    public final NumberPath<Double> dollarPrice = createNumber("dollarPrice", Double.class);
 
     public final QFood food;
 

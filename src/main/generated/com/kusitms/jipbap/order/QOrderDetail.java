@@ -30,7 +30,7 @@ public class QOrderDetail extends EntityPathBase<OrderDetail> {
 
     public final QOrder order;
 
-    public final NumberPath<Long> orderAmount = createNumber("orderAmount", Long.class);
+    public final NumberPath<Double> orderAmount = createNumber("orderAmount", Double.class);
 
     public final NumberPath<Long> orderCount = createNumber("orderCount", Long.class);
 
