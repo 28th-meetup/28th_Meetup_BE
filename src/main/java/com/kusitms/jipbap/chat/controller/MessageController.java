@@ -1,7 +1,7 @@
 package com.kusitms.jipbap.chat.controller;
 
 
-import com.kusitms.jipbap.chat.domain.dto.MessageDto;
+import com.kusitms.jipbap.chat.model.dto.MessageDto;
 import com.kusitms.jipbap.chat.service.RoomService;
 import com.kusitms.jipbap.chat.service.MessageService;
 import com.kusitms.jipbap.chat.service.RedisPublisher;

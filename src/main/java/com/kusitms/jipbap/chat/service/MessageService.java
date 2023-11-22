@@ -1,22 +1,20 @@
 package com.kusitms.jipbap.chat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kusitms.jipbap.chat.domain.dto.MessageDto;
-import com.kusitms.jipbap.chat.domain.entity.Message;
-import com.kusitms.jipbap.chat.domain.entity.Room;
+import com.kusitms.jipbap.chat.model.dto.MessageDto;
+import com.kusitms.jipbap.chat.model.entity.Message;
+import com.kusitms.jipbap.chat.model.entity.Room;
 import com.kusitms.jipbap.chat.exception.RoomNotExistsException;
 import com.kusitms.jipbap.chat.repository.MessageRepository;
 import com.kusitms.jipbap.chat.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

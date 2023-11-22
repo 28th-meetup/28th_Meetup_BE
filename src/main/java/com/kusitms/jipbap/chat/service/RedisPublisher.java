@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.chat.service;
 
-import com.kusitms.jipbap.chat.domain.dto.MessageDto;
+import com.kusitms.jipbap.chat.model.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

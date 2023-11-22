@@ -1,8 +1,8 @@
 package com.kusitms.jipbap.chat.controller;
 
-import com.kusitms.jipbap.chat.domain.dto.MessageRequestDto;
-import com.kusitms.jipbap.chat.domain.dto.MessageResponseDto;
-import com.kusitms.jipbap.chat.domain.dto.RoomDto;
+import com.kusitms.jipbap.chat.model.dto.MessageRequestDto;
+import com.kusitms.jipbap.chat.model.dto.MessageResponseDto;
+import com.kusitms.jipbap.chat.model.dto.RoomDto;
 import com.kusitms.jipbap.chat.service.RoomService;
 import com.kusitms.jipbap.common.response.CommonResponse;
 import com.kusitms.jipbap.security.Auth;

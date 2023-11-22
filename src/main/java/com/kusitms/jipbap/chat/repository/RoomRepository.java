@@ -1,7 +1,7 @@
 package com.kusitms.jipbap.chat.repository;
 
-import com.kusitms.jipbap.chat.domain.entity.Room;
-import com.kusitms.jipbap.user.User;
+import com.kusitms.jipbap.chat.model.entity.Room;
+import com.kusitms.jipbap.user.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

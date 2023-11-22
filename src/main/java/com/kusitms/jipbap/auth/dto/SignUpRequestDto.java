@@ -1,7 +1,7 @@
 package com.kusitms.jipbap.auth.dto;
 
-import com.kusitms.jipbap.user.CountryPhoneCode;
-import com.kusitms.jipbap.user.Role;
+import com.kusitms.jipbap.user.model.entity.CountryPhoneCode;
+import com.kusitms.jipbap.user.model.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

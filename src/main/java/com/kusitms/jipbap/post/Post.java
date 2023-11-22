@@ -1,14 +1,12 @@
 package com.kusitms.jipbap.post;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
-import com.kusitms.jipbap.user.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity

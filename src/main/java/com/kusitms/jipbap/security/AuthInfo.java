@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.security;
 
-import com.kusitms.jipbap.user.Role;
+import com.kusitms.jipbap.user.model.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

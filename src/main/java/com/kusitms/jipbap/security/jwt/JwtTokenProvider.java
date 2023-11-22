@@ -1,7 +1,7 @@
 package com.kusitms.jipbap.security.jwt;
 
 import com.kusitms.jipbap.security.jwt.exception.InvalidTokenException;
-import com.kusitms.jipbap.user.Role;
+import com.kusitms.jipbap.user.model.entity.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

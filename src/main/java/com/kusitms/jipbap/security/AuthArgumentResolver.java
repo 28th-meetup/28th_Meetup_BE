@@ -1,6 +1,6 @@
 package com.kusitms.jipbap.security;
 
-import com.kusitms.jipbap.user.Role;
+import com.kusitms.jipbap.user.model.entity.Role;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

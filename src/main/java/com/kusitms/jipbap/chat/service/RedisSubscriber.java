@@ -1,7 +1,7 @@
 package com.kusitms.jipbap.chat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kusitms.jipbap.chat.domain.dto.MessageDto;
+import com.kusitms.jipbap.chat.model.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
