@@ -18,6 +18,7 @@ import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,7 +108,7 @@ public class OrderService {
 
         OrderStatus status = OrderStatus.fromString(orderStatus);
 
-        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status)
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status, Sort.by(Sort.Direction.DESC, "createdAt"))
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
 
         List<OrderPreviewResponse> orderPreviewResponses = orderList.stream()
@@ -181,7 +182,7 @@ public class OrderService {
                 .orElseThrow(() -> new StoreNotExistsException("해당 유저의 가게를 찾을 수 없습니다."));
 
         //전체 주문내역에서 해당 가게에 속하는 주문내역만 가져오기
-        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED)
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED, Sort.by(Sort.Direction.DESC, "createdAt"))
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
 
         //주문내역 중에서 음식별로 묶기
