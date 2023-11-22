@@ -29,5 +29,10 @@ public class UserController {
         return new CommonResponse<>("로그아웃 성공");
     }
 
+    @Operation(summary = "유저 닉네임 정보 받아오기")
+    @GetMapping("/nickname")
+    public CommonResponse<String> getUserNickname(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(userService.getUserNickname(authInfo.getEmail()));
+    }
 }
 

@@ -48,5 +48,15 @@ public class UserService {
         user.updateRefreshToken(null);
     }
 
+    /**
+     * 유저 닉네임 받아오기
+     * @param email
+     * @return
+     */
+    @Transactional
+    public String getUserNickname(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
+        return user.getUsername();
+    }
 }
 
