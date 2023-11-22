@@ -12,11 +12,12 @@ import lombok.Setter;
 public class ReviewDto {
 
     private Long id;
-
     private Long orderId;
-
+    private String writerName;
+    private String time;
+    private String foodName;
     private Long rating;
-
     private String message;
     private String image;
+
 }

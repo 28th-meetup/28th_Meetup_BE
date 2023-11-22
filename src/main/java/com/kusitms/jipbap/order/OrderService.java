@@ -8,6 +8,7 @@ import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
 import com.kusitms.jipbap.notification.FCMNotificationService;
 import com.kusitms.jipbap.notification.FCMRequestDto;
+import com.kusitms.jipbap.notification.NotificationRepository;
 import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.*;
 import com.kusitms.jipbap.store.Store;
@@ -18,6 +19,7 @@ import com.kusitms.jipbap.user.UserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final FoodOptionRepository foodOptionRepository;
+    private final NotificationRepository notificationRepository;
     private final StoreRepository storeRepository;
     private final FCMNotificationService fcmNotificationService;
 
@@ -107,7 +110,7 @@ public class OrderService {
 
         OrderStatus status = OrderStatus.fromString(orderStatus);
 
-        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status)
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), status, Sort.by(Sort.Direction.DESC, "createdAt"))
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
 
         List<OrderPreviewResponse> orderPreviewResponses = orderList.stream()
@@ -136,13 +139,27 @@ public class OrderService {
         if(order.getStatus() == newStatus){
             throw new OrderStatusAlreadyExistsException("이미 해당 주문 상태입니다.");
         }
-        order.setStatus(newStatus); // 주문 상태 변경
 
-        // 알림 등 로직 추가 가능
-        FCMRequestDto dto = new FCMRequestDto(seller.getId(), "주문이 들어왔습니다", "주문을 확인해주세요.");
-        String ans = fcmNotificationService.sendNotificationByToken(dto);
-        log.info(ans);
+        order.setStatus(newStatus); // 주문 상태 변경
         orderRepository.save(order);
+
+        User buyer = order.getUser();
+        if(newStatus.equals(OrderStatus.ACCEPTED)) { //판매자가 주문을 수락함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 수락했습니다.", "맛있는 한식 집밥이 곧 찾아갑니다!");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 수락, 구매자에게 알림 전송 결과: " + ans);
+
+        }
+        else if(newStatus.equals(OrderStatus.REJECTED)) { //판매자가 주문을 취소함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 취소했습니다.", "다른 상품을 주문해 주세요.");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 거절, 구매자에게 알림 전송 결과: " + ans);
+        }
+        else if(newStatus.equals(OrderStatus.COMPLETED)) { //판매자가 주문을 완료함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "음식이 완료되었습니다.", "한식 집밥, 맛있게 즐기세요!");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 완료, 구매자에게 알림 전송 결과: " + ans);
+        }
     }
 
     public List<OrderHistoryResponse> getMyOrderHistory(String email) {
@@ -168,7 +185,7 @@ public class OrderService {
                 .orElseThrow(() -> new StoreNotExistsException("해당 유저의 가게를 찾을 수 없습니다."));
 
         //전체 주문내역에서 해당 가게에 속하는 주문내역만 가져오기
-        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED)
+        List<Order> orderList = orderRepository.findByStore_IdAndStatus(store.getId(), OrderStatus.ACCEPTED, Sort.by(Sort.Direction.DESC, "createdAt"))
                 .orElseThrow(() -> new OrderNotExistsByOrderStatusException("해당 가게의 주문상태에 따른 주문 내역이 존재하지 않습니다."));
 
         //주문내역 중에서 음식별로 묶기
