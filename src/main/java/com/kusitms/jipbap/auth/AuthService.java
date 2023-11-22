@@ -164,4 +164,10 @@ public class AuthService {
         findUser.updateOAuth(KAKAO);
         return new KakaoSignInResponseDto(signIn(kakaoUser.getEmail(), kakaoUser.getPassword()), isSignUp);
     }
+
+    @Transactional
+    public String checkNicknameIsDuplicate(String nickname){
+        if(userRepository.existsByUsername(nickname)) throw new UsernameExistsException("이미 존재하는 닉네임입니다.");
+        return "사용 가능한 닉네임입니다.";
+    }
 }

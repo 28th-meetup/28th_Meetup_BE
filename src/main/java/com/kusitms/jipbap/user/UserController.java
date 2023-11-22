@@ -7,10 +7,7 @@ import com.kusitms.jipbap.security.AuthInfo;
 import com.kusitms.jipbap.user.dto.NicknameValidateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,10 +29,10 @@ public class UserController {
         return new CommonResponse<>("로그아웃 성공");
     }
 
-    @Operation(summary = "닉네임 중복 여부 확인")
-    @PostMapping("/nickname")
-    public CommonResponse<String> checkNicknameIsDuplicate(@RequestBody NicknameValidateRequest dto) {
-        return new CommonResponse<>(userService.checkNicknameIsDuplicate(dto.getNickname()));
+    @Operation(summary = "유저 닉네임 정보 받아오기")
+    @GetMapping("/nickname")
+    public CommonResponse<String> getUserNickname(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(userService.getUserNickname(authInfo.getEmail()));
     }
 }
 

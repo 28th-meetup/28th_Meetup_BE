@@ -48,9 +48,15 @@ public class UserService {
         user.updateRefreshToken(null);
     }
 
-    public String checkNicknameIsDuplicate(String nickname){
-        if(userRepository.existsByUsername(nickname)) throw new UsernameExistsException("이미 존재하는 닉네임입니다.");
-        return "사용 가능한 닉네임입니다.";
+    /**
+     * 유저 닉네임 받아오기
+     * @param email
+     * @return
+     */
+    @Transactional
+    public String getUserNickname(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
+        return user.getUsername();
     }
 }
 
