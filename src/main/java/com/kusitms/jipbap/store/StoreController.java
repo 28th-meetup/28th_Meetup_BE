@@ -151,4 +151,11 @@ public class StoreController {
         return new CommonResponse<>(storeService.getStoreInfoDetail(authInfo.getEmail(), storeId));
     }
 
+    @Operation(summary = "주문관리에서 진행 중 주문과 오늘 총 주문 조회하기")
+    @GetMapping("/manage")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<StoreManageResponse> getStoreManageOrder(@Auth AuthInfo authInfo) {
+        return new CommonResponse<>(storeService.getStoreManageOrder(authInfo.getEmail()));
+    }
+
 }

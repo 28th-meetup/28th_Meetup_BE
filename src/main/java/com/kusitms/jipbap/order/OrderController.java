@@ -59,4 +59,5 @@ public class OrderController {
     public CommonResponse<StoreProcessingResponse> getStoreProcessingOrder(@Auth AuthInfo authInfo) {
         return new CommonResponse<>(orderService.getStoreProcessingOrder(authInfo.getEmail()));
     }
+
 }
