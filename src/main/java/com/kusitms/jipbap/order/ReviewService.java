@@ -78,7 +78,7 @@ public class ReviewService {
         FCMRequestDto fcmRequestDto = new FCMRequestDto(store.getOwner().getId(), "고객이 리뷰를 작성했습니다.", "내용을 확인해 보시겠어요?");
         String ans = fcmNotificationService.sendNotificationByToken(fcmRequestDto);
         log.info("구매자가 리뷰 작성 완료 알림 전송: " + ans);
-        return new ReviewDto(review.getId(), review.getOrder().getId(), review.getRating(), review.getMessage(), review.getImage());
+        return new ReviewDto(review.getId(), review.getOrder().getId(), review.getOrder().getUser().getUsername(), review.getCreatedAt().toString(), review.getOrder().getOrderDetail().get(0).getFood().getName(), review.getRating(), review.getMessage(), review.getImage());
     }
 
     @Transactional
@@ -89,20 +89,20 @@ public class ReviewService {
 
         return new GetRegisteredReviewsResponseDto(
                 reviews.stream()
-                .map(r -> new ReviewDto(r.getId(), r.getOrder().getId(), r.getRating(), r.getMessage(), r.getImage()))
+                .map(r -> new ReviewDto(r.getId(), r.getOrder().getId(), r.getOrder().getUser().getUsername(), r.getCreatedAt().toString(), r.getOrder().getOrderDetail().get(0).getFood().getName(), r.getRating(), r.getMessage(), r.getImage()))
                 .collect(Collectors.toList())
         );
     }
 
     @Transactional
     public GetRegisteredReviewsResponseDto getStoreRegisteredReviews(Long storeId) {
-        Store store = storeRepository.findById(storeId).orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
-
-        List<Review> reviews = reviewRepository.findAllReviewsByStore(store);
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new StoreNotExistsException("storeId: "+storeId+"에 해당하는 가게가 존재하지 않습니다."));
+        List<Review> reviews = reviewRepository.findAllReviewsByOrder_Store(store);
 
         return new GetRegisteredReviewsResponseDto(
                 reviews.stream()
-                .map(r -> new ReviewDto(r.getId(), r.getOrder().getId(), r.getRating(), r.getMessage(), r.getImage()))
+                .map(r -> new ReviewDto(r.getId(), r.getOrder().getId(), r.getOrder().getUser().getUsername(), r.getCreatedAt().toString(), r.getOrder().getOrderDetail().get(0).getFood().getName(), r.getRating(), r.getMessage(), r.getImage()))
                 .collect(Collectors.toList())
         );
     }

@@ -2,6 +2,7 @@ package com.kusitms.jipbap.order;
 
 import com.kusitms.jipbap.common.entity.DateEntity;
 import com.kusitms.jipbap.food.Food;
+import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,5 @@ public class Review extends DateEntity {
     private Long rating;
     private String message;
     private String image;
+
 }

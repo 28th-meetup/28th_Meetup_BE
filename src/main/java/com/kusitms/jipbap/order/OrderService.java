@@ -8,6 +8,7 @@ import com.kusitms.jipbap.food.exception.FoodNotExistsException;
 import com.kusitms.jipbap.food.exception.FoodOptionNotExistsException;
 import com.kusitms.jipbap.notification.FCMNotificationService;
 import com.kusitms.jipbap.notification.FCMRequestDto;
+import com.kusitms.jipbap.notification.NotificationRepository;
 import com.kusitms.jipbap.order.dto.*;
 import com.kusitms.jipbap.order.exception.*;
 import com.kusitms.jipbap.store.Store;
@@ -36,6 +37,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final FoodOptionRepository foodOptionRepository;
+    private final NotificationRepository notificationRepository;
     private final StoreRepository storeRepository;
     private final FCMNotificationService fcmNotificationService;
 
@@ -146,6 +148,7 @@ public class OrderService {
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 수락했습니다.", "맛있는 한식 집밥이 곧 찾아갑니다!");
             String ans = fcmNotificationService.sendNotificationByToken(dto);
             log.info("판매자가 주문을 수락, 구매자에게 알림 전송 결과: " + ans);
+
         }
         else if(newStatus.equals(OrderStatus.REJECTED)) { //판매자가 주문을 취소함
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 취소했습니다.", "다른 상품을 주문해 주세요.");
