@@ -8,6 +8,8 @@ import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
 import com.kusitms.jipbap.food.dto.FoodDto;
 import com.kusitms.jipbap.food.dto.FoodPreviewResponse;
+import com.kusitms.jipbap.order.OrderRepository;
+import com.kusitms.jipbap.order.OrderStatus;
 import com.kusitms.jipbap.store.dto.*;
 import com.kusitms.jipbap.store.exception.StoreExistsException;
 import com.kusitms.jipbap.store.exception.StoreNotExistsException;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +44,7 @@ public class StoreService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final GlobalRegionRepository globalRegionRepository;
+    private final OrderRepository orderRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -256,6 +260,22 @@ public class StoreService {
         );
     }
 
+    public StoreManageResponse getStoreManageOrder(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+        Store store = storeRepository.findByOwner(user)
+                .orElseThrow(()-> new StoreNotExistsException("가게 정보가 존재하지 않습니다."));
+
+        OrderStatus orderStatus = OrderStatus.ACCEPTED;
+        Long processingOrderCount = orderRepository.countOrdersByStatus(orderStatus);
+        Long todayOrderCount = orderRepository.countOrdersByDate(LocalDate.now());
+
+
+        return new StoreManageResponse(
+                processingOrderCount,
+                todayOrderCount
+        );
+    }
     private double roundToTwoDecimals(double value) {
         return Math.round(value * 100) / 100.0;
     }
