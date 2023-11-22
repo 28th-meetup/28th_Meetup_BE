@@ -39,10 +39,4 @@ public class AuthController {
         return new CommonResponse<>(authService.kakaoAutoSignIn(authService.getKakaoProfile(dto.getToken())));
     }
 
-    @Operation(summary = "액세스 토큰 재발급 - 헤더에 refreshToken 정보 포함하여 요청")
-    @PostMapping("/reissue")
-    public CommonResponse<ReissueResponseDto> reissue(@Auth AuthInfo authInfo) {
-        return new CommonResponse<>(authService.reissue(authInfo.getEmail(), authInfo.getToken()));
-    }
-
 }
