@@ -136,13 +136,28 @@ public class OrderService {
         if(order.getStatus() == newStatus){
             throw new OrderStatusAlreadyExistsException("이미 해당 주문 상태입니다.");
         }
-        order.setStatus(newStatus); // 주문 상태 변경
 
-        // 알림 등 로직 추가 가능
-        FCMRequestDto dto = new FCMRequestDto(seller.getId(), "주문이 들어왔습니다", "주문을 확인해주세요.");
-        String ans = fcmNotificationService.sendNotificationByToken(dto);
-        log.info(ans);
+        order.setStatus(newStatus); // 주문 상태 변경
         orderRepository.save(order);
+
+        User buyer = order.getUser();
+        if(newStatus.equals(OrderStatus.ACCEPTED)) { //판매자가 주문을 수락함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 수락했습니다.", "맛있는 한식 집밥이 곧 찾아갑니다!");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 수락, 구매자에게 알림 전송 결과: " + ans);
+        }
+        else if(newStatus.equals(OrderStatus.REJECTED)) { //판매자가 주문을 취소함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 취소했습니다.", "다른 상품을 주문해 주세요.");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 거절, 구매자에게 알림 전송 결과: " + ans);
+
+        }
+        else if(newStatus.equals(OrderStatus.COMPLETED)) { //판매자가 주문을 완료함
+            FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "음식이 완료되었습니다.", "한식 집밥, 맛있게 즐기세요!");
+            String ans = fcmNotificationService.sendNotificationByToken(dto);
+            log.info("판매자가 주문을 완료, 구매자에게 알림 전송 결과: " + ans);
+
+        }
     }
 
     public List<OrderHistoryResponse> getMyOrderHistory(String email) {

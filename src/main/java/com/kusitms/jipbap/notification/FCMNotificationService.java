@@ -30,7 +30,7 @@ public class FCMNotificationService {
         Optional <User> user = userRepository.findById(dto.getUserId());
 
         if (user.isPresent()){
-            log.info("fcm토큰" + user.get().getFcmToken());
+            log.info("fcm token" + user.get().getFcmToken());
             if (user.get().getFcmToken() != null) {
 
                 Message message = Message.builder()
