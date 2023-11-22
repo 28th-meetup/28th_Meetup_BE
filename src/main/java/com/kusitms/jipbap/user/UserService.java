@@ -29,6 +29,7 @@ public class UserService {
             throw new RefreshTokenNotFoundException("리프레쉬 토큰에서 유저정보를 찾을 수 없습니다.");
         }
         tokenProvider.validateToken(tokenProvider.resolveToken(refreshToken));
+        user.updateRefreshToken(refreshToken);
 
         TokenInfo newAccessToken = tokenProvider.createAccessToken(user.getEmail(), user.getRole());
         TokenInfo newRefreshToken = tokenProvider.createRefreshToken(user.getEmail(), user.getRole());
