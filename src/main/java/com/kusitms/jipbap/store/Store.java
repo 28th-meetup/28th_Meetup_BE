@@ -81,6 +81,10 @@ public class Store extends DateEntity {
     }
 
     public void updateAvgRate(Double newRate) {
-        this.avgRate = (avgRate*rateCount+newRate)/(++rateCount);
+        this.avgRate = roundToTwoDecimals((avgRate*rateCount+newRate)/(++rateCount));
+    }
+
+    private double roundToTwoDecimals(double value) {
+        return Math.round(value * 100) / 100.0;
     }
 }

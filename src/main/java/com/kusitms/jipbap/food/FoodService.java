@@ -43,7 +43,6 @@ public class FoodService {
     private final StoreRepository storeRepository;
     private final FoodRepository foodRepository;
     private final CategoryRepository categoryRepository;
-    private final OrderRepository orderRepository;
     private final FoodOptionRepository foodOptionRepository;
     private final OrderDetailRepository orderDetailRepository;
 
@@ -142,7 +141,7 @@ public class FoodService {
                 .foodPackage(food.getFoodPackage())
                 .informationDescription(food.getInformationDescription())
                 .ingredient(food.getIngredient())
-                .minOrderAmount(food.getStore().getMinOrderAmount())
+                .minOrderAmount(roundToTwoDecimals(food.getStore().getMinOrderAmount()))
                 .foodOptionResponseList(foodOptionResponseList)
                 .build();
     }
@@ -180,17 +179,17 @@ public class FoodService {
                 .collect(Collectors.toList());
 
         List<FoodPreviewResponse> bestSellingFoodResponseList = top10FoodList.stream()
-        .map(food -> new FoodPreviewResponse (
-                food.getId(),
-                food.getName(),
-                food.getStore().getId(),
-                food.getStore().getName(),
-                roundToTwoDecimals(food.getDollarPrice()),
-                roundToTwoDecimals(food.getCanadaPrice()),
-                food.getImage(),
-                food.getStore().getAvgRate()
-        ))
-        .collect(Collectors.toList());
+            .map(food -> new FoodPreviewResponse (
+                    food.getId(),
+                    food.getName(),
+                    food.getStore().getId(),
+                    food.getStore().getName(),
+                    roundToTwoDecimals(food.getDollarPrice()),
+                    roundToTwoDecimals(food.getCanadaPrice()),
+                    food.getImage(),
+                    roundToTwoDecimals(food.getStore().getAvgRate())
+            ))
+            .collect(Collectors.toList());
 
         return bestSellingFoodResponseList;
     }
@@ -214,7 +213,7 @@ public class FoodService {
                         roundToTwoDecimals(food.getDollarPrice()),
                         roundToTwoDecimals(food.getCanadaPrice()),
                         food.getImage(),
-                        food.getStore().getAvgRate()
+                        roundToTwoDecimals(food.getStore().getAvgRate())
                 ))
                 .collect(Collectors.toList());
         return latestSellingFoodResponseList;
@@ -242,7 +241,7 @@ public class FoodService {
                         roundToTwoDecimals(food.getDollarPrice()),
                         roundToTwoDecimals(food.getCanadaPrice()),
                         food.getImage(),
-                        food.getStore().getAvgRate()
+                        roundToTwoDecimals(food.getStore().getAvgRate())
                 ))
                 .collect(Collectors.toList());
 

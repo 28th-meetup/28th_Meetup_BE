@@ -110,7 +110,7 @@ public class StoreService {
                 store.getName(),
                 store.getDescription(),
                 store.getKoreanYn(),
-                store.getAvgRate(),
+                roundToTwoDecimals(store.getAvgRate()),
                 roundToTwoDecimals(store.getMinOrderAmount()),
                 new String[]{store.getImage(), store.getImage2(), store.getImage3()}
         );
@@ -134,7 +134,7 @@ public class StoreService {
         List<StoreDetailResponseDto> storeList = storeRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
                 .stream().map(s -> new StoreDetailResponseDto(
                         new StoreDto(
-                                s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), s.getAvgRate(), roundToTwoDecimals(s.getMinOrderAmount()),
+                                s.getId(), s.getName(), s.getDescription(), s.getKoreanYn(), roundToTwoDecimals(s.getAvgRate()), roundToTwoDecimals(s.getMinOrderAmount()),
                                 new String[]{s.getImage(), s.getImage2(), s.getImage3()}
                             )
                         , storeBookmarkRepository.existsByUserAndStore(user, s)
@@ -144,7 +144,7 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         List<FoodPreviewResponse> foodList = foodRepository.searchByNameOrderBySort(user, pageable, keyword, standard, order)
-                .stream().map(f -> new FoodPreviewResponse(f.getId(), f.getName(), f.getStore().getId(), f.getStore().getName(), roundToTwoDecimals(f.getDollarPrice()), roundToTwoDecimals(f.getCanadaPrice()), f.getImage(), f.getStore().getAvgRate()))
+                .stream().map(f -> new FoodPreviewResponse(f.getId(), f.getName(), f.getStore().getId(), f.getStore().getName(), roundToTwoDecimals(f.getDollarPrice()), roundToTwoDecimals(f.getCanadaPrice()), f.getImage(), roundToTwoDecimals(f.getStore().getAvgRate())))
                 .collect(Collectors.toList());
 
 
@@ -164,7 +164,7 @@ public class StoreService {
                     store.getName(),
                     store.getDescription(),
                     store.getKoreanYn(),
-                    store.getAvgRate(),
+                    roundToTwoDecimals(store.getAvgRate()),
                     roundToTwoDecimals(store.getMinOrderAmount()),
                     new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 )
@@ -188,7 +188,7 @@ public class StoreService {
                 store.getName(),
                 store.getDescription(),
                 store.getKoreanYn(),
-                store.getAvgRate(),
+                roundToTwoDecimals(store.getAvgRate()),
                 roundToTwoDecimals(store.getMinOrderAmount()),
                 new String[]{store.getImage(), store.getImage2(), store.getImage3()}
                 );
@@ -208,7 +208,7 @@ public class StoreService {
                     sb.getStore().getName(),
                     sb.getStore().getDescription(),
                     sb.getStore().getKoreanYn(),
-                    sb.getStore().getAvgRate(),
+                    roundToTwoDecimals(sb.getStore().getAvgRate()),
                     roundToTwoDecimals(sb.getStore().getMinOrderAmount()),
                     new String[]{sb.getStore().getImage(), sb.getStore().getImage2(), sb.getStore().getImage3()}
                 )

@@ -27,7 +27,7 @@ public class StoreInfoDto {
         this.name = store.getName();
         this.description = store.getDescription();
         this.koreanYn = store.getKoreanYn();
-        this.avgRate = store.getAvgRate();
+        this.avgRate = roundToTwoDecimals(store.getAvgRate());
         this.minOrderAmount = roundToTwoDecimals(store.getMinOrderAmount());
         this.images = new String[]{store.getImage(), store.getImage2(), store.getImage3()};
         this.address = store.getAddress();
