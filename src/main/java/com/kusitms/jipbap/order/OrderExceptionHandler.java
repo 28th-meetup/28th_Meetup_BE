@@ -57,5 +57,11 @@ public class OrderExceptionHandler {
         return new CommonResponse<>(ErrorCode.ORDER_STATUS_ALREADY_EXISTS_ERROR);
     }
 
+    @ExceptionHandler(AlreadyExistsReviewException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> handleAlreadyExistsReviewException(AlreadyExistsReviewException e, HttpServletRequest request) {
+        log.warn("ORDER-007> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.ALREADY_EXISTS_REVIEW_ERROR);
+    }
 
 }

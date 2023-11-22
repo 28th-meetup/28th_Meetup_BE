@@ -3,9 +3,12 @@ package com.kusitms.jipbap.order;
 import com.amazonaws.services.s3.AmazonS3;
 import com.kusitms.jipbap.common.exception.S3RegisterFailureException;
 import com.kusitms.jipbap.common.utils.S3Utils;
+import com.kusitms.jipbap.notification.FCMNotificationService;
+import com.kusitms.jipbap.notification.FCMRequestDto;
 import com.kusitms.jipbap.order.dto.GetRegisteredReviewsResponseDto;
 import com.kusitms.jipbap.order.dto.RegisterReviewRequestDto;
 import com.kusitms.jipbap.order.dto.ReviewDto;
+import com.kusitms.jipbap.order.exception.AlreadyExistsReviewException;
 import com.kusitms.jipbap.order.exception.OrderNotExistsException;
 import com.kusitms.jipbap.store.Store;
 import com.kusitms.jipbap.store.StoreRepository;
@@ -33,6 +36,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     private final AmazonS3 amazonS3;
 
@@ -41,12 +45,19 @@ public class ReviewService {
 
     @Transactional
     public ReviewDto registerReview(String email, RegisterReviewRequestDto dto, MultipartFile image) {
-        userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
-        Order order = orderRepository.findById(dto.getOrderId()).orElseThrow(()-> new OrderNotExistsException("orderId: "+dto.getOrderId()+"에 해당하는 주문이 존재하지 않습니다."));
+        userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        Order order = orderRepository.findById(dto.getOrderId())
+                .orElseThrow(()-> new OrderNotExistsException("orderId: "+dto.getOrderId()+"에 해당하는 주문이 존재하지 않습니다."));
+
+        if(order.getReview() != null){
+            throw new AlreadyExistsReviewException("이미 리뷰를 작성한 주문입니다.");
+        }
+
         Store store = order.getStore();
 
         String imageUri = null;
-
         // 이미지가 null이 아닌 경우 s3 업로드
         if(image!=null) {
             try {
@@ -56,12 +67,17 @@ public class ReviewService {
             }
         }
 
+        // 리뷰 작성
         Review review = reviewRepository.save(new Review(null, order, dto.getRating(), dto.getMessage(), imageUri));
-        // 리뷰 개수 업데이트
-        store.increaseReviewCount();
-        // 평점 업데이트
-        store.updateAvgRate(Double.parseDouble(String.valueOf(dto.getRating())));
 
+        store.increaseReviewCount(); // 리뷰 개수 업데이트
+        store.updateAvgRate(Double.parseDouble(String.valueOf(dto.getRating()))); // 평점 업데이트
+
+        // 주문내역에 리뷰 추가 및 판매자에게 리뷰 작성되었다는 알림 전송
+        order.setReview(review);
+        FCMRequestDto fcmRequestDto = new FCMRequestDto(store.getOwner().getId(), "고객이 리뷰를 작성했습니다.", "내용을 확인해 보시겠어요?");
+        String ans = fcmNotificationService.sendNotificationByToken(fcmRequestDto);
+        log.info("구매자가 리뷰 작성 완료 알림 전송: " + ans);
         return new ReviewDto(review.getId(), review.getOrder().getId(), review.getRating(), review.getMessage(), review.getImage());
     }
 

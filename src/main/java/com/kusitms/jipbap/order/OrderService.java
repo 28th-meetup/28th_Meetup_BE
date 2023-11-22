@@ -150,13 +150,11 @@ public class OrderService {
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "가게가 주문을 취소했습니다.", "다른 상품을 주문해 주세요.");
             String ans = fcmNotificationService.sendNotificationByToken(dto);
             log.info("판매자가 주문을 거절, 구매자에게 알림 전송 결과: " + ans);
-
         }
         else if(newStatus.equals(OrderStatus.COMPLETED)) { //판매자가 주문을 완료함
             FCMRequestDto dto = new FCMRequestDto(buyer.getId(), "음식이 완료되었습니다.", "한식 집밥, 맛있게 즐기세요!");
             String ans = fcmNotificationService.sendNotificationByToken(dto);
             log.info("판매자가 주문을 완료, 구매자에게 알림 전송 결과: " + ans);
-
         }
     }
 
