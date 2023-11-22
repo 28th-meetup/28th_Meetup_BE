@@ -164,25 +164,4 @@ public class AuthService {
         findUser.updateOAuth(KAKAO);
         return new KakaoSignInResponseDto(signIn(kakaoUser.getEmail(), kakaoUser.getPassword()), isSignUp);
     }
-
-    /**
-     * refreshtoken 갱
-     * @param email
-     * @param refreshToken
-     * @return
-     */
-    @Transactional
-    public ReissueResponseDto reissue(String email, String refreshToken) {
-        User user = userRepository.findByEmail(email).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
-        if(!user.getRefreshToken().equals(refreshToken)) {
-            throw new RefreshTokenNotFoundException("리프레쉬 토큰에서 유저정보를 찾을 수 없습니다.");
-        }
-        tokenProvider.validateToken(refreshToken);
-
-        TokenInfo newAccessToken = tokenProvider.createAccessToken(user.getEmail(), user.getRole());
-        TokenInfo newRefreshToken = tokenProvider.createRefreshToken(user.getEmail(), user.getRole());
-        return new ReissueResponseDto(
-                newAccessToken.getToken(), newRefreshToken.getToken()
-        );
-    }
 }
