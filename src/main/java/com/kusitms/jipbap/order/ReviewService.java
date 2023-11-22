@@ -78,6 +78,9 @@ public class ReviewService {
         FCMRequestDto fcmRequestDto = new FCMRequestDto(store.getOwner().getId(), "고객이 리뷰를 작성했습니다.", "내용을 확인해 보시겠어요?");
         String ans = fcmNotificationService.sendNotificationByToken(fcmRequestDto);
         log.info("구매자가 리뷰 작성 완료 알림 전송: " + ans);
+
+        //알림 데이터베이스에 저장
+
         return new ReviewDto(review.getId(), review.getOrder().getId(), review.getOrder().getUser().getUsername(), review.getCreatedAt().toString(), review.getOrder().getOrderDetail().get(0).getFood().getName(), review.getRating(), review.getMessage(), review.getImage());
     }
 
