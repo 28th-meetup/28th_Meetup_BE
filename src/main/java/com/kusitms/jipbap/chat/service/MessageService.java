@@ -1,23 +1,20 @@
 package com.kusitms.jipbap.chat.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kusitms.jipbap.chat.exception.RoomNotExistsException;
 import com.kusitms.jipbap.chat.model.dto.MessageDto;
 import com.kusitms.jipbap.chat.model.entity.Message;
 import com.kusitms.jipbap.chat.model.entity.Room;
-import com.kusitms.jipbap.chat.exception.RoomNotExistsException;
 import com.kusitms.jipbap.chat.repository.MessageRepository;
 import com.kusitms.jipbap.chat.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -26,7 +23,7 @@ public class MessageService {
     private final RedisTemplate<String, MessageDto> redisTemplateMessage;
     private final MessageRepository messageRepository;
     private final RoomRepository roomRepository;
-    private final ObjectMapper objectMapper;
+    private final MessageReleaseService messageReleaseService;
 
     // 메세지 저장
     @Transactional
@@ -35,18 +32,7 @@ public class MessageService {
                 ()->new RoomNotExistsException("채팅방이 더 이상 존재하지 않습니다.")
         );
 
-        // DB 저장
-        Message message = messageRepository.save(new Message(messageDto.getSenderName(), room, messageDto.getMessage()));
-        message.updateSentTime(message.getCreatedAt().toString());
-
-        // 1. 직렬화
-        redisTemplateMessage.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
-
-        // 2. redis 저장
-        redisTemplateMessage.opsForList().rightPush(messageDto.getRoomId(), messageDto);
-
-        // 3. redistemplate의 expire() 을 이용해서, Key 를 만료시킬 수 있음
-        redisTemplateMessage.expire(messageDto.getRoomId(), 60, TimeUnit.MINUTES);
+        messageReleaseService.saveMessage(messageDto, room);
     }
 
     // 6. 대화 조회 - Redis & DB (TLB 캐시전략 유사)
