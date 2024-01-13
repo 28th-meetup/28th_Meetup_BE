@@ -41,6 +41,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //cors
+                                .requestMatchers("/auth/**").permitAll() // 로그인 필요 X
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -63,7 +64,6 @@ public class SpringSecurityConfig {
                 "/swagger-ui/**",
                 "/swagger/**",
                 "/error",
-                "/auth/**",
                 "/ws/**", //ws://localhost:8080/ws/chat
                 "/ws-stomp/**",
                 "/addresses/**"
