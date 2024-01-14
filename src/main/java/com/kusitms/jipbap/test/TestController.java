@@ -41,7 +41,7 @@ public class TestController {
     @Operation(summary = "ec2 서버 커넥션 테스트용 컨트롤러(인증)")
     @GetMapping("/auth")
     public String test2(@Auth AuthInfo authInfo) {
-        User user = userRepository.findByEmail(authInfo.getEmail()).orElseThrow(()->new InvalidEmailException("회원정보가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(authInfo.getEmail()).orElse(null);
         return "Healthy Connection";
     }
 

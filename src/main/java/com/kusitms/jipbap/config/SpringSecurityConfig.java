@@ -42,6 +42,7 @@ public class SpringSecurityConfig {
                         authorize
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //cors
                                 .requestMatchers("/auth/**").permitAll() // 로그인 필요 X
+                                .requestMatchers("/test/**").permitAll() // anonymousUser 테스트
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)

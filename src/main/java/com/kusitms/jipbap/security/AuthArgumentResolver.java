@@ -2,6 +2,7 @@ package com.kusitms.jipbap.security;
 
 import com.kusitms.jipbap.user.model.entity.Role;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,8 @@ import java.util.List;
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final String AUTHORIZATION_HEADER = "Authorization";
+    private final String ANONYMOUS_TOKEN = "ANONYMOUS_TOKEN";
+    private final String ANONYMOUS_EMAIL = "ANONYMOUS_EMAIL";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -29,11 +32,15 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory) {
-        UserDetails authentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal().equals("anonymousUser")) { // 익명 사용자
+            return new AuthInfo(ANONYMOUS_TOKEN, ANONYMOUS_EMAIL, List.of(Role.ROLE_ANONYMOUS));
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new AuthInfo(
                 webRequest.getHeader(AUTHORIZATION_HEADER),
-                authentication.getUsername(),
-                getRoles(authentication.getAuthorities())
+                userDetails.getUsername(),
+                getRoles(userDetails.getAuthorities())
         );
     }
 
