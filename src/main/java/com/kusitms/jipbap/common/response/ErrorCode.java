@@ -54,6 +54,11 @@ public enum ErrorCode {
     UNAUTHORIZED_ACCESS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "해당 주문에 접근할 권한이 없습니다."),
     ORDER_STATUS_ALREADY_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 해당 주문 상태입니다."),
     ALREADY_EXISTS_REVIEW_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 리뷰를 작성한 주문입니다."),
+
+    //event
+    EVENT_NOT_EXISTS_ERROR(false, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 이벤트입니다."),
+    EVENT_EXHAUST_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이벤트 쿠폰이 모두 소진되었습니다."),
+    ALREADY_EXISTS_USER_EVENT_ERROR(false, HttpStatus.BAD_REQUEST.value(), "이미 이벤트 쿠폰을 발급한 유저입니다."),
     ;
 
     private Boolean isSuccess;
