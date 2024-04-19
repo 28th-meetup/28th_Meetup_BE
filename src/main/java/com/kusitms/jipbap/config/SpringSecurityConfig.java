@@ -43,7 +43,8 @@ public class SpringSecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //cors
                                 .requestMatchers("/auth/**").permitAll() // 로그인 필요 X
                                 .requestMatchers("/test/**").permitAll() // anonymousUser 테스트
-                                .requestMatchers(HttpMethod.PUT, "/event").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/event").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/event").hasAuthority("USER") // ROLE_로 시작하지 않기 떄문에 hasAuthority함수 사용
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
