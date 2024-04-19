@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,9 +18,13 @@ public class QEvent extends EntityPathBase<Event> {
 
     private static final long serialVersionUID = -778155915L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QEvent event = new QEvent("event");
 
     public final com.kusitms.jipbap.common.entity.QDateEntity _super = new com.kusitms.jipbap.common.entity.QDateEntity(this);
+
+    public final com.kusitms.jipbap.user.model.entity.QUser admin;
 
     public final NumberPath<Long> amount = createNumber("amount", Long.class);
 
@@ -36,15 +41,24 @@ public class QEvent extends EntityPathBase<Event> {
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QEvent(String variable) {
-        super(Event.class, forVariable(variable));
+        this(Event.class, forVariable(variable), INITS);
     }
 
     public QEvent(Path<? extends Event> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QEvent(PathMetadata metadata) {
-        super(Event.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QEvent(PathMetadata metadata, PathInits inits) {
+        this(Event.class, metadata, inits);
+    }
+
+    public QEvent(Class<? extends Event> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.admin = inits.isInitialized("admin") ? new com.kusitms.jipbap.user.model.entity.QUser(forProperty("admin"), inits.get("admin")) : null;
     }
 
 }

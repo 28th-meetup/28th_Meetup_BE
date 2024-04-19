@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class EntryEventResponse {
+public class EnterEventResponse {
     private String userEmail;
     private String title;
     private Long sequence;

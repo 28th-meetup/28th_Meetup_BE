@@ -7,7 +7,7 @@ import com.kusitms.jipbap.event.model.dto.EventDto;
 import com.kusitms.jipbap.event.model.entity.Event;
 import com.kusitms.jipbap.event.model.entity.EventUser;
 import com.kusitms.jipbap.event.model.request.RegisterEventRequest;
-import com.kusitms.jipbap.event.model.response.EntryEventResponse;
+import com.kusitms.jipbap.event.model.response.EnterEventResponse;
 import com.kusitms.jipbap.event.repository.EventRepository;
 import com.kusitms.jipbap.event.repository.EventUserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
@@ -26,13 +26,14 @@ public class EventService {
     private final EventUserRepository eventUserRepository;
 
     @Transactional
-    public EventDto registerEvent(RegisterEventRequest dto) {
-        Event savedEvent = eventRepository.save(new Event(dto.getTitle(), dto.getDescription(), dto.getAmount()));
+    public EventDto registerEvent(String email, RegisterEventRequest dto) {
+        User admin = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("해당 이메일을 가진 관리자가 없습니다"));
+        Event savedEvent = eventRepository.save(new Event(admin, dto.getTitle(), dto.getDescription(), dto.getAmount()));
         return new EventDto(savedEvent.getId(), savedEvent.getTitle(), savedEvent.getDescription(), savedEvent.getAmount());
     }
 
     @Transactional
-    public EntryEventResponse entryEvent(String email, Long eventId) {
+    public EnterEventResponse entryEvent(String email, Long eventId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
         Event event = eventRepository.findById(eventId)
@@ -52,6 +53,6 @@ public class EventService {
         EventUser savedEventUser = eventUserRepository.save(new EventUser(null, user, event));
 
         // N번~1번 쿠폰 순서대로 발급
-        return new EntryEventResponse(user.getEmail(), savedEventUser.getEvent().getTitle(), event.getAmount()+1);
+        return new EnterEventResponse(user.getEmail(), savedEventUser.getEvent().getTitle(), event.getAmount()+1);
     }
 }
