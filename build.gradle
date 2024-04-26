@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// spring batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	//aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	//jwt
