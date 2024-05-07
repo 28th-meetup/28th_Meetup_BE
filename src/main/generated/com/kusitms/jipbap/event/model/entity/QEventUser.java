@@ -54,7 +54,7 @@ public class QEventUser extends EntityPathBase<EventUser> {
 
     public QEventUser(Class<? extends EventUser> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.event = inits.isInitialized("event") ? new QEvent(forProperty("event")) : null;
+        this.event = inits.isInitialized("event") ? new QEvent(forProperty("event"), inits.get("event")) : null;
         this.user = inits.isInitialized("user") ? new com.kusitms.jipbap.user.model.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

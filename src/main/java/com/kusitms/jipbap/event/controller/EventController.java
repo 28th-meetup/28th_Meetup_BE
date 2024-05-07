@@ -23,8 +23,7 @@ public class EventController {
     @PutMapping
     @Operation(summary = "신규 이벤트 등록 (관리자)")
     public RegisterEventResponse registerNewEvent(@Auth AuthInfo authInfo, @Valid @RequestBody RegisterEventRequest request) {
-        EventDto dto = eventService.registerEvent(authInfo.getEmail(), request);
-        return new RegisterEventResponse(dto.getId(), dto.getTitle(), dto.getDescription(), dto.getAmount());
+        return eventService.registerEvent(authInfo.getEmail(), request);
     }
 
     // 이벤트 응모
@@ -34,5 +33,10 @@ public class EventController {
         return eventService.entryEvent(authinfo.getEmail(), request.getId());
     }
 
-    // 이벤트 응모 조회
+//    // TODO(이벤트 응모 조회)
+//    @GetMapping
+//    @Operation(summary = "이벤트 응모 정보 조회 (유저)")
+//    public CheckEventResponse checkEvent(@Auth AuthInfo authInfo, @Valid @RequestBody CheckEventRequest request) {
+//        return
+//    }
 }

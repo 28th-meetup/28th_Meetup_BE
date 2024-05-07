@@ -3,11 +3,11 @@ package com.kusitms.jipbap.event.service;
 import com.kusitms.jipbap.event.exception.AlreadyExistsEventUserException;
 import com.kusitms.jipbap.event.exception.EventExhaustException;
 import com.kusitms.jipbap.event.exception.EventNotExistsException;
-import com.kusitms.jipbap.event.model.dto.EventDto;
 import com.kusitms.jipbap.event.model.entity.Event;
 import com.kusitms.jipbap.event.model.entity.EventUser;
 import com.kusitms.jipbap.event.model.request.RegisterEventRequest;
 import com.kusitms.jipbap.event.model.response.EnterEventResponse;
+import com.kusitms.jipbap.event.model.response.RegisterEventResponse;
 import com.kusitms.jipbap.event.repository.EventRepository;
 import com.kusitms.jipbap.event.repository.EventUserRepository;
 import com.kusitms.jipbap.user.exception.UserNotFoundException;
@@ -26,10 +26,10 @@ public class EventService {
     private final EventUserRepository eventUserRepository;
 
     @Transactional
-    public EventDto registerEvent(String email, RegisterEventRequest dto) {
+    public RegisterEventResponse registerEvent(String email, RegisterEventRequest dto) {
         User admin = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("해당 이메일을 가진 관리자가 없습니다"));
         Event savedEvent = eventRepository.save(new Event(admin, dto.getTitle(), dto.getDescription(), dto.getAmount()));
-        return new EventDto(savedEvent.getId(), savedEvent.getTitle(), savedEvent.getDescription(), savedEvent.getAmount());
+        return new RegisterEventResponse(savedEvent.getId(), savedEvent.getTitle(), savedEvent.getDescription(), savedEvent.getAmount());
     }
 
     @Transactional
