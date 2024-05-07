@@ -54,7 +54,7 @@ public class EventLogClearConfig {
     @JobScope
     public Step eventLogClearStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<EventLog, EventLog>chunk(5, transactionManager) // chunkSize: 몇 개 단위로 데이터를 처리할 것인지 지정. 참고로 파라미터로 받아서 사용할 수는 없다.
+                .<EventLog, EventLog>chunk(500, transactionManager) // chunkSize: 몇 개 단위로 데이터를 처리할 것인지 지정. 참고로 파라미터로 받아서 사용할 수는 없다.
                 .reader(eventLogClearReader())
                 .processor(eventLogClearProcessor())
                 .writer(eventLogClearWriter())
@@ -100,9 +100,9 @@ public class EventLogClearConfig {
                 .repository(eventLogRepository)
                 .methodName("findByCreatedAtBefore")
                 .arguments(List.of(dateTime)) // 의미없는 PageRequest 전달
-                .pageSize(5) // chunkSize와 일치하게 설정
+                .pageSize(500) // chunkSize와 일치하게 설정
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
-                .build();제
+                .build();
 
     }
 }

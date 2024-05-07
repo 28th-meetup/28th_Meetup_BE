@@ -46,7 +46,7 @@ spring:
       initialize-schema: always
     job:
       name: eventLogClearJob
-#      enabled: false # Job 실행을 스케줄러에게 위임하기 위하여 설정
+      enabled: false # Job 실행을 스케줄러에게 위임하기 위하여 설정
 
 cloud:
   aws:
