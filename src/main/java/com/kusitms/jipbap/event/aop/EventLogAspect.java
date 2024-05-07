@@ -53,5 +53,6 @@ public class EventLogAspect {
     @AfterThrowing(value = "execution(* com.kusitms.jipbap.event..*Controller.*(..))", throwing = "ex")
     public void eventErrorLogging(JoinPoint joinPoint, Exception ex) {
         log.info("[ERROR][event] error occurred - exception: {}, timestamp: {}", ex.getMessage(), System.currentTimeMillis());
+        eventLogService.createEventErrorLog();
     }
 }
