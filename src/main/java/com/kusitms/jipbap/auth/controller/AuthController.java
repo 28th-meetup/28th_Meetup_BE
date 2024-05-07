@@ -45,4 +45,11 @@ public class AuthController {
         return new CommonResponse<>(authService.checkNicknameIsDuplicate(dto.getNickname()));
     }
 
+    @Operation(summary = "(테스트용 임시) 관리자 등록")
+    @PostMapping("/admin/signup")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<String> adminSignUp(@RequestBody Long id) {
+        return new CommonResponse<>(authService.createTmpAdmin(id));
+    }
+
 }

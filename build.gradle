@@ -40,6 +40,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// spring batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	//aop
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	//jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -61,6 +65,8 @@ dependencies {
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	//queryDsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
@@ -74,6 +80,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//firebase
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	// test h2 database
+	testRuntimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {

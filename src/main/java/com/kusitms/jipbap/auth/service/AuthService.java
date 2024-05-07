@@ -8,11 +8,11 @@ import com.kusitms.jipbap.auth.dto.*;
 import com.kusitms.jipbap.auth.exception.*;
 import com.kusitms.jipbap.security.jwt.JwtTokenProvider;
 import com.kusitms.jipbap.security.jwt.TokenInfo;
+import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import com.kusitms.jipbap.user.model.entity.CountryPhoneCode;
 import com.kusitms.jipbap.user.model.entity.Role;
 import com.kusitms.jipbap.user.model.entity.User;
 import com.kusitms.jipbap.user.repository.UserRepository;
-import com.kusitms.jipbap.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -166,5 +166,24 @@ public class AuthService {
     public String checkNicknameIsDuplicate(String nickname){
         if(userRepository.existsByUsername(nickname)) throw new UsernameExistsException("이미 존재하는 닉네임입니다.");
         return "사용 가능한 닉네임입니다.";
+    }
+
+    @Transactional
+    public String createTmpAdmin(Long id) {
+        if(userRepository.existsByEmail("admin"+id+"@email.com")) throw new EmailExistsException("이미 존재하는 어드민 이메일 id입니다");
+        User user = userRepository.save(
+                User.builder()
+                        .id(null)
+                        .email("admin"+id+"@email.com")
+                        .password(passwordEncoder.encode("qwe123"))
+                        .username("admin"+System.currentTimeMillis())
+                        .countryPhoneCode(null)
+                        .phoneNum(null)
+                        .role(Role.ROLE_ADMIN)
+                        .refreshToken(null)
+                        .oauth(INAPP)
+                        .build()
+        );
+        return user.getEmail();
     }
 }
